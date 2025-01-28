@@ -143,20 +143,23 @@ class Rules:
         """
         return self.client.post(f"/rules/{rule_uid}/runnow", json=context_data or {})
 
-    def get_modules(self, rule_uid: str, module_category: str):
+
+
+    def get_module(self, rule_uid: str, module_category: str, module_id: str):
         """
-        Holt die Module einer Regel basierend auf der Kategorie und UID.
+        Holt ein bestimmtes Modul einer Regel.
 
         :param rule_uid: Die UID der Regel.
-        :param module_category: Die Kategorie der Module.
+        :param module_category: Die Kategorie des Moduls.
+        :param module_id: Die ID des Moduls.
 
-        :return: Eine Liste der Module (JSON).
+        :return: Das Modul (JSON).
         """
-        return self.client.get(f"/rules/{rule_uid}/{module_category}")
+        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}")
 
     def get_module_config(self, rule_uid: str, module_category: str, module_id: str):
         """
-        Holt die Konfiguration eines Moduls einer Regel.
+        Holt die gesamte Konfiguration eines Moduls einer Regel.
 
         :param rule_uid: Die UID der Regel.
         :param module_category: Die Kategorie des Moduls.
@@ -166,15 +169,28 @@ class Rules:
         """
         return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}/config")
 
-    def set_module_config(self, rule_uid: str, module_category: str, module_id: str, param: str, value: str):
+    def get_module_config_param(self, rule_uid: str, module_category: str, module_id: str, param: str):
         """
-        Setzt einen Konfigurationsparameter eines Moduls einer Regel.
+        Holt einen spezifischen Konfigurationsparameter eines Moduls einer Regel.
 
         :param rule_uid: Die UID der Regel.
         :param module_category: Die Kategorie des Moduls.
         :param module_id: Die ID des Moduls.
-        :param param: Der Parameter, der gesetzt werden soll.
-        :param value: Der Wert, der gesetzt werden soll.
+        :param param: Der Name des Konfigurationsparameters.
+
+        :return: Der Wert des Konfigurationsparameters (JSON).
+        """
+        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}/config/{param}")
+
+    def set_module_config_param(self, rule_uid: str, module_category: str, module_id: str, param: str, value: str):
+        """
+        Setzt einen spezifischen Konfigurationsparameter eines Moduls einer Regel.
+
+        :param rule_uid: Die UID der Regel.
+        :param module_category: Die Kategorie des Moduls.
+        :param module_id: Die ID des Moduls.
+        :param param: Der Name des Konfigurationsparameters.
+        :param value: Der zu setzende Wert des Konfigurationsparameters.
 
         :return: Die Antwort der API (Statuscode).
         """

@@ -141,3 +141,14 @@ class Things:
         """
         headers = {'Accept-Language': language} if language else {}
         return self.client.get(f'/things/{thing_uid}/firmwares', headers=headers)
+
+    def get_thing_config_status(self, thing_uid: str, language: str = None):
+        """
+        Holt den Konfigurationsstatus eines Things.
+
+        :param thing_uid: Die UID des Things.
+        :param language: Die bevorzugte Sprache für die Antwort.
+        :return: JSON-Antwort mit dem Konfigurationsstatus des Things.
+        """
+        headers = {'Accept-Language': language} if language else {}
+        return self.client.get(f'/things/{thing_uid}/config/status', headers=headers)

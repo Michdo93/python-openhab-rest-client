@@ -85,14 +85,56 @@ class Voice:
         response = self.client.post('/voice/interpreters', headers=headers, params=params, json={'text': text})
         return response.json() if response.status_code == 200 else None
 
-    def get_voice(self, voice_id: str):
+    def get_interpreter(self, interpreter_id: str, language: str = None):
         """
-        Ruft eine spezifische Stimme ab.
+        Ruft die Details eines einzelnen Interpreters ab.
 
-        :param voice_id: Die ID der Stimme.
-        :return: Die Details der Stimme.
+        :param interpreter_id: Die ID des Interpreters.
+        :param language: Die Sprache für die Anfrage (optional).
+        :return: Die Details des Interpreters.
         """
-        response = self.client.get(f'/voice/voices/{voice_id}')
+        headers = {'Accept-Language': language} if language else {}
+        response = self.client.get(f'/voice/interpreters/{interpreter_id}', headers=headers)
+        return response.json() if response.status_code == 200 else None
+
+    def interpret_text_batch(self, text: str, language: str, ids: list):
+        """
+        Sendet Text zur Interpretation an mehrere spezifische Interpreter.
+
+        :param text: Der zu interpretierende Text.
+        :param language: Die Sprache des Textes.
+        :param ids: Eine Liste von Interpreter-IDs.
+        :return: Die Antwort des Servers.
+        """
+        headers = {'Accept-Language': language}
+        params = {'ids': ','.join(ids)}
+        response = self.client.post('/voice/interpreters', headers=headers, params=params, json={'text': text})
+        return response.json() if response.status_code == 200 else None
+
+    def listen_and_answer(self, source_id: str, stt_id: str, tts_id: str, voice_id: str,
+                        hli_ids: list = None, sink_id: str = None, listening_item: str = None):
+        """
+        Führt eine einfache Dialogsequenz ohne Keyword-Spotting aus.
+
+        :param source_id: Die ID der Audioquelle.
+        :param stt_id: Die ID des Speech-to-Text-Systems.
+        :param tts_id: Die ID des Text-to-Speech-Systems.
+        :param voice_id: Die ID der Stimme.
+        :param hli_ids: Eine Liste von Interpreter-IDs (optional).
+        :param sink_id: Die ID des Audio-Ausgangs (optional).
+        :param listening_item: Der Name des zu hörenden Items (optional).
+        :return: Die Antwort des Servers.
+        """
+        params = {
+            'sourceId': source_id,
+            'sttId': stt_id,
+            'ttsId': tts_id,
+            'voiceId': voice_id,
+            'hliIds': ','.join(hli_ids) if hli_ids else None,
+            'sinkId': sink_id,
+            'listeningItem': listening_item
+        }
+        response = self.client.post('/voice/listenandanswer', params=params)
         return response.json() if response.status_code == 200 else None
 
     def say_text(self, text: str, voice_id: str, sink_id: str, volume: str = '100'):
