@@ -1,5 +1,5 @@
 from .client import OpenHABClient
-import requests
+import json
 
 class Rules:
     def __init__(self, client: OpenHABClient):
@@ -47,7 +47,10 @@ class Rules:
 
         :return: Die erstellte Regel (JSON).
         """
-        return self.client.post("/rules", json=rule_data)
+        header = {"Content-Type": "application/json"}
+        rule_data = json.dumps(rule_data)
+
+        return self.client.post("/rules", data=rule_data, header=header)
 
     def update_rule(self, rule_uid: str, rule_data: dict):
         """
@@ -58,7 +61,10 @@ class Rules:
 
         :return: Die aktualisierte Regel (JSON).
         """
-        return self.client.put(f"/rules/{rule_uid}", json=rule_data)
+        header = {"Content-Type": "application/json"}
+        rule_data = json.dumps(rule_data)
+
+        return self.client.put(f"/rules/{rule_uid}", data=rule_data, header=header)
 
     def delete_rule(self, rule_uid: str):
         """
@@ -68,7 +74,7 @@ class Rules:
 
         :return: Die Antwort der API (Statuscode).
         """
-        return self.client.delete(f"/rules/{rule_uid}")
+        return self.client.delete(f"/rules/{rule_uid}", header={"Accept": "application/json"})
 
     def get_triggers(self, rule_uid: str):
         """
@@ -119,9 +125,11 @@ class Rules:
 
         :return: Die aktualisierte Konfiguration (JSON).
         """
-        return self.client.put(f"/rules/{rule_uid}/config", json=config_data)
+        config_data = json.dumps(config_data)
 
-    def enable_rule(self, rule_uid: str, enable: bool):
+        return self.client.put(f"/rules/{rule_uid}/config", data=config_data, header={"Content-Type": "application/json"})
+
+    def set_rule_state(self, rule_uid: str, enable: bool):
         """
         Aktiviert oder deaktiviert eine Regel.
 
@@ -130,7 +138,16 @@ class Rules:
 
         :return: Die Antwort der API (Statuscode).
         """
-        return self.client.post(f"/rules/{rule_uid}/enable", json={"enable": "true" if enable else "false"})
+        header = {"Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"}
+        data = "true" if enable else "false"
+
+        return self.client.post(f"/rules/{rule_uid}/enable", data=data, header=header)
+
+    def enable_rule(self, rule_uid: str):
+        return self.set_rule_state(rule_uid, True)
+
+    def disable_rule(self, rule_uid: str):
+        return self.set_rule_state(rule_uid, False)
 
     def run_now(self, rule_uid: str, context_data: dict = None):
         """
@@ -141,9 +158,8 @@ class Rules:
 
         :return: Die Antwort der API (Statuscode).
         """
-        return self.client.post(f"/rules/{rule_uid}/runnow", json=context_data or {})
-
-
+        context_data = json.dumps(context_data)
+        return self.client.post(f"/rules/{rule_uid}/runnow", data=context_data or {})
 
     def get_module(self, rule_uid: str, module_category: str, module_id: str):
         """
@@ -155,7 +171,7 @@ class Rules:
 
         :return: Das Modul (JSON).
         """
-        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}")
+        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}", header={"Accept": "application/json"})
 
     def get_module_config(self, rule_uid: str, module_category: str, module_id: str):
         """
@@ -180,7 +196,7 @@ class Rules:
 
         :return: Der Wert des Konfigurationsparameters (JSON).
         """
-        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}/config/{param}")
+        return self.client.get(f"/rules/{rule_uid}/{module_category}/{module_id}/config/{param}", header = {'Accept': 'text/plain'})
 
     def set_module_config_param(self, rule_uid: str, module_category: str, module_id: str, param: str, value: str):
         """
@@ -194,7 +210,9 @@ class Rules:
 
         :return: Die Antwort der API (Statuscode).
         """
-        return self.client.put(f"/rules/{rule_uid}/{module_category}/{module_id}/config/{param}", json=value)
+        value = json.dumps(value)
+
+        return self.client.put(f"/rules/{rule_uid}/{module_category}/{module_id}/config/{param}", data=value, header = {'Content-Type': 'text/plain'})
 
     def simulate_schedule(self, from_time: str, until_time: str):
         """
@@ -209,4 +227,4 @@ class Rules:
             "from": from_time,
             "until": until_time
         }
-        return self.client.get("/rules/schedule/simulations", params=params)
+        return self.client.get("/rules/schedule/simulations", params=params, header = {'Accept': 'application/json'})
