@@ -16,29 +16,36 @@ def tags_examples():
     print("All Tags:", all_tags)
 
     # Ein neues Tag erstellen
+    # Beispiel für das Tag-Datenobjekt
     new_tag_data = {
-        "id": "newTag",
-        "label": "New Tag",
-        "type": "semantic"
+        "uid": "CustomTag",
+        "name": "CustomTag",
+        "label": "My Custom Tag",
+        "description": "This is a custom tag",
+        "synonyms": ["Custom", "Tag"],
+        "editable": True
     }
-    tags_api.create_tag(new_tag_data)
-    print("New Tag created.")
+
+    try:
+        response = tags_api.create_tag(new_tag_data)
+        print("Tag Created:", response)
+    except Exception as e:
+        print("Error creating tag:", e)
 
     # Details zu einem Tag abrufen
-    tag_details = tags_api.get_tag("newTag")
+    tag_details = tags_api.get_tag("Property_Voltage")
     print("Details for newTag:", tag_details)
 
     # Ein Tag aktualisieren
     updated_tag_data = {
-        "id": "newTag",
-        "label": "Updated Tag",
-        "type": "semantic"
+        "id": "Property_Voltage",
+        "label": "Updated Tag"
     }
-    tags_api.update_tag("newTag", updated_tag_data)
+    tags_api.update_tag("Property_Voltage", new_tag_data)
     print("newTag updated.")
 
     # Ein Tag löschen
-    tags_api.delete_tag("newTag")
+    tags_api.delete_tag("Property_Voltage")
     print("newTag deleted.")
 
 # Funktion ausführen

@@ -8,6 +8,8 @@ from openhab import OpenHABClient, Services
 def main():
     # OpenHAB-Client initialisieren
     client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
+
+    service_id = "org.openhab.i18n"
     
     # Services-API-Objekt erstellen
     services_api = Services(client)
@@ -16,14 +18,18 @@ def main():
     print("Alle Services:")
     all_services = services_api.get_services(language="de")
     print(all_services)
+
+    # 2. Einzelnen Service abrufen
+    print("Einzelner Service:")
+    single_service = services_api.get_service(service_id)
+    print(single_service)
     
-    # 2. Konfiguration eines spezifischen Services abrufen
-    service_id = "openhabCloud"
+    # 3. Konfiguration eines spezifischen Services abrufen
     print(f"\nKonfiguration für den Service {service_id}:")
     service_config = services_api.get_service_config(service_id)
     print(service_config)
     
-    # 3. Konfiguration für einen Service aktualisieren
+    # 4. Konfiguration für einen Service aktualisieren
     new_config = {
         "enabled": True,
         "setting1": "newValue1"
@@ -32,12 +38,12 @@ def main():
     old_config = services_api.update_service_config(service_id, new_config)
     print("Alte Konfiguration:", old_config)
     
-    # 4. Konfiguration eines Services löschen
+    # 5. Konfiguration eines Services löschen
     print(f"\nService-Konfiguration für {service_id} löschen:")
     deleted_config = services_api.delete_service_config(service_id)
     print("Gelöschte Konfiguration:", deleted_config)
 
-    # 5. Alle Kontexte eines Services abrufen
+    # 6. Alle Kontexte eines Services abrufen
     print(f"\nKontexte für {service_id}:")
     service_contexts = services_api.get_service_contexts(service_id)
     print(service_contexts)

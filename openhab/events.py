@@ -54,3 +54,59 @@ class Events:
             return self.client.post(endpoint, json=payload)
         except Exception as e:
             raise ValueError(f"Fehler beim Aktualisieren der Verbindung: {e}")
+
+
+class ItemEvents:
+    pass
+
+"""
+Event 	Description 	Topic
+ItemAddedEvent 	An item has been added to the item registry. 	openhab/items/{itemName}/added
+ItemRemovedEvent 	An item has been removed from the item registry. 	openhab/items/{itemName}/removed
+ItemUpdatedEvent 	An item has been updated in the item registry. 	openhab/items/{itemName}/updated
+ItemCommandEvent 	A command is sent to an item via a channel. 	openhab/items/{itemName}/command
+ItemStateEvent 	The state of an item is updated. 	openhab/items/{itemName}/state
+ItemStatePredictedEvent 	The state of an item predicted to be updated. 	openhab/items/{itemName}/statepredicted
+ItemStateChangedEvent 	The state of an item has changed. 	openhab/items/{itemName}/statechanged
+GroupItemStateChangedEvent 	The state of a group item has changed through a member. 	openhab/items/{itemName}/{memberName}/statechanged
+"""
+
+class ThingEvents:
+    pass
+
+"""
+Event 	Description 	Topic
+ThingAddedEvent 	A thing has been added to the thing registry. 	openhab/things/{thingUID}/added
+ThingRemovedEvent 	A thing has been removed from the thing registry. 	openhab/things/{thingUID}/removed
+ThingUpdatedEvent 	A thing has been updated in the thing registry. 	openhab/things/{thingUID}/updated
+ThingStatusInfoEvent 	The status of a thing is updated. 	openhab/things/{thingUID}/status
+ThingStatusInfoChangedEvent 	The status of a thing changed. 	openhab/things/{thingUID}/statuschanged
+"""
+
+class InboxEvents:
+    pass
+
+"""
+Event 	Description 	Topic
+InboxAddedEvent 	A discovery result has been added to the inbox. 	openhab/inbox/{thingUID}/added
+InboxRemovedEvent 	A discovery result has been removed from the inbox. 	openhab/inbox/{thingUID}/removed
+InboxUpdateEvent 	A discovery result has been updated in the inbox. 	openhab/inbox/{thingUID}/updated
+"""
+
+class LinkEvents:
+    pass
+
+"""
+Event 	Description 	Topic
+ItemChannelLinkAddedEvent 	An item channel link has been added to the registry. 	openhab/links/{itemName}-{channelUID}/added
+ItemChannelLinkRemovedEvent 	An item channel link has been removed from the registry. 	openhab/links/{itemName}-{channelUID}/removed
+"""
+
+class ChannelEvents:
+    pass
+
+"""
+Event 	Description 	Topic
+ChannelDescriptionChangedEvent 	A dynamic CommandDescription or StateDescription has changed. 	openhab/channels/{channelUID}/descriptionchanged
+ChannelTriggeredEvent 	A channel has been triggered. 	openhab/channels/{channelUID}/triggered
+"""

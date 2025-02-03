@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class Tags:
     def __init__(self, client: OpenHABClient):
@@ -17,8 +18,9 @@ class Tags:
 
         :return: Eine Liste der semantischen Tags (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get("/tags", headers=headers)
+        header = {"Accept-Language": language} if language else {}
+
+        return self.client.get("/tags", header=header)
 
     def create_tag(self, tag_data, language=None):
         """
@@ -29,8 +31,17 @@ class Tags:
 
         :return: Die Antwort auf die Tag-Erstellungsanforderung (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.post("/tags", json=tag_data, headers=headers)
+        header = {"Content-Type": "application/json", "Accept": "application/json"}  # Default auf application/json
+
+        # Wenn eine Sprache übergeben wird, füge auch Accept-Language hinzu
+        if language:
+            header["Accept-Language"] = language
+
+        # Tag-Daten als JSON-String umwandeln
+        tag_data = json.dumps(tag_data)
+
+        # POST-Anfrage senden
+        return self.client.post("/tags", data=tag_data, header=header)
 
     def get_tag(self, tag_id: str, language=None):
         """
@@ -41,8 +52,13 @@ class Tags:
 
         :return: Das Tag-Objekt und seine Untertags (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get(f"/tags/{tag_id}", headers=headers)
+        header = {"Content-Type": "application/json", "Accept": "application/json"}  # Default auf application/json
+
+        # Wenn eine Sprache übergeben wird, füge auch Accept-Language hinzu
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.get(f"/tags/{tag_id}", header=header)
 
     def update_tag(self, tag_id: str, tag_data, language=None):
         """
@@ -54,8 +70,14 @@ class Tags:
 
         :return: Die Antwort auf die Tag-Aktualisierungsanforderung (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.put(f"/tags/{tag_id}", json=tag_data, headers=headers)
+        header = {"Content-Type": "application/json", "Accept": "application/json"}  # Default auf application/json
+
+        # Wenn eine Sprache übergeben wird, füge auch Accept-Language hinzu
+        if language:
+            header["Accept-Language"] = language
+        tag_data = json.dumps(tag_data)
+
+        return self.client.put(f"/tags/{tag_id}", data=tag_data, header=header)
 
     def delete_tag(self, tag_id: str, language=None):
         """
@@ -66,5 +88,10 @@ class Tags:
 
         :return: Die Antwort auf die Tag-Löschanforderung (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.delete(f"/tags/{tag_id}", headers=headers)
+        header = {"Content-Type": "application/json", "Accept": "application/json"}  # Default auf application/json
+
+        # Wenn eine Sprache übergeben wird, füge auch Accept-Language hinzu
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.delete(f"/tags/{tag_id}", header=header)

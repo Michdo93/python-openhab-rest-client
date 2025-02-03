@@ -1,5 +1,5 @@
 from .client import OpenHABClient
-import requests
+import json
 
 class Services:
     def __init__(self, client: OpenHABClient):
@@ -52,7 +52,9 @@ class Services:
 
         :return: Die alte Konfiguration des Services (JSON).
         """
-        return self.client.put(f"/services/{service_id}/config", json=config_data)
+        config_data = json.dumps(config_data)
+
+        return self.client.put(f"/services/{service_id}/config", data=config_data, header={"Content-type": "application/json", "Accept": "application/json"})
 
     def delete_service_config(self, service_id: str):
         """
@@ -62,7 +64,7 @@ class Services:
 
         :return: Die alte Konfiguration des Services (JSON).
         """
-        return self.client.delete(f"/services/{service_id}/config")
+        return self.client.delete(f"/services/{service_id}/config", header={"Accept": "application/json"})
 
     def get_service_contexts(self, service_id: str, language=None):
         """
@@ -73,5 +75,11 @@ class Services:
 
         :return: Eine Liste der Kontexte (JSON).
         """
-        header = {"Accept-Language": language} if language else {}
+        # Setze den richtigen Accept-Header auf application/json
+        header = {"Accept": "application/json"}  # Default auf application/json
+
+        # Wenn eine Sprache übergeben wird, füge auch Accept-Language hinzu
+        if language:
+            header["Accept-Language"] = language
+
         return self.client.get(f"/services/{service_id}/contexts", header=header)

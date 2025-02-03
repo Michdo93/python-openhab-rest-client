@@ -34,8 +34,8 @@ class Sitemaps:
             "jsoncallback": jsoncallback,
             "includeHidden": include_hidden
         }
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get(f"/sitemaps/{sitemapname}", headers=headers, params=params)
+        header = {"Accept-Language": language} if language else {}
+        return self.client.get(f"/sitemaps/{sitemapname}", header=header, params=params)
 
     def get_sitemap_page(self, sitemapname: str, pageid: str, subscriptionid=None, include_hidden=False):
         """
