@@ -19,9 +19,9 @@ class Iconsets:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = "/iconsets"
-        headers = {"Accept-Language": language} if language else {}
+        header = {"Accept-Language": language} if language else {}
         
         try:
-            return self.client.get(endpoint, headers=headers)
+            return self.client.get(endpoint, header=header)
         except Exception as e:
             raise Exception(f"Fehler beim Abrufen der Iconsets: {e}")

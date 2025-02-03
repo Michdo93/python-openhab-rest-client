@@ -58,9 +58,13 @@ def test_get_addon_config():
 
 # Teste den Endpunkt, um die Add-on-Konfiguration zu aktualisieren
 def test_update_addon_config():
-    addon_id = "binding-astro"
-    config_data = {"someKey": "someValue"}
-    print(f"Teste update_addon_config für ID {addon_id}...")
+    addon_id = "binding-astro"  # OpenHAB Binding für Sonnen- und Mondzeiten
+    config_data = {
+        "latitude": 52.52,  # Berlin
+        "longitude": 13.405, 
+        "interval": 300  # Aktualisierung alle 5 Minuten
+    }
+    print(f"Teste update_addon_config für ID {addon_id} mit {config_data}...")
     response = addons_api.update_addon_config(addon_id, config_data)
     print(f"Antwort von update_addon_config für {addon_id}:", json.dumps(response, indent=2))
 
@@ -71,20 +75,22 @@ def test_get_addon_services():
     print("Antwort von get_addon_services:", json.dumps(response, indent=2))
 
 def test_install_addon_from_url():
-    url = "http://example.com/path/to/addon"
+    # Ersetze diese URL durch eine echte OpenHAB-Add-on-URL
+    url = "https://repo1.maven.org/maven2/org/smarthomej/addons/bundles/org.smarthomej.binding.amazonechocontrol/4.2.0/org.smarthomej.binding.amazonechocontrol-4.2.0.kar"
+    
     print(f"Teste install_addon_from_url für URL {url}...")
     response = addons_api.install_addon_from_url(url)
     print(f"Antwort von install_addon_from_url für URL {url}:", json.dumps(response, indent=2))
 
 if __name__ == "__main__":
     # Führe alle Tests aus
-    test_get_addons()
-    test_get_addon()
-    test_install_addon()
-    test_uninstall_addon()
-    test_get_addon_types()
-    test_get_addon_suggestions()
-    test_get_addon_config()
-    test_update_addon_config()
-    test_get_addon_services()
+    #test_get_addons()
+    #test_get_addon()
+    #test_install_addon()
+    #test_uninstall_addon()
+    #test_get_addon_types()
+    #test_get_addon_suggestions()
+    #test_get_addon_config()
+    #test_update_addon_config()
+    #test_get_addon_services()
     test_install_addon_from_url()

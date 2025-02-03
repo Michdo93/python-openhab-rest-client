@@ -18,8 +18,8 @@ class Services:
 
         :return: Eine Liste von Services (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get("/services", headers=headers)
+        header = {"Accept-Language": language} if language else {}
+        return self.client.get("/services", header=header)
 
     def get_service(self, service_id: str, language=None):
         """
@@ -30,8 +30,8 @@ class Services:
 
         :return: Das Service-Objekt (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get(f"/services/{service_id}", headers=headers)
+        header = {"Accept-Language": language} if language else {}
+        return self.client.get(f"/services/{service_id}", header=header)
 
     def get_service_config(self, service_id: str):
         """
@@ -73,5 +73,5 @@ class Services:
 
         :return: Eine Liste der Kontexte (JSON).
         """
-        headers = {"Accept-Language": language} if language else {}
-        return self.client.get(f"/services/{service_id}/contexts", headers=headers)
+        header = {"Accept-Language": language} if language else {}
+        return self.client.get(f"/services/{service_id}/contexts", header=header)

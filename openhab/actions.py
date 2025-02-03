@@ -50,6 +50,4 @@ class Actions:
         except TypeError as e:
             raise ValueError(f"Fehler bei der Serialisierung des action_inputs-Dictionaries: {e}")
 
-        print(action_inputs_json)
-
         return self.client.post(endpoint, header=header, data=action_inputs_json)

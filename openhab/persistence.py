@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class Persistence:
     def __init__(self, client: OpenHABClient):
@@ -49,10 +50,23 @@ class Persistence:
         """
         endpoint = f"/persistence/{service_id}"
         
+        # Header für die Anfrage
+        header = {
+            "Content-Type": "application/json",  # Senden von JSON-Daten im Body
+            "Accept": "application/json"          # Erwartung einer JSON-Antwort
+        }
+
+        # Füge das serviceId-Feld zu den Konfigurationsdaten hinzu
+        config['serviceId'] = service_id
+
+        data = json.dumps(config)
+
         try:
-            return self.client.put(endpoint, json=config)
+            # Verwende json=config, um sicherzustellen, dass die Daten korrekt serialisiert werden
+            return self.client.put(endpoint, data=data, header=header)
         except Exception as e:
             raise Exception(f"Fehler beim Setzen der Konfiguration des Persistence-Dienstes: {e}")
+
 
     def delete_service_configuration(self, service_id: str) -> dict:
         """
@@ -123,16 +137,21 @@ class Persistence:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = f"/persistence/items/{item_name}"
+
+        # Query-Parameter (nicht im Body, sondern in der URL)
         params = {
-            "serviceId": service_id,
-            "time": time,
-            "state": state
+            "serviceId": service_id,  # Optional, wenn kein Default-Service vorhanden ist
+            "time": time,  # Zeit der Speicherung
+            "state": state  # Zustand des Items
         }
 
+        # Absenden der PUT-Anfrage mit den Query-Parametern
         try:
-            return self.client.put(endpoint, params=params)
+            response = self.client.put(endpoint, params=params)
+            return response
         except Exception as e:
             raise Exception(f"Fehler beim Speichern der Persistence-Daten für Item {item_name}: {e}")
+
 
     def delete_item_data(self, service_id: str, item_name: str, start_time: str, end_time: str) -> dict:
         """

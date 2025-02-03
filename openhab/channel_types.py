@@ -18,15 +18,15 @@ class ChannelTypes:
         :return: Eine Liste von Channel-Typen.
         """
         endpoint = "/channel-types"
-        headers = {}
+        header = {}
         if language:
-            headers["Accept-Language"] = language
+            header["Accept-Language"] = language
 
         params = {}
         if prefixes:
             params["prefixes"] = prefixes
 
-        return self.client.get(endpoint, headers=headers, params=params)
+        return self.client.get(endpoint, header=header, params=params)
 
     def get_channel_type_by_uid(self, channel_type_uid: str, language: str = None) -> dict:
         """
@@ -37,11 +37,11 @@ class ChannelTypes:
         :return: Details des spezifischen Channel-Typs.
         """
         endpoint = f"/channel-types/{channel_type_uid}"
-        headers = {}
+        header = {}
         if language:
-            headers["Accept-Language"] = language
+            header["Accept-Language"] = language
 
-        return self.client.get(endpoint, headers=headers)
+        return self.client.get(endpoint, header=header)
 
     def get_linkable_item_types(self, channel_type_uid: str) -> list:
         """

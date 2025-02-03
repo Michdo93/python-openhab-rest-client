@@ -12,7 +12,7 @@ items_api = Items(client)
 
 # Beispiele für jede Methode in Items
 def examples():
-    """
+    
     # Alle Items abrufen
     all_items = items_api.get_all_items()
     print("All Items:", all_items)
@@ -114,7 +114,7 @@ def examples():
     # Verwaiste Metadaten löschen
     items_api.purge_orphaned_metadata()
     print("Orphaned metadata purged.")
-
+    """
 # Funktion ausführen
 if __name__ == "__main__":
     examples()

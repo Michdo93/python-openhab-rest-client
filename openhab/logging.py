@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class Logging:
     def __init__(self, client: OpenHABClient):
@@ -18,10 +19,7 @@ class Logging:
         """
         endpoint = "/logging"
         
-        try:
-            return self.client.get(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen der Loggers: {e}")
+        return self.client.get(endpoint)
 
     def get_single_logger(self, logger_name: str) -> dict:
         """
@@ -33,10 +31,7 @@ class Logging:
         """
         endpoint = f"/logging/{logger_name}"
         
-        try:
-            return self.client.get(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen des Loggers: {e}")
+        return self.client.get(endpoint)
 
     def modify_or_add_logger(self, logger_name: str, level: str) -> dict:
         """
@@ -48,15 +43,15 @@ class Logging:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = f"/logging/{logger_name}"
+        header = {"Content-Type": "application/json"}
         data = {
             "loggerName": logger_name,
             "level": level
         }
-        
-        try:
-            return self.client.put(endpoint, json=data)
-        except Exception as e:
-            raise Exception(f"Fehler beim Modifizieren oder Hinzufügen des Loggers: {e}")
+
+        data = json.dumps(data)
+
+        return self.client.put(endpoint, data=data, header=header)
 
     def remove_logger(self, logger_name: str) -> dict:
         """
@@ -68,7 +63,4 @@ class Logging:
         """
         endpoint = f"/logging/{logger_name}"
         
-        try:
-            return self.client.delete(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Entfernen des Loggers: {e}")
+        return self.client.delete(endpoint)

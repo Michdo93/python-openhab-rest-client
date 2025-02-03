@@ -1,5 +1,6 @@
 import json
 from .client import OpenHABClient
+import urllib.parse
 
 class Addons:
     def __init__(self, client: OpenHABClient):
@@ -37,22 +38,22 @@ class Addons:
         Installiert das Add-on mit der gegebenen Addon-ID.
         """
         endpoint = f"/addons/{addon_id}/install"
-        params = {"serviceId": service_id} if service_id else {}
+        data = {"serviceId": service_id} if service_id else {}
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
-        return self.client.post(endpoint, header=header, json=params)
+        return self.client.post(endpoint, header=header, data=data)
 
     def uninstall_addon(self, addon_id: str, service_id: str = None, language: str = None) -> dict:
         """
         Deinstalliert das Add-on mit der gegebenen Addon-ID.
         """
         endpoint = f"/addons/{addon_id}/uninstall"
-        params = {"serviceId": service_id} if service_id else {}
+        data = {"serviceId": service_id} if service_id else {}
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
-        return self.client.post(endpoint, header=header, json=params)
+        return self.client.post(endpoint, header=header, data=data)
 
     def get_addon_types(self, language: str = None) -> dict:
         """
@@ -88,9 +89,16 @@ class Addons:
         Aktualisiert die Konfiguration eines Add-ons und gibt die alte Konfiguration zurück.
         """
         endpoint = f"/addons/{addon_id}/config"
-        params = {"serviceId": service_id} if service_id else {}
         header = {"Content-Type": "application/json"}
-        return self.client.put(endpoint, header=header, json=config_data, params=params)
+
+        # Füge serviceId zu den bestehenden config_data hinzu
+        data = {**config_data}  # Kopiere config_data, um es nicht zu verändern
+        if service_id:
+            data["serviceId"] = service_id
+
+        data = json.dumps(data)
+
+        return self.client.put(endpoint, header=header, data=data)
 
     def get_addon_services(self, language: str = None) -> dict:
         """
@@ -109,6 +117,7 @@ class Addons:
         :param url: URL des Add-ons, das installiert werden soll
         :return: JSON-Antwort vom Server
         """
-        endpoint = f"/addons/url/{url}/install"
-        header = {"Content-Type": "application/json"}
-        return self.client.post(endpoint, header=header, json=None)
+        encoded_url = urllib.parse.quote(url, safe='')  # Kodierung der URL
+        endpoint = f"/addons/url/{encoded_url}/install"
+        header = {"Content-Type": "text/plain"}
+        return self.client.post(endpoint, header=header, data=None)

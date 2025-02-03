@@ -1,5 +1,5 @@
 from .client import OpenHABClient
-
+import json
 
 class Inbox:
     def __init__(self, client: OpenHABClient):
@@ -53,12 +53,11 @@ class Inbox:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = f"/inbox/{thing_uid}/approve"
-        headers = {"Accept-Language": language} if language else {}
+        header = {"Accept-Language": language, "Content-Type": "text/plain"} if language else {"Content-Type": "text/plain"}
         params = {"newThingId": new_thing_id} if new_thing_id else {}
-        data = {"thing label": thing_label}
         
         try:
-            return self.client.post(endpoint, headers=headers, params=params, json=data)
+            return self.client.post(endpoint, header=header, params=params, data=thing_label)
         except Exception as e:
             raise Exception(f"Fehler bei der Genehmigung des Entdeckungsergebnisses: {e}")
 

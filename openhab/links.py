@@ -1,4 +1,6 @@
 from .client import OpenHABClient
+import json
+from urllib.parse import quote
 
 class Links:
     def __init__(self, client: OpenHABClient):
@@ -19,16 +21,14 @@ class Links:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = "/links"
+        header = {"Content-Type": "application/json"}
         params = {}
         if channel_uid:
             params["channelUID"] = channel_uid
         if item_name:
             params["itemName"] = item_name
         
-        try:
-            return self.client.get(endpoint, params=params)
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen der Links: {e}")
+        return self.client.get(endpoint, params=params, header=header)
 
     def get_individual_link(self, item_name: str, channel_uid: str) -> dict:
         """
@@ -39,12 +39,12 @@ class Links:
         :return: Der Link mit den Details des Items, Channel UID und Konfiguration.
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
+        item_name = quote(item_name, safe="")
+        channel_uid = quote(channel_uid, safe="")
         endpoint = f"/links/{item_name}/{channel_uid}"
+        header = {"Accept": "application/json"}
         
-        try:
-            return self.client.get(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen des einzelnen Links: {e}")
+        return self.client.get(endpoint, header=header)
 
     def link_item_to_channel(self, item_name: str, channel_uid: str, configuration: dict) -> dict:
         """
@@ -56,17 +56,19 @@ class Links:
         :return: Die Antwort der API, wenn der Link erfolgreich erstellt wurde.
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
+        item_name = quote(item_name, safe="")
+        channel_uid = quote(channel_uid, safe="")
         endpoint = f"/links/{item_name}/{channel_uid}"
-        data = {
+        header = {"Content-Type": "application/json"}
+        data = json.dumps({
             "itemName": item_name,
             "channelUID": channel_uid,
             "configuration": configuration
-        }
+        })
+
+        print(data)
         
-        try:
-            return self.client.put(endpoint, json=data)
-        except Exception as e:
-            raise Exception(f"Fehler beim Verknüpfen des Items mit dem Channel: {e}")
+        return self.client.put(endpoint, data=data, header=header)
 
     def unlink_item_from_channel(self, item_name: str, channel_uid: str) -> dict:
         """
@@ -77,12 +79,12 @@ class Links:
         :return: Die Antwort der API, wenn der Link erfolgreich entfernt wurde.
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
+        item_name = quote(item_name, safe="")
+        channel_uid = quote(channel_uid, safe="")
         endpoint = f"/links/{item_name}/{channel_uid}"
+        header = {"Content-Type": "application/json"}
         
-        try:
-            return self.client.delete(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Entfernen des Links: {e}")
+        return self.client.delete(endpoint, header=header)
 
     def delete_all_links(self, object: str) -> dict:
         """
@@ -94,10 +96,7 @@ class Links:
         """
         endpoint = f"/links/{object}"
         
-        try:
-            return self.client.delete(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Löschen der Links: {e}")
+        return self.client.delete(endpoint)
 
     def get_orphan_links(self) -> list:
         """
@@ -107,11 +106,9 @@ class Links:
         :raises Exception: Wenn die Anfrage fehlschlägt.
         """
         endpoint = "/links/orphans"
+        header = {"Accept": "application/json"}
         
-        try:
-            return self.client.get(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Abrufen der Orphan-Links: {e}")
+        return self.client.get(endpoint, header=header)
 
     def purge_unused_links(self) -> dict:
         """
@@ -122,7 +119,4 @@ class Links:
         """
         endpoint = "/links/purge"
         
-        try:
-            return self.client.post(endpoint)
-        except Exception as e:
-            raise Exception(f"Fehler beim Entfernen der ungenutzten Links: {e}")
+        return self.client.post(endpoint)

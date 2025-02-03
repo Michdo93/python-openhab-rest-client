@@ -19,15 +19,15 @@ class ConfigDescriptions:
         :return: Eine Liste von Konfigurationsbeschreibungen.
         """
         endpoint = "/config-descriptions"
-        headers = {}
+        header = {}
         if language:
-            headers["Accept-Language"] = language
+            header["Accept-Language"] = language
 
         params = {}
         if scheme:
             params["scheme"] = scheme
 
-        return self.client.get(endpoint, headers=headers, params=params)
+        return self.client.get(endpoint, header=header, params=params)
 
     def get_config_description_by_uri(self, uri: str, language: str = None) -> dict:
         """
@@ -39,12 +39,12 @@ class ConfigDescriptions:
         :raises ValueError: Wenn die URI ungültig ist oder nicht gefunden wird.
         """
         endpoint = f"/config-descriptions/{uri}"
-        headers = {}
+        header = {}
         if language:
-            headers["Accept-Language"] = language
+            header["Accept-Language"] = language
 
         try:
-            return self.client.get(endpoint, headers=headers)
+            return self.client.get(endpoint, header=header)
         except Exception as e:
             if "400" in str(e):
                 raise ValueError("Ungültige URI-Syntax.")
