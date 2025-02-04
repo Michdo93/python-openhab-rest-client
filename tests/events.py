@@ -20,14 +20,22 @@ except ValueError as e:
 
 # Neue Status-Tracker-Verbindung initiieren
 try:
-    connection_id = events_api.initiate_state_tracker()
-    print("Neue Verbindungs-ID:", connection_id)
+    connection_id_response = events_api.initiate_state_tracker()
+    print("Neue Verbindungs-ID:", connection_id_response)
 except Exception as e:
     print("Fehler beim Starten der Status-Tracker-Verbindung:", e)
 
-# Liste von Items für die Verbindung aktualisieren
+connection_id = None
+for line in connection_id_response.iter_lines():
+    if line.startswith(b"data: "):  # Die Zeile mit der ID suchen
+        connection_id = line.decode().split("data: ")[1].strip()
+        break  # Nur die erste "data: ..." Zeile auslesen
+
+print("Gefundene Connection ID:", connection_id)
+
+# Verbindung aktualisieren
 try:
-    result = events_api.update_sse_connection_items(connection_id="12345", items=["item1", "item2"])
-    print("Erfolgreich aktualisiert:", result)
+    result = events_api.update_sse_connection_items(connection_id=connection_id, items=["item1", "item2"])
+    print(result)
 except ValueError as e:
     print("Fehler beim Aktualisieren der Verbindung:", e)

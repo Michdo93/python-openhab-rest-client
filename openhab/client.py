@@ -123,6 +123,12 @@ class OpenHABClient:
         else:
             return self.session.get(url, stream=True)
 
+    def __execute_sse(self, url: str, header: dict = {}):
+        if self.username is not None and self.password is not None:
+            return self.session.get(url, auth=self.auth, headers=header, stream=True)
+        else:
+            return self.session.get(url, headers=header, stream=True)
+
     def get(self, endpoint: str, header: dict = None, params: dict = None):
         """
         Sends a GET request to the OpenHAB server.

@@ -18,12 +18,9 @@ class Events:
         :return: Eine Liste von Events.
         :raises ValueError: Wenn das angegebene Topic leer oder ungültig ist.
         """
-        endpoint = "/events"
-        params = {"topics": topics} if topics else {}
-        try:
-            return self.client.get(endpoint, params=params)
-        except Exception as e:
-            raise ValueError(f"Ungültige oder leere Topics: {e}")
+        return self.client._OpenHABClient__execute_sse(
+            self.client.url + f"/rest/events" + (f"?topics={topics}" if topics else "")
+        )
 
     def initiate_state_tracker(self) -> str:
         """
@@ -31,8 +28,10 @@ class Events:
 
         :return: Die Verbindungs-ID als String.
         """
-        endpoint = "/events/states"
-        return self.client.get(endpoint)
+        url = self.client.url + "/rest/events/states"
+        header = {"Accept": "*/*"}  # Wichtig!
+
+        return self.client._OpenHABClient__execute_sse(url, header=header)
 
     def update_sse_connection_items(self, connection_id: str, items: list) -> str:
         """
@@ -48,10 +47,13 @@ class Events:
         if not isinstance(items, list) or not all(isinstance(item, str) for item in items):
             raise ValueError("Die Items-Liste muss eine Liste von Strings sein.")
 
-        endpoint = f"/events/states/{connection_id}"
-        payload = json.dumps(items)
+        endpoint = f"/rest/events/states/{connection_id}"  # Korrekte API-URL
+        header = {"Content-Type": "application/json"}  # WICHTIG!
+        
+        payload = json.dumps(items)  # JSON korrekt formatieren
+        
         try:
-            return self.client.post(endpoint, data=payload)
+            return self.client.post(endpoint, data=payload, header=header)
         except Exception as e:
             raise ValueError(f"Fehler beim Aktualisieren der Verbindung: {e}")
 
