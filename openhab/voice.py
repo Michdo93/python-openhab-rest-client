@@ -16,7 +16,9 @@ class Voice:
 
         :return: Ein Dictionary mit den Details der Standard-Stimme.
         """
-        return self.client.get('/voice/defaultvoice')
+        header = {"Accept": "application/json"}
+
+        return self.client.get('/voice/defaultvoice', header=header)
 
     def start_dialog(self, source_id: str, ks_id: str = None, stt_id: str = None, 
                      tts_id: str = None, voice_id: str = None, hli_ids: str = None, 
@@ -46,6 +48,7 @@ class Voice:
             'keyword': keyword,
             'listeningItem': listening_item
         }
+
         return self.client.post('/voice/dialog/start', params=params)
 
     def stop_dialog(self, source_id: str):
@@ -56,6 +59,7 @@ class Voice:
         :return: Die Antwort des Servers.
         """
         params = {'sourceId': source_id}
+
         return self.client.post('/voice/dialog/stop', params=params)
 
     def get_interpreters(self, language: str = None):
@@ -65,7 +69,10 @@ class Voice:
         :param language: Die Sprache für die Anfrage (optional).
         :return: Eine Liste der Interpreter, wenn erfolgreich.
         """
-        header = {'Accept-Language': language} if language else {}
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         return self.client.get('/voice/interpreters', header=header)
 
     def interpret_text(self, text: str, language: str, ids: list = None):
@@ -77,10 +84,12 @@ class Voice:
         :param ids: Eine Liste von Interpreter-IDs (optional).
         :return: Die Antwort des Servers.
         """
-        header = {'Accept-Language': language}
+        header = {"Content-Type": "text/plain"}
+        if language:
+            header["Accept-Language"] = language
+
         params = {'ids': ','.join(ids)} if ids else {}
         data = {'text': text}
-        data = json.dumps(data)
 
         return self.client.post('/voice/interpreters', header=header, params=params, data=data)
 
@@ -92,7 +101,10 @@ class Voice:
         :param language: Die Sprache für die Anfrage (optional).
         :return: Die Details des Interpreters.
         """
-        header = {'Accept-Language': language} if language else {}
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+        
         return self.client.get(f'/voice/interpreters/{interpreter_id}', header=header)
 
     def interpret_text_batch(self, text: str, language: str, ids: list):
@@ -104,7 +116,10 @@ class Voice:
         :param ids: Eine Liste von Interpreter-IDs.
         :return: Die Antwort des Servers.
         """
-        header = {'Accept-Language': language}
+        header = {"Content-Type": "text/plain"}
+        if language:
+            header["Accept-Language"] = language
+
         params = {'ids': ','.join(ids)}
         data = {'text': text}
         data = json.dumps(data)
@@ -134,7 +149,8 @@ class Voice:
             'sinkId': sink_id,
             'listeningItem': listening_item
         }
-        return self.client.post('/voice/listenandanswer', params=params)
+
+        return self.client.post('/voice/listenandanswer', data=params)
 
     def say_text(self, text: str, voice_id: str, sink_id: str, volume: str = '100'):
         """
@@ -146,15 +162,15 @@ class Voice:
         :param volume: Die Lautstärke (Standard: 100).
         :return: Die Antwort des Servers.
         """
+        header = {"Content-Type": "text/plain"}
         params = {
             'voiceid': voice_id,
             'sinkid': sink_id,
             'volume': volume
         }
         data = {'text': text}
-        data = json.dumps(data)
 
-        return self.client.post('/voice/say', params=params, data=data)
+        return self.client.post('/voice/say', params=params, data=data, header=header)
 
     def get_voices(self):
         """
@@ -162,4 +178,6 @@ class Voice:
 
         :return: Eine Liste der Stimmen, wenn erfolgreich.
         """
-        return self.client.get('/voice/voices')
+        header = {"Accept": "application/json"}
+
+        return self.client.get('/voice/voices', header=header)
