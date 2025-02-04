@@ -1,5 +1,5 @@
 from .client import OpenHABClient
-
+import json
 
 class Events:
     def __init__(self, client: OpenHABClient):
@@ -49,64 +49,100 @@ class Events:
             raise ValueError("Die Items-Liste muss eine Liste von Strings sein.")
 
         endpoint = f"/events/states/{connection_id}"
-        payload = items
+        payload = json.dumps(items)
         try:
-            return self.client.post(endpoint, json=payload)
+            return self.client.post(endpoint, data=payload)
         except Exception as e:
             raise ValueError(f"Fehler beim Aktualisieren der Verbindung: {e}")
 
-
 class ItemEvents:
-    pass
+    def __init__(self, client: OpenHABClient):
+        """
+        Initialisiert die Events-Klasse mit einem OpenHABClient-Objekt.
 
-"""
-Event 	Description 	Topic
-ItemAddedEvent 	An item has been added to the item registry. 	openhab/items/{itemName}/added
-ItemRemovedEvent 	An item has been removed from the item registry. 	openhab/items/{itemName}/removed
-ItemUpdatedEvent 	An item has been updated in the item registry. 	openhab/items/{itemName}/updated
-ItemCommandEvent 	A command is sent to an item via a channel. 	openhab/items/{itemName}/command
-ItemStateEvent 	The state of an item is updated. 	openhab/items/{itemName}/state
-ItemStatePredictedEvent 	The state of an item predicted to be updated. 	openhab/items/{itemName}/statepredicted
-ItemStateChangedEvent 	The state of an item has changed. 	openhab/items/{itemName}/statechanged
-GroupItemStateChangedEvent 	The state of a group item has changed through a member. 	openhab/items/{itemName}/{memberName}/statechanged
-"""
+        :param client: Eine Instanz von OpenHABClient, die für die REST-API-Kommunikation verwendet wird.
+        """
+        self.client = client
+
+    def ItemEvent(self):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items")
+
+    def ItemAddedEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/added")
+
+    def ItemRemovedEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/removed")
+
+    def ItemUpdatedEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/updated")
+
+    def ItemCommandEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/command")
+
+    def ItemStateEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/state")
+
+    def ItemStatePredictedEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statepredicted")
+
+    def ItemStateChangedEvent(self, itemName: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statechanged")
+
+    def GroupItemStateChangedEvent(self, itemName: str, memberName: str):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/{memberName}/statechanged")
 
 class ThingEvents:
-    pass
+    def __init__(self, client: OpenHABClient):
+        """Initialisiert die ThingEvents-Klasse mit einem OpenHABClient-Objekt."""
+        self.client = client
 
-"""
-Event 	Description 	Topic
-ThingAddedEvent 	A thing has been added to the thing registry. 	openhab/things/{thingUID}/added
-ThingRemovedEvent 	A thing has been removed from the thing registry. 	openhab/things/{thingUID}/removed
-ThingUpdatedEvent 	A thing has been updated in the thing registry. 	openhab/things/{thingUID}/updated
-ThingStatusInfoEvent 	The status of a thing is updated. 	openhab/things/{thingUID}/status
-ThingStatusInfoChangedEvent 	The status of a thing changed. 	openhab/things/{thingUID}/statuschanged
-"""
+    def ThingAddedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/added")
+
+    def ThingRemovedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/removed")
+
+    def ThingUpdatedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/updated")
+
+    def ThingStatusInfoEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/status")
+
+    def ThingStatusInfoChangedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/statuschanged")
 
 class InboxEvents:
-    pass
+    def __init__(self, client: OpenHABClient):
+        """Initialisiert die InboxEvents-Klasse mit einem OpenHABClient-Objekt."""
+        self.client = client
 
-"""
-Event 	Description 	Topic
-InboxAddedEvent 	A discovery result has been added to the inbox. 	openhab/inbox/{thingUID}/added
-InboxRemovedEvent 	A discovery result has been removed from the inbox. 	openhab/inbox/{thingUID}/removed
-InboxUpdateEvent 	A discovery result has been updated in the inbox. 	openhab/inbox/{thingUID}/updated
-"""
+    def InboxAddedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/added")
+
+    def InboxRemovedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/removed")
+
+    def InboxUpdatedEvent(self, thingUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/updated")
 
 class LinkEvents:
-    pass
+    def __init__(self, client: OpenHABClient):
+        """Initialisiert die LinkEvents-Klasse mit einem OpenHABClient-Objekt."""
+        self.client = client
 
-"""
-Event 	Description 	Topic
-ItemChannelLinkAddedEvent 	An item channel link has been added to the registry. 	openhab/links/{itemName}-{channelUID}/added
-ItemChannelLinkRemovedEvent 	An item channel link has been removed from the registry. 	openhab/links/{itemName}-{channelUID}/removed
-"""
+    def ItemChannelLinkAddedEvent(self, itemName: str = "*", channelUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/added")
+
+    def ItemChannelLinkRemovedEvent(self, itemName: str = "*", channelUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/removed")
 
 class ChannelEvents:
-    pass
+    def __init__(self, client: OpenHABClient):
+        """Initialisiert die ChannelEvents-Klasse mit einem OpenHABClient-Objekt."""
+        self.client = client
 
-"""
-Event 	Description 	Topic
-ChannelDescriptionChangedEvent 	A dynamic CommandDescription or StateDescription has changed. 	openhab/channels/{channelUID}/descriptionchanged
-ChannelTriggeredEvent 	A channel has been triggered. 	openhab/channels/{channelUID}/triggered
-"""
+    def ChannelDescriptionChangedEvent(self, channelUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/descriptionchanged")
+
+    def ChannelTriggeredEvent(self, channelUID: str = "*"):
+        return self.client._OpenHABClient__execute_sse(self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/triggered")

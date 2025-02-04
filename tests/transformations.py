@@ -14,27 +14,24 @@ transformations_list = transformations.get_transformations()
 print(transformations_list)
 
 # Eine spezifische Transformation abrufen
-uid = "your-transformation-uid"
+uid = "en.map"
 transformation = transformations.get_transformation(uid)
 print(transformation)
 
 # Eine Transformation aktualisieren
 updated_data = {
-    "uid": "your-transformation-uid",
-    "label": "Updated Label",
-    "type": "new-type",
-    "configuration": {
-        "additionalProp1": "value1",
-        "additionalProp2": "value2"
-    },
+    "uid": "my_custom_map",
+    "label": "My Custom Map",
+    "type": "map",
+    "configuration": {"function": "CLOSED=geschlossen\nOPEN=offen\nNULL=unbekannt\n"},
     "editable": True
 }
-updated_transformation = transformations.update_transformation(uid, updated_data)
-print(updated_transformation)
+#updated_transformation = transformations.update_transformation(uid, updated_data)
+#print(updated_transformation)
 
 # Eine Transformation löschen
-deleted_transformation = transformations.delete_transformation(uid)
-print(deleted_transformation)
+#deleted_transformation = transformations.delete_transformation(uid)
+#print(deleted_transformation)
 
 # Alle Transformation-Dienste abrufen
 services = transformations.get_transformation_services()

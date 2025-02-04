@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class UI:
     def __init__(self, client: OpenHABClient):
@@ -28,7 +29,10 @@ class UI:
         :param component_data: Die Daten der UI-Komponente (JSON), die hinzugefügt werden sollen.
         :return: Die Antwort auf die Anfrage (JSON).
         """
-        return self.client.post(f"/ui/components/{namespace}", json=component_data)
+        header = {"Content-Type": "application/json"}
+        component_data = json.dumps(component_data)
+
+        return self.client.post(f"/ui/components/{namespace}", data=component_data, header=header)
 
     def get_ui_component(self, namespace: str, component_uid: str):
         """
@@ -49,7 +53,9 @@ class UI:
         :param component_data: Die neuen Daten der UI-Komponente (JSON).
         :return: Die Antwort auf die Anfrage (JSON).
         """
-        return self.client.put(f"/ui/components/{namespace}/{component_uid}", json=component_data)
+        component_data = json.dumps(component_data)
+
+        return self.client.put(f"/ui/components/{namespace}/{component_uid}", data=component_data)
 
     def delete_ui_component(self, namespace: str, component_uid: str):
         """

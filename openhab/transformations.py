@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class Transformations:
     def __init__(self, client: OpenHABClient):
@@ -34,7 +35,10 @@ class Transformations:
         :param transformation_data: Die neuen Daten der Transformation.
         :return: Die Antwort auf die Transformations-Aktualisierungsanforderung (JSON).
         """
-        return self.client.put(f"/transformations/{uid}", json=transformation_data)
+        header = {"Content-Type": "application/json"}
+        transformation_data = json.dumps(transformation_data)
+
+        return self.client.put(f"/transformations/{uid}", data=transformation_data, header=header)
 
     def delete_transformation(self, uid: str):
         """

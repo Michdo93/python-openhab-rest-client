@@ -1,4 +1,5 @@
 from .client import OpenHABClient
+import json
 
 class Voice:
     def __init__(self, client: OpenHABClient):
@@ -15,8 +16,7 @@ class Voice:
 
         :return: Ein Dictionary mit den Details der Standard-Stimme.
         """
-        response = self.client.get('/voice/defaultvoice')
-        return response.json() if response.status_code == 200 else None
+        return self.client.get('/voice/defaultvoice')
 
     def start_dialog(self, source_id: str, ks_id: str = None, stt_id: str = None, 
                      tts_id: str = None, voice_id: str = None, hli_ids: str = None, 
@@ -46,8 +46,7 @@ class Voice:
             'keyword': keyword,
             'listeningItem': listening_item
         }
-        response = self.client.post('/voice/dialog/start', params=params)
-        return response.json() if response.status_code == 200 else None
+        return self.client.post('/voice/dialog/start', params=params)
 
     def stop_dialog(self, source_id: str):
         """
@@ -57,8 +56,7 @@ class Voice:
         :return: Die Antwort des Servers.
         """
         params = {'sourceId': source_id}
-        response = self.client.post('/voice/dialog/stop', params=params)
-        return response.json() if response.status_code == 200 else None
+        return self.client.post('/voice/dialog/stop', params=params)
 
     def get_interpreters(self, language: str = None):
         """
@@ -67,9 +65,8 @@ class Voice:
         :param language: Die Sprache für die Anfrage (optional).
         :return: Eine Liste der Interpreter, wenn erfolgreich.
         """
-        headers = {'Accept-Language': language} if language else {}
-        response = self.client.get('/voice/interpreters', headers=headers)
-        return response.json() if response.status_code == 200 else None
+        header = {'Accept-Language': language} if language else {}
+        return self.client.get('/voice/interpreters', header=header)
 
     def interpret_text(self, text: str, language: str, ids: list = None):
         """
@@ -80,10 +77,12 @@ class Voice:
         :param ids: Eine Liste von Interpreter-IDs (optional).
         :return: Die Antwort des Servers.
         """
-        headers = {'Accept-Language': language}
+        header = {'Accept-Language': language}
         params = {'ids': ','.join(ids)} if ids else {}
-        response = self.client.post('/voice/interpreters', headers=headers, params=params, json={'text': text})
-        return response.json() if response.status_code == 200 else None
+        data = {'text': text}
+        data = json.dumps(data)
+
+        return self.client.post('/voice/interpreters', header=header, params=params, data=data)
 
     def get_interpreter(self, interpreter_id: str, language: str = None):
         """
@@ -93,9 +92,8 @@ class Voice:
         :param language: Die Sprache für die Anfrage (optional).
         :return: Die Details des Interpreters.
         """
-        headers = {'Accept-Language': language} if language else {}
-        response = self.client.get(f'/voice/interpreters/{interpreter_id}', headers=headers)
-        return response.json() if response.status_code == 200 else None
+        header = {'Accept-Language': language} if language else {}
+        return self.client.get(f'/voice/interpreters/{interpreter_id}', header=header)
 
     def interpret_text_batch(self, text: str, language: str, ids: list):
         """
@@ -106,10 +104,12 @@ class Voice:
         :param ids: Eine Liste von Interpreter-IDs.
         :return: Die Antwort des Servers.
         """
-        headers = {'Accept-Language': language}
+        header = {'Accept-Language': language}
         params = {'ids': ','.join(ids)}
-        response = self.client.post('/voice/interpreters', headers=headers, params=params, json={'text': text})
-        return response.json() if response.status_code == 200 else None
+        data = {'text': text}
+        data = json.dumps(data)
+
+        return self.client.post('/voice/interpreters', header=header, params=params, data=data)
 
     def listen_and_answer(self, source_id: str, stt_id: str, tts_id: str, voice_id: str,
                         hli_ids: list = None, sink_id: str = None, listening_item: str = None):
@@ -134,8 +134,7 @@ class Voice:
             'sinkId': sink_id,
             'listeningItem': listening_item
         }
-        response = self.client.post('/voice/listenandanswer', params=params)
-        return response.json() if response.status_code == 200 else None
+        return self.client.post('/voice/listenandanswer', params=params)
 
     def say_text(self, text: str, voice_id: str, sink_id: str, volume: str = '100'):
         """
@@ -152,8 +151,10 @@ class Voice:
             'sinkid': sink_id,
             'volume': volume
         }
-        response = self.client.post('/voice/say', params=params, json={'text': text})
-        return response.json() if response.status_code == 200 else None
+        data = {'text': text}
+        data = json.dumps(data)
+
+        return self.client.post('/voice/say', params=params, data=data)
 
     def get_voices(self):
         """
@@ -161,5 +162,4 @@ class Voice:
 
         :return: Eine Liste der Stimmen, wenn erfolgreich.
         """
-        response = self.client.get('/voice/voices')
-        return response.json() if response.status_code == 200 else None
+        return self.client.get('/voice/voices')

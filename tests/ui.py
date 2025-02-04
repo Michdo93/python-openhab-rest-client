@@ -12,6 +12,7 @@ ui = UI(client)
 # Alle UI-Komponenten im Namespace "home" abrufen
 namespace = "home"
 ui_components = ui.get_ui_components(namespace)
+print("Alle UI-Komponenten:\n")
 print(ui_components)
 
 # Eine neue UI-Komponente hinzufügen
@@ -36,11 +37,13 @@ component_data = {
     "type": "button"
 }
 new_component = ui.add_ui_component(namespace, component_data)
+print("Neue UI-Komponente:\n")
 print(new_component)
 
 # Eine spezifische UI-Komponente abrufen
 component_uid = "unique-button-uid"
 component = ui.get_ui_component(namespace, component_uid)
+print("Einzelne UI-Komponente:\n")
 print(component)
 
 # Eine UI-Komponente aktualisieren
@@ -53,12 +56,15 @@ updated_component_data = {
     "uid": "unique-button-uid"
 }
 updated_component = ui.update_ui_component(namespace, component_uid, updated_component_data)
+print("Geänderte UI-Komponente:\n")
 print(updated_component)
 
 # Eine UI-Komponente löschen
 deleted_component = ui.delete_ui_component(namespace, component_uid)
+print("Gelöschte UI-Komponente:\n")
 print(deleted_component)
 
 # Alle UI-Kacheln abrufen
 ui_tiles = ui.get_ui_tiles()
+print("Kacheln einer UI-Komponente:\n")
 print(ui_tiles)

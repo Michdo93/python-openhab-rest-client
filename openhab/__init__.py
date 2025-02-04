@@ -6,7 +6,7 @@ from .channel_types import ChannelTypes
 from .client import OpenHABClient
 from .config_descriptions import ConfigDescriptions
 from .discovery import Discovery
-from .events import Events
+from .events import Events, ItemEvents, ThingEvents, InboxEvents, LinkEvents, ChannelEvents
 from .iconsets import Iconsets
 from .inbox import Inbox
 from .items import Items
@@ -58,4 +58,9 @@ __all__ = [
     "UI",
     "UUID",
     "Voice",
+    "ItemEvents",
+    "ThingEvents",
+    "InboxEvents",
+    "LinkEvents",
+    "ChannelEvents"
 ]
