@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import traceback
 
 # Füge den Projektwurzelpfad (eine Ebene höher) zum Python-Suchpfad hinzu
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -10,6 +11,7 @@ from openhab import OpenHABClient, Things
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 things_api = Things(client)
 
+
 def safe_call(description, func, *args, **kwargs):
     try:
         print(f"{description}...")
@@ -17,13 +19,14 @@ def safe_call(description, func, *args, **kwargs):
         print("Erfolgreich:", response)
     except Exception as e:
         print(f"Fehler bei {description}: {e}")
+        traceback.print_exc()  # Stacktrace ausgeben
 
 # 1. Alle Things abrufen
 #safe_call("Alle Things abrufen", things_api.get_all_things)
 
 # 2. Ein spezifisches Thing per UID abrufen
-thing_uid = "astro:sun:560560e11a"
-#safe_call(f"Thing {thing_uid} abrufen", things_api.get_thing_by_uid, thing_uid)
+thing_uid = "mqtt:topic:mybroker:newthing"
+safe_call(f"Thing {thing_uid} abrufen", things_api.get_thing_by_uid, thing_uid)
 
 # 3. Ein neues Thing erstellen
 new_thing = {
@@ -36,12 +39,12 @@ new_thing = {
 }
 #safe_call("Neues Thing erstellen", things_api.create_thing, new_thing)
 
-time.sleep(2)  # Warte, damit OpenHAB das neue Thing registrieren kann
+#time.sleep(2)  # Warte, damit OpenHAB das neue Thing registrieren kann
 
 thing_uid = "mqtt:topic:mybroker:newthing"
 # 4. Ein Thing aktualisieren
 updated_data = {"label": "Aktualisiertes MQTT Thing"}
-safe_call(f"Thing {thing_uid} aktualisieren", things_api.update_thing, thing_uid, updated_data)
+#safe_call(f"Thing {thing_uid} aktualisieren", things_api.update_thing, thing_uid, updated_data)
 
 # 5. Ein Thing löschen
 #safe_call(f"Thing {thing_uid} löschen", things_api.delete_thing, thing_uid, force=True)

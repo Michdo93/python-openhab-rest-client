@@ -15,8 +15,8 @@ class OpenHABClient:
         self.username = username
         self.password = password
         self.token = token
-        self.is_cloud = False
-        self.is_logged_in = False
+        self.isCloud = False
+        self.isLoggedIn = False
 
         self.session = requests.Session()
 
@@ -37,23 +37,23 @@ class OpenHABClient:
 
     def __login(self):
         """
-        Attempts to log in to the OpenHAB server.
+        Attempts to log in to the openHAB server.
 
         If the server is "myopenhab.org", it sets the connection to the cloud service.
         Otherwise, it prepares a local connection and verifies login credentials.
         """
         if self.url == "https://myopenhab.org":
-            self.is_cloud = True
+            self.isCloud = True
         else:
-            self.is_cloud = False
+            self.isCloud = False
 
         # Check connection and authentication
         try:
-            login_response = self.session.get(self.url + "/rest", timeout=8)
-            login_response.raise_for_status()
+            loginResponse = self.session.get(self.url + "/rest", timeout=8)
+            loginResponse.raise_for_status()
 
-            if login_response.ok or login_response.status_code == 200:
-                self.is_logged_in = True
+            if loginResponse.ok or loginResponse.status_code == 200:
+                self.isLoggedIn = True
         except requests.exceptions.HTTPError as errh:
             print(f"HTTP error occurred: {errh}")
         except requests.exceptions.ConnectionError as errc:
@@ -63,35 +63,36 @@ class OpenHABClient:
         except requests.exceptions.RequestException as err:
             print(f"Request exception occurred: {err}")
 
-    def __execute_request(self, header: dict = None, resource_path: str = None, method: str = None, data=None, params=None):
+    def __executeRequest(self, header: dict = None, resourcePath: str = None, method: str = None, data=None, params=None):
         """
-        Executes an HTTP request to the OpenHAB server.
+        Executes an HTTP request to the openHAB server.
 
         :param header: Optional; A dictionary of headers to be sent with the request.
-        :param resource_path: The path of the resource to interact with.
+        :param resourcePath: The path of the resource to interact with.
         :param method: The HTTP method (GET, POST, PUT, DELETE).
         :param data: Optional; The data to send in the request (for POST and PUT requests).
         :return: The response of the request, either as JSON or plain text.
+
         :raises ValueError: If the method is invalid or if the resource path is not provided.
         """
-        if not resource_path or not method:
+        if not resourcePath or not method:
             raise ValueError('You must specify a valid resource path and HTTP method!')
 
         method = method.lower()
         header = header or {}
 
-        if resource_path[0] != "/":
-            resource_path = "/" + resource_path
+        if resourcePath[0] != "/":
+            resourcePath = "/" + resourcePath
 
         # Ensure resource path starts with "/rest"
-        if not resource_path.startswith("/rest"):
-            resource_path = f"/rest{resource_path}"
+        if not resourcePath.startswith("/rest"):
+            resourcePath = f"/rest{resourcePath}"
 
         # Update session headers
         self.session.headers.update(header)
 
         try:
-            url = f"{self.url}{resource_path}"
+            url = f"{self.url}{resourcePath}"
             if method == "get":
                 response = self.session.get(url, params=params, timeout=5)
             elif method == "post":
@@ -117,13 +118,28 @@ class OpenHABClient:
             print(f"Request error occurred: {err}")
             raise
 
-    def __execute_sse(self, url: str):
+    def __executeSSE(self, url: str):
+        """
+        Executes a Server-Sent Events (SSE) request.
+
+        :param url: The URL to connect to for the SSE stream.
+
+        :return: The response object with the SSE stream.
+        """
         if self.username is not None and self.password is not None:
             return self.session.get(url, auth=self.auth, stream=True)
         else:
             return self.session.get(url, stream=True)
 
-    def __execute_sse(self, url: str, header: dict = {}):
+    def __executeSSE(self, url: str, header: dict = {}):
+        """
+        Executes a Server-Sent Events (SSE) request with custom headers.
+
+        :param url: The URL to connect to for the SSE stream.
+        :param header: A dictionary of headers to include in the request.
+
+        :return: The response object with the SSE stream.
+        """
         if self.username is not None and self.password is not None:
             return self.session.get(url, auth=self.auth, headers=header, stream=True)
         else:
@@ -131,47 +147,51 @@ class OpenHABClient:
 
     def get(self, endpoint: str, header: dict = None, params: dict = None):
         """
-        Sends a GET request to the OpenHAB server.
+        Sends a GET request to the openHAB server.
 
         :param endpoint: The endpoint for the GET request (e.g., "/items").
         :param header: Optional; Headers to be sent with the request.
         :param params: Optional; Query parameters for the GET request.
+
         :return: The response from the GET request, either as JSON or plain text.
         """
-        return self.__execute_request(header, endpoint, "get", params=params)
+        return self.__executeRequest(header, endpoint, "get", params=params)
 
     def post(self, endpoint: str, header: dict = None, data=None, params: dict = None):
         """
-        Sends a POST request to the OpenHAB server.
+        Sends a POST request to the openHAB server.
 
         :param endpoint: The endpoint for the POST request (e.g., "/items").
         :param header: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the POST request.
         :param params: Optional; Query parameters for the request.
+
         :return: The response from the POST request.
         """
-        return self.__execute_request(header, endpoint, "post", data=data, params=params)
+        return self.__executeRequest(header, endpoint, "post", data=data, params=params)
 
     def put(self, endpoint: str, header: dict = None, data=None, params: dict = None):
         """
-        Sends a PUT request to the OpenHAB server.
+        Sends a PUT request to the openHAB server.
 
         :param endpoint: The endpoint for the PUT request (e.g., "/items").
         :param header: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the PUT request.
         :param params: Optional; Query parameters for the request.
+
         :return: The response from the PUT request.
         """
-        return self.__execute_request(header, endpoint, "put", data=data)
+        return self.__executeRequest(header, endpoint, "put", data=data)
 
     def delete(self, endpoint: str, header: dict = None, data=None, params: dict = None):
         """
-        Sends a DELETE request to the OpenHAB server.
+        Sends a DELETE request to the openHAB server.
 
         :param endpoint: The endpoint for the DELETE request (e.g., "/items").
         :param header: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the DELETE request.
         :param params: Optional; Query parameters for the request.
+
         :return: The response from the DELETE request.
         """
-        return self.__execute_request(header, endpoint, "delete", data=data, params=params)
+        return self.__executeRequest(header, endpoint, "delete", data=data, params=params)

@@ -4,169 +4,196 @@ import json
 class Things:
     def __init__(self, client: OpenHABClient):
         """
-        Initialisiert die Things-Klasse mit einem OpenHABClient-Objekt.
+        Initializes the Things class with an OpenHABClient object.
 
-        :param client: Eine Instanz von OpenHABClient, die für die REST-API-Kommunikation verwendet wird.
+        :param client: An instance of OpenHABClient that is used for REST-API communication.
         """
         self.client = client
 
-    def get_all_things(self, summary: bool = False, static_data_only: bool = False, language: str = None):
+    def getAllThings(self, summary: bool = False, staticDataOnly: bool = False, language: str = None):
         """
-        Holt alle verfügbaren "Things".
+        Get all available things.
 
-        :param summary: Wenn True, gibt nur die Zusammenfassungsfelder zurück.
-        :param static_data_only: Wenn True, gibt eine cachebare Liste zurück.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: JSON-Antwort mit den "Things".
+        :param summary: If True, returns only the summary fields.
+        :param staticDataOnly: If True, returns a cacheable list.
+        :param language: The preferred language for the response.
+
+        :return: JSON response with the things.
         """
-        params = {
-            'summary': summary,
-            'staticDataOnly': static_data_only
-        }
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get('/things', params=params, header=header)
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
 
-    def create_thing(self, thing_data: dict, language: str = None):
+        return self.client.get('/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, header=header)
+
+    def createThing(self, thingData: dict, language: str = None):
         """
-        Erstellt ein neues Thing und fügt es dem Registry hinzu.
+        Creates a new thing and adds it to the registry.
 
-        :param thing_data: Das JSON-Objekt mit den Thing-Daten.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
+        :param thingData: The JSON object containing the thing data.
+        :param language: The preferred language for the response.
+
+        :return: The API response.
         """
         header = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        thing_data = json.dumps(thing_data)
+        return self.client.post('/things', data=json.dumps(thingData), header=header)
 
-        return self.client.post('/things', data=thing_data, header=header)
-
-    def get_thing_by_uid(self, thing_uid: str, language: str = None):
+    def getThingByUID(self, thingUID: str, language: str = None):
         """
-        Holt ein Thing anhand der UID.
+        Gets a thing by UID.
 
-        :param thing_uid: Die UID des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: JSON-Antwort mit den Thing-Daten.
+        :param thingUID: The UID of the thing.
+        :param language: The preferred language for the response.
+
+        :return: JSON response with the thing data.
         """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get(f'/things/{thing_uid}', header=header)
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
 
-    def update_thing(self, thing_uid: str, thing_data: dict, language: str = None):
+        return self.client.get(f'/things/{thingUID}', header=header)
+
+    def updateThing(self, thingUID: str, thingData: dict, language: str = None):
         """
-        Aktualisiert ein Thing anhand der UID.
+        Updates a thing.
 
-        :param thing_uid: Die UID des Things.
-        :param thing_data: Das JSON-Objekt mit den aktualisierten Thing-Daten.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
+        :param thingUID: The UID of the thing.
+        :param thingData: The JSON object containing the updated thing data.
+        :param language: The preferred language for the response.
+
+        :return: The API response.
         """
         header = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        thing_data = json.dumps(thing_data)
+        return self.client.put(f'/things/{thingUID}', data=json.dumps(thingData), header=header)
 
-        return self.client.put(f'/things/{thing_uid}', data=thing_data, header=header)
-
-    def delete_thing(self, thing_uid: str, force: bool = False, language: str = None):
+    def deleteThing(self, thingUID: str, force: bool = False, language: str = None):
         """
-        Entfernt ein Thing aus dem Registry.
+        Removes a thing from the registry. Set 'force' to __true__ if you want the thing to be removed immediately.
 
-        :param thing_uid: Die UID des Things.
-        :param force: Wenn True, wird das Thing sofort entfernt.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
+        :param thingUID: The UID of the thing.
+        :param force: If True, the thing will be immediately removed.
+        :param language: The preferred language for the response.
+
+        :return: The API response.
         """
-        params = {'force': force}
-        header = {'Accept-Language': language} if language else {}
-        return self.client.delete(f'/things/{thing_uid}', params=params, header=header)
+        return self.client.delete(f'/things/{thingUID}', params={'force': force}, header={'Accept-Language': language} if language else {})
 
-    def update_thing_configuration(self, thing_uid: str, configuration_data: dict, language: str = None):
+    def updateThingConfiguration(self, thingUID: str, configurationData: dict, language: str = None):
         """
-        Aktualisiert die Konfiguration eines Things.
+        Updates a thing's configuration.
 
-        :param thing_uid: Die UID des Things.
-        :param configuration_data: Die Konfigurationsdaten des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
+        :param thingUID: The UID of the thing.
+        :param configurationData: The configuration data of the thing.
+        :param language: The preferred language for the response.
+
+        :return: The API response.
         """
         header = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        configuration_data = json.dumps(configuration_data)
+        return self.client.put(f'/things/{thingUID}/config', data=json.dumps(configurationData), header=header)
 
-        return self.client.put(f'/things/{thing_uid}/config', data=configuration_data, header=header)
-
-    def enable_thing(self, thing_uid: str, enabled: bool, language: str = None):
+    def getThingConfigStatus(self, thingUID: str, language: str = None):
         """
-        Setzt den Status eines Things auf aktiviert oder deaktiviert.
+        Gets the thing's configuration status.
 
-        :param thing_uid: Die UID des Things.
-        :param enabled: Wenn True, wird das Thing aktiviert.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
+        :param thingUID: The UID of the thing.
+        :param language: The preferred language for the response.
+
+        :return: JSON response with the thing's configuration status.
         """
-        data = {'enabled': str(enabled).lower()}
-        header = {'Accept-Language': language} if language else {}
-        data = json.dumps(data)
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
 
-        return self.client.put(f'/things/{thing_uid}/enable', data=data, header=header)
-
-    def get_thing_status(self, thing_uid: str, language: str = None):
-        """
-        Holt den Status eines Things.
-
-        :param thing_uid: Die UID des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort mit dem Status des Things.
-        """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get(f'/things/{thing_uid}/status', header=header)
+        return self.client.get(f'/things/{thingUID}/config/status', header=header)
     
-    def get_thing_firmware_status(self, thing_uid: str, language: str = None):
+    def setThingStatus(self, thingUID: str, enabled: bool, language: str = None):
         """
-        Holt den Firmware-Status eines Things.
+        Sets the thing's enabled status.
 
-        :param thing_uid: Die UID des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: JSON-Antwort mit dem Firmware-Status.
-        """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get(f'/things/{thing_uid}/firmware/status', header=header)
+        :param thingUID: The UID of the thing.
+        :param enabled: If True, the thing will be enabled.
+        :param language: The preferred language for the response.
 
-    def update_thing_firmware(self, thing_uid: str, firmware_version: str, language: str = None):
+        :return: The API response.
         """
-        Aktualisiert die Firmware eines Things.
+        header = {"Content-Type": "text/plain"}
+        if language:
+            header["Accept-Language"] = language
 
-        :param thing_uid: Die UID des Things.
-        :param firmware_version: Die Firmware-Version.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Antwort der API.
-        """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.put(f'/things/{thing_uid}/firmware/{firmware_version}', header=header)
+        return self.client.put(f'/things/{thingUID}/enable', data="true" if enabled else "false", header=header)
 
-    def get_thing_firmwares(self, thing_uid: str, language: str = None):
-        """
-        Holt alle verfügbaren Firmwares für ein Thing.
+    def enableThing(self, thingUID: str):
+        return self.setThingStatus(thingUID, True)
+    
+    def disableThing(self, thingUID: str):
+        return self.setThingStatus(thingUID, False)
 
-        :param thing_uid: Die UID des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: Die Liste der verfügbaren Firmwares.
+    def updateThingFirmware(self, thingUID: str, firmwareVersion: str, language: str = None):
         """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get(f'/things/{thing_uid}/firmwares', header=header)
+        Updates the firmware of a thing.
 
-    def get_thing_config_status(self, thing_uid: str, language: str = None):
-        """
-        Holt den Konfigurationsstatus eines Things.
+        :param thingUID: The UID of the thing.
+        :param firmwareVersion: The firmware version.
+        :param language: The preferred language for the response.
 
-        :param thing_uid: Die UID des Things.
-        :param language: Die bevorzugte Sprache für die Antwort.
-        :return: JSON-Antwort mit dem Konfigurationsstatus des Things.
+        :return: The API response.
         """
-        header = {'Accept-Language': language} if language else {}
-        return self.client.get(f'/things/{thing_uid}/config/status', header=header)
+        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.put(f'/things/{thingUID}/firmware/{firmwareVersion}', header=header)
+
+    def getThingFirmwareStatus(self, thingUID: str, language: str = None):
+        """
+        Gets the thing's firmware status.
+
+        :param thingUID: The UID of the thing.
+        :param language: The preferred language for the response.
+
+        :return: JSON response with the firmware status.
+        """
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.get(f'/things/{thingUID}/firmware/status', header=header)
+
+    def getThingFirmwares(self, thingUID: str, language: str = None):
+        """
+        Gets all available firmwares for the provided thing UID.
+
+        :param thingUID: The UID of the thing.
+        :param language: The preferred language for the response.
+
+        :return: A list of available firmwares.
+        """
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.get(f'/things/{thingUID}/firmwares', header=header)
+
+    def getThingStatus(self, thingUID: str, language: str = None):
+        """
+        Gets the thing's status.
+
+        :param thingUID: The UID of the thing.
+        :param language: The preferred language for the response.
+
+        :return: JSON response with the thing's status.
+        """
+        header = {"Content-Type": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
+        return self.client.get(f'/things/{thingUID}/status', header=header)
