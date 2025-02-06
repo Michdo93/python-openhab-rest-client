@@ -131,7 +131,6 @@ with response as events:
 
 ### OpenHABClient
 
-
 `OpenHABClient` is a Python class that provides an interface to interact with the openHAB REST API. It allows users to send requests to openHAB to retrieve and manipulate smart home devices, events, and configurations. The get, put, post and delete methods are used in the other classes for the client. You therefore do not need to use them raw.
 
 #### Initialization
@@ -141,7 +140,6 @@ with response as events:
 ```python
 OpenHABClient(url: str, username: str = None, password: str = None, token: str = None)
 ```
-
 ###### Parameters:
 - `url` (str): The base URL of the openHAB server (e.g., "http://127.0.0.1:8080").
 - `username` (str, optional): Username for Basic Authentication (default is `None`).
@@ -155,8 +153,6 @@ client = OpenHABClient("http://127.0.0.1:8080", username="admin", password="pass
 ```
 
 #### Methods
-
-
 
 ##### `get`
 
@@ -243,6 +239,7 @@ If a token is provided, it is used for authentication; otherwise, Basic Authenti
 
 Errors during requests are caught and logged, with appropriate exception handling for HTTP errors, connection issues, and timeouts.
 
+
 ### Actions
 
 The `Actions` class provides methods to interact with the OpenHAB actions API. It allows retrieving available actions for a specific `thingUID` and executing actions.
@@ -260,13 +257,14 @@ actions = Actions(client)
 #### Methods
 
 ##### `getAllActions(thingUID: str, language: str = None) -> list`
+
 Retrieves all available actions for a given thing UID.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the thing for which actions should be retrieved.
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-###### Returns:
+**Returns:**
 - `list`: A list of available actions.
 
 ###### Example:
@@ -275,21 +273,21 @@ actions_list = actions.getAllActions("myThingUID")
 print(actions_list)
 ```
 
----
-
 ##### `execute_action(thingUID: str, actionUID: str, actionInputs: dict, language: str = None) -> str`
+
 Executes an action on a specific thing.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the thing on which the action is executed.
 - `actionUID` (str): The UID of the action to be performed.
 - `actionInputs` (dict): A dictionary containing input parameters for the action.
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-###### Returns:
+**Returns:**
 - `str`: The response from the OpenHAB server.
 
 ###### Example:
+
 ```python
 response = actions.execute_action("myThingUID", "actionID", {"param1": "value1"})
 print(response)
@@ -302,6 +300,7 @@ The `Addons` class provides methods for interacting with the openHAB add-ons via
 #### Methods
 
 ##### `getAddons(serviceID: str = None, language: str = None) -> dict`
+
 Retrieves a list of all available add-ons.
 
 **Parameters:**
@@ -312,6 +311,7 @@ Retrieves a list of all available add-ons.
 A dictionary containing add-ons data.
 
 ##### `getAddon(addonID: str, serviceID: str = None, language: str = None) -> dict`
+
 Retrieves details of a specific add-on by its ID.
 
 **Parameters:**
@@ -323,6 +323,7 @@ Retrieves details of a specific add-on by its ID.
 A dictionary containing details of the specified add-on.
 
 ##### `getAddonConfig(addonID: str, serviceID: str = None) -> dict`
+
 Retrieves the configuration of a specific add-on.
 
 **Parameters:**
@@ -333,6 +334,7 @@ Retrieves the configuration of a specific add-on.
 A dictionary containing the configuration of the add-on.
 
 ##### `updateAddonConfig(addonID: str, configData: dict, serviceID: str = None) -> dict`
+
 Updates the configuration of a specific add-on.
 
 **Parameters:**
@@ -344,6 +346,7 @@ Updates the configuration of a specific add-on.
 A dictionary containing the updated configuration.
 
 ##### `installAddon(addonID: str, serviceID: str = None, language: str = None) -> dict`
+
 Installs an add-on by its ID.
 
 **Parameters:**
@@ -355,6 +358,7 @@ Installs an add-on by its ID.
 A dictionary containing the installation status.
 
 ##### `uninstallAddon(addonID: str, serviceID: str = None, language: str = None) -> dict`
+
 Uninstalls an add-on by its ID.
 
 **Parameters:**
@@ -366,6 +370,7 @@ Uninstalls an add-on by its ID.
 A dictionary containing the uninstallation status.
 
 ##### `getAddonServices(language: str = None) -> dict`
+
 Retrieves a list of all available add-on services.
 
 **Parameters:**
@@ -375,6 +380,7 @@ Retrieves a list of all available add-on services.
 A dictionary containing available add-on services.
 
 ##### `getAddonSuggestions(language: str = None) -> dict`
+
 Retrieves a list of suggested add-ons for installation.
 
 **Parameters:**
@@ -384,6 +390,7 @@ Retrieves a list of suggested add-ons for installation.
 A dictionary containing suggested add-ons.
 
 ##### `getAddonTypes(language: str = None) -> dict`
+
 Retrieves a list of all available add-on types.
 
 **Parameters:**
@@ -393,6 +400,7 @@ Retrieves a list of all available add-on types.
 A dictionary containing available add-on types.
 
 ##### `installAddonFromUrl(url: str) -> dict`
+
 Installs an add-on from a given URL.
 
 **Parameters:**
@@ -405,7 +413,7 @@ A dictionary containing the installation status.
 
 The `Audio` class provides methods for interacting with the OpenHAB audio API. It allows retrieving default audio sinks and sources, as well as listing available sinks and sources.
 
-## Initialization
+#### Initialization
 
 ```python
 from .client import OpenHABClient
@@ -415,69 +423,70 @@ client = OpenHABClient("http://openhab-server:8080", username="user", password="
 audio = Audio(client)
 ```
 
-## Methods
+#### Methods
 
-### `getDefaultSink(language: str = None) -> dict`
+##### `getDefaultSink(language: str = None) -> dict`
+
 Retrieves the default audio sink if defined, or the first available sink.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-#### Returns:
+**Returns:**
 - `dict`: Information about the default sink.
 
-#### Example:
+###### Example:
+
 ```python
 default_sink = audio.getDefaultSink()
 print(default_sink)
 ```
 
----
+##### `getDefaultSource(language: str = None) -> dict`
 
-### `getDefaultSource(language: str = None) -> dict`
 Retrieves the default audio source if defined, or the first available source.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-#### Returns:
+**Returns:**
 - `dict`: Information about the default source.
 
-#### Example:
+###### Example:
+
 ```python
 default_source = audio.getDefaultSource()
 print(default_source)
 ```
 
----
+##### `getSinks(language: str = None) -> list`
 
-### `getSinks(language: str = None) -> list`
 Retrieves a list of all available audio sinks.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-#### Returns:
+**Returns:**
 - `list`: A list of available audio sinks.
 
-#### Example:
+###### Example:
+
 ```python
 sinks = audio.getSinks()
 print(sinks)
 ```
 
----
+##### `getSources(language: str = None) -> list`
 
-### `getSources(language: str = None) -> list`
 Retrieves a list of all available audio sources.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the response (sets the `Accept-Language` header).
 
-#### Returns:
+**Returns:**
 - `list`: A list of available audio sources.
 
-#### Example:
+###### Example:
 
 ```python
 sources = audio.getSources()
@@ -488,7 +497,7 @@ print(sources)
 
 The `Auth` class provides methods for handling authentication in OpenHAB, including retrieving API tokens, revoking tokens, logging out, and managing authentication sessions.
 
-## Initialization
+#### Initialization
 
 ```python
 from .client import OpenHABClient
@@ -498,82 +507,83 @@ client = OpenHABClient("http://openhab-server:8080", username="user", password="
 auth = Auth(client)
 ```
 
-## Methods
+#### Methods
 
-### `getApiTokens(language: str = None) -> dict`
+##### `getApiTokens(language: str = None) -> dict`
+
 Retrieves the API tokens associated with the authenticated user.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the request (sets the `Accept-Language` header).
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response containing API tokens.
 
-#### Example:
+###### Example:
+
 ```python
 tokens = auth.getApiTokens()
 print(tokens)
 ```
 
----
+##### `revokeApiToken(tokenName: str, language: str = None) -> dict`
 
-### `revokeApiToken(tokenName: str, language: str = None) -> dict`
 Revokes a specific API token associated with the authenticated user.
 
-#### Parameters:
+**Parameters:**
 - `tokenName` (str): The name of the API token to revoke.
 - `language` (str, optional): The language for the request.
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response confirming the revocation.
 
-#### Example:
+###### Example:
+
 ```python
 response = auth.revokeApiToken("my_token")
 print(response)
 ```
 
----
+##### `logout(refreshToken: str, language: str = None) -> dict`
 
-### `logout(refreshToken: str, language: str = None) -> dict`
 Terminates the session associated with a given refresh token.
 
-#### Parameters:
+**Parameters:**
 - `refreshToken` (str): The refresh token used to delete the session.
 - `language` (str, optional): The language for the request.
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response confirming the logout.
 
-#### Example:
+###### Example:
+
 ```python
 response = auth.logout("my_refresh_token")
 print(response)
 ```
 
----
+##### `getSessions(language: str = None) -> dict`
 
-### `getSessions(language: str = None) -> dict`
 Retrieves the sessions associated with the authenticated user.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The language for the request.
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response containing session details.
 
-#### Example:
+###### Example:
+
 ```python
 sessions = auth.getSessions()
 print(sessions)
 ```
 
----
+##### `getToken(grantType: str, code: str = None, redirectUri: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict`
 
-### `getToken(grantType: str, code: str = None, redirectUri: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict`
 Obtains access and refresh tokens.
 
-#### Parameters:
+**Parameters:**
 - `grantType` (str): The type of grant being requested.
 - `code` (str, optional): Authorization code for authentication.
 - `redirectUri` (str, optional): Redirect URI for OAuth authentication.
@@ -582,10 +592,11 @@ Obtains access and refresh tokens.
 - `codeVerifier` (str, optional): Code verifier for PKCE authentication.
 - `language` (str, optional): The language for the request.
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response containing access and refresh tokens.
 
-#### Example:
+###### Example:
+
 ```python
 token_response = auth.getToken(
     grantType="authorization_code",
@@ -614,51 +625,53 @@ channel_types = ChannelTypes(client)
 #### Methods
 
 ##### `getAllChannelTypes(language: str = None, prefixes: str = None) -> list`
+
 Retrieves all available channel types.
 
-###### Parameters:
+**Parameters:**
 - `language` (str, optional): The preferred language for the response (`Accept-Language` header).
 - `prefixes` (str, optional): A query parameter to filter channel types by prefix.
 
-###### Returns:
+**Returns:**
 - `list`: A list of available channel types.
 
 ###### Example:
+
 ```python
 channels = channel_types.getAllChannelTypes(language="en", prefixes="zwave")
 print(channels)
 ```
 
----
-
 ##### `getChannelTypeByUid(channelTypeUid: str, language: str = None) -> dict`
+
 Retrieves details of a specific channel type by its UID.
 
-###### Parameters:
+**Parameters:**
 - `channelTypeUid` (str): The unique identifier of the channel type.
 - `language` (str, optional): The preferred language for the response.
 
-###### Returns:
+**Returns:**
 - `dict`: JSON response containing details of the specified channel type.
 
 ###### Example:
+
 ```python
 channel_details = channel_types.getChannelTypeByUid("zwave:switch_binary", language="en")
 print(channel_details)
 ```
 
----
-
 ##### `getLinkableItemTypes(channelTypeUid: str) -> list`
+
 Retrieves the item types that can be linked to a specified trigger channel type.
 
-###### Parameters:
+**Parameters:**
 - `channelTypeUid` (str): The unique identifier of the channel type.
 
-###### Returns:
+**Returns:**
 - `list`: A list of item types that can be linked to the given channel type.
 
 ###### Example:
+
 ```python
 linkable_items = channel_types.getLinkableItemTypes("zwave:switch_binary")
 print(linkable_items)
@@ -668,7 +681,7 @@ print(linkable_items)
 
 The `ConfigDescriptions` class provides methods to interact with OpenHAB's configuration descriptions, allowing retrieval of all available descriptions and specific descriptions by URI.
 
-## Initialization
+#### Initialization
 
 ```python
 from .client import OpenHABClient
@@ -678,37 +691,39 @@ client = OpenHABClient("http://openhab-server:8080", username="user", password="
 config_descriptions = ConfigDescriptions(client)
 ```
 
-## Methods
+#### Methods
 
-### `getAllConfigDescriptions(language: str = None, scheme: str = None) -> list`
+##### `getAllConfigDescriptions(language: str = None, scheme: str = None) -> list`
+
 Retrieves all available configuration descriptions.
 
-#### Parameters:
+**Parameters:**
 - `language` (str, optional): The preferred language for the response (`Accept-Language` header).
 - `scheme` (str, optional): A query parameter to filter results by a specific scheme.
 
-#### Returns:
+**Returns:**
 - `list`: A list of available configuration descriptions.
 
-#### Example:
+###### Example:
+
 ```python
 configs = config_descriptions.getAllConfigDescriptions(language="en", scheme="thing")
 print(configs)
 ```
 
----
+##### `getConfigDescriptionByUri(uri: str, language: str = None) -> dict`
 
-### `getConfigDescriptionByUri(uri: str, language: str = None) -> dict`
 Retrieves a specific configuration description by its URI.
 
-#### Parameters:
+**Parameters:**
 - `uri` (str): The URI of the requested configuration description.
 - `language` (str, optional): The preferred language for the response.
 
-#### Returns:
+**Returns:**
 - `dict`: JSON response containing details of the specified configuration description.
 
-#### Example:
+###### Example:
+
 ```python
 config_details = config_descriptions.getConfigDescriptionByUri("thing-type:zwave:device", language="en")
 print(config_details)
@@ -731,29 +746,30 @@ discovery = Discovery(client)
 #### Methods
 
 ##### `getAllDiscoveryBindings() -> list`
+
 Retrieves all bindings that support discovery.
 
-###### Returns:
+**Returns:**
 - `list`: A list of strings representing the bindings that support discovery.
 
 ###### Example:
+
 ```python
 bindings = discovery.getAllDiscoveryBindings()
 print(bindings)
 ```
 
----
-
 ##### `startBindingScan(bindingID: str) -> int`
 Starts the asynchronous discovery process for a binding and returns the timeout duration in seconds.
 
-###### Parameters:
+**Parameters:**
 - `bindingID` (str): The ID of the binding for which the discovery process is to be started.
 
-###### Returns:
+**Returns:**
 - `int`: Timeout duration of the discovery operation in seconds.
 
 ###### Example:
+
 ```python
 timeout = discovery.startBindingScan("zwave")
 print(timeout)
@@ -776,289 +792,271 @@ events = Events(client)
 #### Methods
 
 ##### `getAllEvents(topics: str = None) -> list`
+
 Retrieves all available events, optionally filtered by topic.
 
-###### Parameters:
+**Parameters:**
 - `topics` (str, optional): A comma-separated list of topics to filter the events by.
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of events.
 
 ###### Example:
+
 ```python
 events = events.getAllEvents(topics="openhab/items")
 print(events)
 ```
 
----
-
 ##### `initiateStateTracker() -> str`
+
 Initiates a new item state tracker connection.
 
-###### Returns:
+**Returns:**
 - `str`: The connection ID as a string.
 
 ###### Example:
+
 ```python
 connection_id = events.initiateStateTracker()
 print(connection_id)
 ```
 
----
-
 ##### `updateSseConnectionItems(connectionId: str, items: list) -> str`
+
 Changes the list of items an SSE connection will receive state updates for.
 
-###### Parameters:
+**Parameters:**
 - `connectionId` (str): The ID of the existing connection.
 - `items` (list): A list of item names to subscribe to for state updates.
 
-###### Returns:
+**Returns:**
 - `str`: A success message when the update is completed.
 
 ###### Example:
+
 ```python
 success_message = events.updateSseConnectionItems("connection-id", ["item1", "item2"])
 print(success_message)
 ```
-
----
 
 #### `ItemEvents` Class
 
 The `ItemEvents` class allows you to retrieve events related to items.
 
 ##### `ItemEvent()`
+
 Get all item-related events.
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of item events.
 
----
-
 ##### `ItemAddedEvent(itemName: str = "*")`
+
 Get events for added items.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of added item events.
 
----
-
 ##### `ItemRemovedEvent(itemName: str = "*")`
+
 Get events for removed items.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of removed item events.
 
----
-
 ##### `ItemUpdatedEvent(itemName: str = "*")`
+
 Get events for updated items.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of updated item events.
 
----
-
 ##### `ItemCommandEvent(itemName: str = "*")`
+
 Get events for item commands.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of item command events.
 
----
-
 ##### `ItemStateEvent(itemName: str = "*")`
+
 Get events for item state changes.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of item state events.
 
----
-
 ##### `ItemStatePredictedEvent(itemName: str = "*")`
+
 Get events for predicted item state changes.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of predicted item state events.
 
----
-
 ##### `ItemStateChangedEvent(itemName: str = "*")`
+
 Get events for item state changes.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of state changed events.
-
----
 
 #### `ThingEvents` Class
 
 The `ThingEvents` class allows you to retrieve events related to things.
 
 ##### `ThingAddedEvent(thingUID: str = "*")`
+
 Get events for added things.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of added thing events.
 
----
-
 ##### `ThingRemovedEvent(thingUID: str = "*")`
+
 Get events for removed things.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of removed thing events.
 
----
-
 ##### `ThingUpdatedEvent(thingUID: str = "*")`
+
 Get events for updated things.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of updated thing events.
 
----
-
 ##### `ThingStatusInfoEvent(thingUID: str = "*")`
+
 Get events for thing status information.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of status information events.
 
----
-
 ##### `ThingStatusInfoChangedEvent(thingUID: str = "*")`
+
 Get events for thing status information changes.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of status changed events.
-
----
 
 #### `InboxEvents` Class
 
 The `InboxEvents` class allows you to retrieve events related to things in the inbox.
 
 ##### `InboxAddedEvent(thingUID: str = "*")`
+
 Get events for added things in the inbox.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of added inbox events.
 
----
-
 ##### `InboxRemovedEvent(thingUID: str = "*")`
+
 Get events for removed things in the inbox.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of removed inbox events.
 
----
-
 ##### `InboxUpdatedEvent(thingUID: str = "*")`
+
 Get events for updated things in the inbox.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str, optional): The UID of the thing (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of updated inbox events.
-
----
 
 #### `LinkEvents` Class
 
 The `LinkEvents` class allows you to retrieve events related to item-channel links.
 
 ##### `ItemChannelLinkAddedEvent(itemName: str = "*", channelUID: str = "*")`
+
 Get events for added item-channel links.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 - `channelUID` (str, optional): The UID of the channel (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of added item-channel link events.
 
----
-
 ##### `ItemChannelLinkRemovedEvent(itemName: str = "*", channelUID: str = "*")`
+
 Get events for removed item-channel links.
 
-###### Parameters:
+**Parameters:**
 - `itemName` (str, optional): The name of the item (default is "*").
 - `channelUID` (str, optional): The UID of the channel (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of removed item-channel link events.
-
----
 
 #### `ChannelEvents` Class
 
 The `ChannelEvents` class allows you to retrieve events related to channel descriptions and triggers.
 
 ##### `ChannelDescriptionChangedEvent(channelUID: str = "*")`
+
 Get events for changes in channel descriptions.
 
-###### Parameters:
+**Parameters:**
 - `channelUID` (str, optional): The UID of the channel (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of channel description changed events.
 
----
-
 ##### `ChannelTriggeredEvent(channelUID: str = "*")`
+
 Get events for triggered channels.
 
-###### Parameters:
+**Parameters:**
 - `channelUID` (str, optional): The UID of the channel (default is "*").
 
-###### Returns:
+**Returns:**
 - `list`: A SSE stream of triggered channel events.
 
 ### Iconsets
@@ -1078,15 +1076,17 @@ iconsets = Iconsets(client)
 #### Methods
 
 ##### `getAllIconsets(language: str = None) -> list`
+
 Gets all icon sets, optionally filtered by language.
 
-###### Parameters:
+**Parameters:**
 - `language` (str, optional): An optional language preference for the response (e.g., 'en', 'de').
 
-###### Returns:
+**Returns:**
 - `list`: A list of icon sets with details such as ID, label, description, and supported formats.
 
 ###### Example:
+
 ```python
 iconsets = iconsets.getAllIconsets(language="en")
 print(iconsets)
@@ -1109,49 +1109,50 @@ inbox = Inbox(client)
 #### Methods
 
 ##### `getAllDiscoveredThings(includeIgnored: bool = True) -> list`
+
 Gets all discovered things, optionally including ignored ones.
 
-###### Parameters:
+**Parameters:**
 - `includeIgnored` (bool, optional): Whether ignored entries should also be included. Defaults to `True`.
 
-###### Returns:
+**Returns:**
 - `list`: A list of discovered things with details such as UID, flag, label, and properties.
 
 ###### Example:
+
 ```python
 discovered_things = inbox.getAllDiscoveredThings()
 print(discovered_things)
 ```
 
----
-
 ##### `removeDiscoveryResult(thingUID: str) -> dict`
+
 Removes a discovery result from the inbox.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the discovered thing to be removed.
 
-###### Returns:
+**Returns:**
 - `dict`: The API response to the delete request.
 
 ###### Example:
+
 ```python
 response = inbox.removeDiscoveryResult("someThingUID")
 print(response)
 ```
 
----
-
 ##### `approveDiscoveryResult(thingUID: str, thingLabel: str, newThingID: str = None, language: str = None) -> dict`
+
 Approves the discovery result by adding the thing to the registry.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the discovered thing.
 - `thingLabel` (str): The new name of the thing.
 - `newThingID` (str, optional): The new thing ID.
 - `language` (str, optional): The language preference for the response.
 
-###### Returns:
+**Returns:**
 - `dict`: The API response to the approval request.
 
 ###### Example:
@@ -1160,35 +1161,35 @@ response = inbox.approveDiscoveryResult("someThingUID", "NewThingLabel")
 print(response)
 ```
 
----
-
 ##### `ignoreDiscoveryResult(thingUID: str) -> dict`
+
 Flags a discovery result as ignored for further processing.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the discovered thing.
 
-###### Returns:
+**Returns:**
 - `dict`: The API response to the ignore request.
 
 ###### Example:
+
 ```python
 response = inbox.ignoreDiscoveryResult("someThingUID")
 print(response)
 ```
 
----
-
 ##### `unignoreDiscoveryResult(thingUID: str) -> dict`
+
 Removes the ignore flag from a discovery result.
 
-###### Parameters:
+**Parameters:**
 - `thingUID` (str): The UID of the discovered thing.
 
-###### Returns:
+**Returns:**
 - `dict`: The API response to the unignore request.
 
 ###### Example:
+
 ```python
 response = inbox.unignoreDiscoveryResult("someThingUID")
 print(response)
@@ -1196,9 +1197,10 @@ print(response)
 
 ### Items
 
-Die `Items`-Klasse bietet Methoden zur Verwaltung von OpenHAB-Items über die REST-API. Sie ermöglicht das Abrufen, Hinzufügen, Aktualisieren und Löschen von Items sowie die Verwaltung von Tags, Metadaten und Zuständen.
+The `Items` class provides methods for managing OpenHAB items via the REST API. It enables the retrieval, addition, updating and deletion of items as well as the management of tags, metadata and statuses.
 
-#### **Initialisierung**
+#### **Initilization**
+
 ```python
 from .client import OpenHABClient
 from items import Items
@@ -1207,225 +1209,223 @@ client = OpenHABClient("http://openhab-server:8080", username="user", password="
 items = Items(client)
 ```
 
----
-
 #### **Methoden**
 
 ##### `getAllItems(...) -> list`
-Ruft alle verfügbaren Items ab.
 
-###### **Parameter:**
-- `language` (str, optional): Sprachfilter für den Header `Accept-Language`.
-- `type` (str, optional): Item-Typ-Filter.
-- `tags` (str, optional): Item-Tag-Filter.
-- `metadata` (str, optional): Metadaten-Selektor (Standard: `.*`).
-- `recursive` (bool, optional): Sollen Gruppenmitglieder rekursiv abgerufen werden? (Standard: `False`).
-- `fields` (str, optional): Begrenzung auf bestimmte Felder (kommagetrennt).
-- `staticDataOnly` (bool, optional): Nur gecachte Daten zurückgeben? (Standard: `False`).
+Retrieves all available items.
 
-###### **Beispiel:**
+**Parameter:**
+- `language` (str, optional): Language filter for the header `Accept-Language`.
+- `type` (str, optional): Item type filter.
+- `tags` (str, optional): Item tag filter.
+- `metadata` (str, optional): Metadata selector (default: `.*`).
+- `recursive` (bool, optional): Should group members be retrieved recursively? (Default: `False`).
+- `fields` (str, optional): Limitation to certain fields (comma-separated).
+- `staticDataOnly` (bool, optional): Only return cached data? (Default: `False`).
+
+**Example:**
+
 ```python
 all_items = items.getAllItems(language="de", type="Switch")
 print(all_items)
 ```
 
----
-
 ##### `addOrUpdateItems(items: list) -> dict`
-Fügt eine Liste von Items hinzu oder aktualisiert bestehende.
 
-###### **Parameter:**
-- `items` (list): Liste von Items als Dictionary.
+Adds a list of items or updates existing ones.
 
-###### **Beispiel:**
+**Parameter:**
+- `items` (list): List of items as a dictionary.
+
+**Example:**
+
 ```python
 new_items = [{"name": "NewLight", "type": "Switch"}]
 response = items.addOrUpdateItems(new_items)
 print(response)
 ```
 
----
-
 ##### `getItem(itemName: str, ...) -> dict`
-Holt die Details eines einzelnen Items.
 
-###### **Parameter:**
-- `itemName` (str): Name des Items.
-- `language`, `metadata`, `recursive` (siehe `getAllItems`).
+Gets the details of a single item.
 
-###### **Beispiel:**
+**Parameter:**
+- `itemName` (str): Name of the item.
+- `language`, `metadata`, `recursive` (see `getAllItems`).
+
+**Example:**
+
 ```python
 item_data = items.getItem("LivingRoomLight")
 print(item_data)
 ```
 
----
-
 ##### `addOrUpdateItem(itemName: str, itemData: dict, ...) -> dict`
-Fügt ein Item hinzu oder aktualisiert es.
 
-###### **Parameter:**
-- `itemName` (str): Name des Items.
-- `itemData` (dict): Daten des Items.
+Adds or updates an item.
+
+**Parameter:**
+- `itemName` (str): Name of the item.
+- `itemData` (dict): Data of the item.
 - `language` (str, optional).
 
-###### **Beispiel:**
+**Example:**
+
 ```python
 new_item = {"type": "Switch", "label": "New Light"}
 response = items.addOrUpdateItem("NewLight", new_item)
 print(response)
 ```
 
----
-
 ##### `sendCommand(itemName: str, command: str) -> dict`
-Sendet einen Befehl an ein Item.
 
-###### **Beispiel:**
+Sends a command to an item.
+
+**Example:**
+
 ```python
 response = items.sendCommand("LivingRoomLight", "ON")
 print(response)
 ```
 
----
-
 ##### `postUpdate(itemName: str, state: str) -> dict`
-Aktualisiert den Zustand eines Items.
 
-###### **Beispiel:**
+Updates the status of an item.
+
+**Example:**
+
 ```python
 response = items.postUpdate("LivingRoomLight", "OFF")
 print(response)
 ```
 
----
-
 ##### `deleteItem(itemName: str) -> dict`
-Löscht ein Item aus der Registry.
 
-###### **Beispiel:**
+Deletes an item from the registry.
+
+**Example:**
+
 ```python
 response = items.deleteItem("OldItem")
 print(response)
 ```
 
----
-
 ##### `addGroupMember(itemName: str, memberItemName: str) -> dict`
-Fügt ein Item zu einer Gruppe hinzu.
 
-###### **Beispiel:**
+Adds an item to a group.
+
+**Example:**
+
 ```python
 response = items.addGroupMember("LivingRoomGroup", "NewLight")
 print(response)
 ```
 
----
-
 ##### `removeGroupMember(itemName: str, memberItemName: str) -> dict`
-Entfernt ein Item aus einer Gruppe.
 
-###### **Beispiel:**
+Removes an item from a group.
+
+**Example:**
 ```python
 response = items.removeGroupMember("LivingRoomGroup", "OldLight")
 print(response)
 ```
 
----
-
 ##### `addMetadata(itemName: str, namespace: str, metadata: dict) -> dict`
-Fügt einem Item Metadaten hinzu.
 
-###### **Beispiel:**
+Adds metadata to an item.
+
+**Example:**
+
 ```python
 metadata = {"value": "20", "config": {"unit": "°C"}}
 response = items.addMetadata("Thermostat", "temperature", metadata)
 print(response)
 ```
 
----
-
 ##### `removeMetadata(itemName: str, namespace: str) -> dict`
-Entfernt Metadaten eines Items.
 
-###### **Beispiel:**
+Removes metadata from an item.
+
+**Example:**
+
 ```python
 response = items.removeMetadata("Thermostat", "temperature")
 print(response)
 ```
 
----
-
 ##### `getMetadataNamespaces(itemName: str, ...) -> list`
-Liefert die Metadaten-Namespace eines Items.
 
-###### **Beispiel:**
+Returns the metadata namespace of an item.
+
+**Example:**
+
 ```python
 namespaces = items.getMetadataNamespaces("Thermostat")
 print(namespaces)
 ```
 
----
-
 ##### `getSemanticItem(itemName: str, semanticClass: str, ...) -> dict`
-Liefert das Item einer bestimmten Semantik-Klasse.
 
-###### **Beispiel:**
+Returns the item of a specific semantic class.
+
+**Example:**
+
 ```python
 semantic_item = items.getSemanticItem("Thermostat", "Point")
 print(semantic_item)
 ```
 
----
-
 ##### `getItemState(itemName: str) -> dict`
-Holt den aktuellen Zustand eines Items.
 
-###### **Beispiel:**
+Gets the current status of an item.
+
+**Example:**
+
 ```python
 state = items.getItemState("LivingRoomLight")
 print(state)
 ```
 
----
-
 ##### `updateItemState(itemName: str, state: str, ...) -> dict`
-Aktualisiert den Zustand eines Items.
 
-###### **Beispiel:**
+Updates the status of an item.
+
+**Example:**
+
 ```python
 response = items.updateItemState("LivingRoomLight", "ON")
 print(response)
 ```
 
----
-
 ##### `addTag(itemName: str, tag: str) -> dict`
-Fügt einem Item ein Tag hinzu.
 
-###### **Beispiel:**
+Adds a tag to an item.
+
+**Example:**
 ```python
 response = items.addTag("LivingRoomLight", "Lighting")
 print(response)
 ```
 
----
-
 ##### `removeTag(itemName: str, tag: str) -> dict`
-Entfernt ein Tag von einem Item.
 
-###### **Beispiel:**
+Removes a tag from an item.
+
+**Example:**
+
 ```python
 response = items.removeTag("LivingRoomLight", "Lighting")
 print(response)
 ```
 
----
-
 ##### `purgeOrphanedMetadata() -> dict`
-Löscht nicht verwendete Metadaten.
 
-###### **Beispiel:**
+Deletes unused metadata.
+
+**Example:**
+
 ```python
 response = items.purgeOrphanedMetadata()
 print(response)
@@ -1446,8 +1446,6 @@ Retrieves all available links.
 
 **Returns:** A list of links containing details such as `itemName`, `channelUID`, and configuration.  
 
----
-
 ##### `getIndividualLink(itemName: str, channelUID: str) -> dict`
 
 Retrieves a specific link between an item and a channel.
@@ -1456,8 +1454,6 @@ Retrieves a specific link between an item and a channel.
 - `channelUID` *(str)* – The UID of the channel.  
 
 **Returns:** A dictionary containing details of the link, including the item, channel UID, and configuration.  
-
----
 
 ##### `linkItemToChannel(itemName: str, channelUID: str, configuration: dict) -> dict`
 
@@ -1469,8 +1465,6 @@ Creates a link between an item and a channel.
 
 **Returns:** The API response confirming the link creation.  
 
----
-
 ##### `unlinkItemFromChannel(itemName: str, channelUID: str) -> dict`
 
 Removes a link between an item and a channel.
@@ -1480,8 +1474,6 @@ Removes a link between an item and a channel.
 
 **Returns:** The API response confirming the link removal.  
 
----
-
 ##### `deleteAllLinks(object: str) -> dict`
 
 Deletes all links that refer to a specific item or thing.
@@ -1490,15 +1482,11 @@ Deletes all links that refer to a specific item or thing.
 
 **Returns:** The API response confirming the deletion.  
 
----
-
 ##### `getOrphanLinks() -> list`
 
 Retrieves orphaned links, which refer to items connected to non-existent or broken channels.
 
-**Returns:** A list of orphaned links.  
-
----
+**Returns:** A list of orphaned links.
 
 ##### `purgeUnusedLinks() -> dict`
 
@@ -1518,8 +1506,6 @@ Retrieves all available loggers.
 
 **Returns:** A dictionary containing all loggers with their names and logging levels.  
 
----
-
 ##### `getSingleLogger(loggerName: str) -> dict`
 
 Retrieves a specific logger.
@@ -1527,8 +1513,6 @@ Retrieves a specific logger.
 - `loggerName` *(str)* – The name of the logger.  
 
 **Returns:** A dictionary containing the logger name and its current logging level.  
-
----
 
 ##### `modifyOrAddLogger(loggerName: str, level: str) -> dict`
 
@@ -1538,8 +1522,6 @@ Modifies an existing logger or creates a new one with a specified logging level.
 - `level` *(str)* – The logging level (e.g., `DEBUG`, `INFO`, `WARN`, `ERROR`).  
 
 **Returns:** The API response confirming the modification or addition.  
-
----
 
 ##### `removeLogger(loggerName: str) -> dict`
 
@@ -1563,9 +1545,7 @@ Retrieves all available module types.
 - `typeFilter` *(Optional, str)* – Filter by module type (`action`, `condition`, `trigger`).  
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
 
-**Returns:** A list of available module types.  
-
----
+**Returns:** A list of available module types.
 
 ##### `getModuleType(moduleTypeUID: str, language: str = None) -> dict`
 
@@ -1588,8 +1568,6 @@ Retrieves a list of available persistence services.
 
 **Returns:** A list of persistence services with their IDs, labels, and types.  
 
----
-
 ##### `getServiceConfiguration(serviceId: str) -> dict`
 
 Retrieves the configuration of a specific persistence service.
@@ -1597,8 +1575,6 @@ Retrieves the configuration of a specific persistence service.
 - `serviceId` *(str)* – The ID of the persistence service.  
 
 **Returns:** A dictionary containing the service configuration.  
-
----
 
 ##### `setServiceConfiguration(serviceId: str, config: dict) -> dict`
 
@@ -1609,8 +1585,6 @@ Sets the configuration of a persistence service.
 
 **Returns:** The API response after modifying the configuration.  
 
----
-
 ##### `deleteServiceConfiguration(serviceId: str) -> dict`
 
 Deletes the configuration of a persistence service.
@@ -1619,8 +1593,6 @@ Deletes the configuration of a persistence service.
 
 **Returns:** The API response after deleting the configuration.  
 
----
-
 ##### `getItemsForService(serviceId: str) -> dict`
 
 Retrieves a list of items available in a specific persistence service.
@@ -1628,8 +1600,6 @@ Retrieves a list of items available in a specific persistence service.
 - `serviceId` *(str)* – The ID of the persistence service.  
 
 **Returns:** A list of items with their last and earliest timestamps.  
-
----
 
 ##### `getItemPersistenceData(serviceId: str, itemName: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50) -> dict`
 
@@ -1644,8 +1614,6 @@ Retrieves persistence data for a specific item from a persistence service.
 
 **Returns:** The retrieved data points of the item.  
 
----
-
 ##### `storeItemData(serviceId: str, itemName: str, time: str, state: str) -> dict`
 
 Stores persistence data for a specific item.
@@ -1656,8 +1624,6 @@ Stores persistence data for a specific item.
 - `state` *(str)* – The state value to be stored.  
 
 **Returns:** The API response after storing the data.  
-
----
 
 ##### `deleteItemData(serviceId: str, itemName: str, startTime: str, endTime: str) -> dict`
 
@@ -1693,6 +1659,7 @@ The `Rules` class provides methods to interact with OpenHAB's rules via the REST
 #### Methods
 
 ##### `getRules(prefix: str = None, tags: list = None, summary: bool = False, staticDataOnly: bool = False) -> dict`
+
 Retrieves available rules, optionally filtered by tags and/or prefix.
 
 - `prefix` *(Optional, str)* – Filters results by prefix.  
@@ -1702,27 +1669,24 @@ Retrieves available rules, optionally filtered by tags and/or prefix.
 
 **Returns:** A list of rules (JSON objects).  
 
----
-
 ##### `createRule(ruleData: dict) -> dict`
+
 Creates a new rule.
 
 - `ruleData` *(dict)* – The rule data to be created.  
 
 **Returns:** The created rule (JSON).  
 
----
-
 ##### `getRule(ruleUID: str) -> dict`
+
 Retrieves a rule by its UID.
 
 - `ruleUID` *(str)* – The UID of the rule.  
 
 **Returns:** The rule object (JSON).  
 
----
-
 ##### `updateRule(ruleUID: str, ruleData: dict) -> dict`
+
 Updates an existing rule.
 
 - `ruleUID` *(str)* – The UID of the rule.  
@@ -1730,18 +1694,16 @@ Updates an existing rule.
 
 **Returns:** The updated rule (JSON).  
 
----
-
 ##### `deleteRule(ruleUID: str) -> dict`
+
 Removes a rule.
 
 - `ruleUID` *(str)* – The UID of the rule.  
 
 **Returns:** API response (status code).  
 
----
-
 ##### `setRuleState(ruleUID: str, enable: bool) -> dict`
+
 Activates or deactivates a rule.
 
 - `ruleUID` *(str)* – The UID of the rule.  
@@ -1749,19 +1711,16 @@ Activates or deactivates a rule.
 
 **Returns:** API response (status code).  
 
----
-
 ##### `enableRule(ruleUID: str) -> dict`
+
 Enables a rule.  
 
----
-
 ##### `disableRule(ruleUID: str) -> dict`
-Disables a rule.  
 
----
+Disables a rule. 
 
 ##### `runNow(ruleUID: str, contextData: dict = None) -> dict`
+
 Executes the rule's actions immediately.
 
 - `ruleUID` *(str)* – The UID of the rule.  
@@ -1769,9 +1728,8 @@ Executes the rule's actions immediately.
 
 **Returns:** API response (status code).  
 
----
-
 ##### `simulateSchedule(fromTime: str, untilTime: str) -> dict`
+
 Simulates rule executions filtered by the `Schedule` tag within a given timeframe.
 
 - `fromTime` *(str)* – Start time of the simulation.  
@@ -1792,9 +1750,8 @@ Retrieves all configurable services.
 
 **Returns:** A list of services (JSON).  
 
----
-
 ##### `getService(serviceID: str, language: str = None) -> dict`
+
 Retrieves a specific configurable service by its ID.
 
 - `serviceID` *(str)* – The ID of the service.  
@@ -1802,18 +1759,16 @@ Retrieves a specific configurable service by its ID.
 
 **Returns:** The service object (JSON).  
 
----
-
 ##### `getServiceConfig(serviceID: str) -> dict`
+
 Retrieves the configuration of a given service.
 
 - `serviceID` *(str)* – The ID of the service.  
 
 **Returns:** The configuration of the service (JSON).  
 
----
-
 ##### `updateServiceConfig(serviceID: str, configData: dict) -> dict`
+
 Updates the configuration of a service and returns the old configuration.
 
 - `serviceID` *(str)* – The ID of the service.  
@@ -1821,18 +1776,16 @@ Updates the configuration of a service and returns the old configuration.
 
 **Returns:** The old configuration of the service (JSON).  
 
----
-
 ##### `deleteServiceConfig(serviceID: str) -> dict`
+
 Deletes the configuration of a given service and returns the old configuration.
 
 - `serviceID` *(str)* – The ID of the service.  
 
 **Returns:** The old configuration of the service (JSON).  
 
----
-
 ##### `getServiceContexts(serviceID: str, language: str = None) -> dict`
+
 Retrieves multiple context service configurations for a given factory PID.
 
 - `serviceID` *(str)* – The ID of the service.  
@@ -1847,13 +1800,13 @@ The `Sitemaps` class provides methods to interact with OpenHAB's sitemaps via th
 #### Methods
 
 ##### `getSitemaps() -> dict`
+
 Retrieves all available sitemaps.
 
 **Returns:** A list of sitemaps (JSON).  
 
----
-
 ##### `getSitemap(sitemapName: str, language: str = None, type: str = None, jsonCallback: str = None, includeHidden: bool = False) -> dict`
+
 Retrieves a specific sitemap by name.
 
 - `sitemapName` *(str)* – The name of the sitemap.  
@@ -1862,11 +1815,10 @@ Retrieves a specific sitemap by name.
 - `jsonCallback` *(Optional, str)* – Query parameter for JSON callback.  
 - `includeHidden` *(Optional, bool, default=False)* – Whether hidden widgets should be included.  
 
-**Returns:** The sitemap object (JSON).  
-
----
+**Returns:** The sitemap object (JSON).
 
 ##### `getSitemapPage(sitemapName: str, pageId: str, subscriptionID: str = None, includeHidden: bool = False) -> dict`
+
 Retrieves the data for a specific page within a sitemap.
 
 - `sitemapName` *(str)* – The name of the sitemap.  
@@ -1876,9 +1828,8 @@ Retrieves the data for a specific page within a sitemap.
 
 **Returns:** The sitemap page (JSON).  
 
----
-
 ##### `getFullSitemap(sitemapName: str, subscriptionID: str = None, includeHidden: bool = False) -> dict`
+
 Retrieves data for an entire sitemap.  
 ⚠ **Not recommended due to potentially high traffic.**
 
@@ -1888,9 +1839,8 @@ Retrieves data for an entire sitemap.
 
 **Returns:** The complete sitemap (JSON).  
 
----
-
 ##### `getSitemapEvents(subscriptionID: str, sitemap: str = None, pageId: str = None) -> dict`
+
 Retrieves events for a specific sitemap or page.
 
 - `subscriptionID` *(str)* – The ID of the subscription.  
@@ -1899,9 +1849,8 @@ Retrieves events for a specific sitemap or page.
 
 **Returns:** The events (JSON).  
 
----
-
 ##### `getFullSitemapEvents(subscriptionID: str, sitemap: str = None) -> dict`
+
 Retrieves events for an entire sitemap.  
 ⚠ **Not recommended due to potentially high traffic.**
 
@@ -1910,9 +1859,8 @@ Retrieves events for an entire sitemap.
 
 **Returns:** The events for the entire sitemap (JSON).  
 
----
-
 ##### `subscribeToSitemapEvents() -> dict`
+
 Creates a sitemap event subscription.
 
 **Returns:** The response to the subscription request (JSON).  
@@ -1924,15 +1872,15 @@ The `Systeminfo` class provides methods to retrieve system information via the O
 #### Methods
 
 ##### `getSystemInfo(language: str = None) -> dict`
+
 Retrieves general system information.
 
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
 **Returns:** A dictionary containing system information (JSON).
 
----
-
 ##### `getUomInfo(language: str = None) -> dict`
+
 Retrieves all supported units of measurement (UOM) and their system units.
 
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
@@ -1946,15 +1894,15 @@ The `Tags` class provides methods to manage semantic tags via the OpenHAB REST A
 #### Methods
 
 ##### `getTags(language: str = None) -> dict`
+
 Retrieves all available semantic tags.
 
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
 **Returns:** A list of semantic tags (JSON).
 
----
-
 ##### `createTag(tagData: dict, language: str = None) -> dict`
+
 Creates a new semantic tag and adds it to the registry.
 
 - `tagData` *(dict)* – The data object for the tag to be created.
@@ -1962,9 +1910,8 @@ Creates a new semantic tag and adds it to the registry.
 
 **Returns:** The response to the tag creation request (JSON).
 
----
-
 ##### `getTag(tagID: str, language: str = None) -> dict`
+
 Retrieves a semantic tag and its sub-tags.
 
 - `tagID` *(str)* – The ID of the tag to retrieve.
@@ -1972,9 +1919,8 @@ Retrieves a semantic tag and its sub-tags.
 
 **Returns:** The tag object and its sub-tags (JSON).
 
----
-
 ##### `updateTag(tagID: str, tagData: dict, language: str = None) -> dict`
+
 Updates a semantic tag.
 
 - `tagID` *(str)* – The ID of the tag to be updated.
@@ -1982,8 +1928,6 @@ Updates a semantic tag.
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
 **Returns:** The response to the tag update request (JSON).
-
----
 
 ##### `deleteTag(tagID: str, language: str = None) -> dict`
 Removes a semantic tag and its sub-tags from the registry.
@@ -1993,7 +1937,6 @@ Removes a semantic tag and its sub-tags from the registry.
 
 **Returns:** The response to the tag deletion request (JSON).
 
-
 ### Templates
 
 The `Templates` class provides methods to manage templates via the OpenHAB REST API.
@@ -2001,15 +1944,15 @@ The `Templates` class provides methods to manage templates via the OpenHAB REST 
 #### Methods
 
 ##### `getAllTemplates(language: str = None) -> list`
+
 Retrieves all available templates.
 
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
 **Returns:** A list of templates (JSON).
 
----
-
 ##### `getTemplateByUID(templateUID: str, language: str = None) -> dict`
+
 Retrieves a template corresponding to the given UID.
 
 - `templateUID` *(str)* – The UID of the template.
@@ -2024,6 +1967,7 @@ The `ThingTypes` class provides methods to retrieve available thing types via th
 #### Methods
 
 ##### `getAllThingTypes(bindingId: str = None, language: str = None) -> list`
+
 Retrieves all available thing types without configuration descriptions, channels, and properties.
 
 - `bindingId` *(Optional, str)* – Filter the results by a specific binding ID.
@@ -2031,9 +1975,8 @@ Retrieves all available thing types without configuration descriptions, channels
 
 **Returns:** A list of thing types (JSON).
 
----
-
 ##### `getThingType(thingTypeUID: str, language: str = None) -> dict`
+
 Retrieves a thing type by its UID.
 
 - `thingTypeUID` *(str)* – The UID of the thing type.
@@ -2050,6 +1993,7 @@ The `Things` class provides methods to interact with available things in the Ope
 #### Methods
 
 ##### `getAllThings(summary: bool = False, staticDataOnly: bool = False, language: str = None)`
+
 Retrieves all available things.
 
 - `summary` *(Optional, bool)* – If `True`, returns only the summary fields.
@@ -2058,9 +2002,8 @@ Retrieves all available things.
 
 **Returns:** JSON response with the things.
 
----
-
 ##### `createThing(thingData: dict, language: str = None)`
+
 Creates a new thing and adds it to the registry.
 
 - `thingData` *(dict)* – The JSON object containing the thing data.
@@ -2068,9 +2011,8 @@ Creates a new thing and adds it to the registry.
 
 **Returns:** The API response.
 
----
-
 ##### `getThingByUID(thingUID: str, language: str = None)`
+
 Gets a thing by UID.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2078,9 +2020,8 @@ Gets a thing by UID.
 
 **Returns:** JSON response with the thing data.
 
----
-
 ##### `updateThing(thingUID: str, thingData: dict, language: str = None)`
+
 Updates a thing.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2089,9 +2030,8 @@ Updates a thing.
 
 **Returns:** The API response.
 
----
-
 ##### `deleteThing(thingUID: str, force: bool = False, language: str = None)`
+
 Removes a thing from the registry. Set 'force' to `true` if you want the thing to be removed immediately.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2100,9 +2040,8 @@ Removes a thing from the registry. Set 'force' to `true` if you want the thing t
 
 **Returns:** The API response.
 
----
-
 ##### `updateThingConfiguration(thingUID: str, configurationData: dict, language: str = None)`
+
 Updates a thing's configuration.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2111,9 +2050,8 @@ Updates a thing's configuration.
 
 **Returns:** The API response.
 
----
-
 ##### `getThingConfigStatus(thingUID: str, language: str = None)`
+
 Gets the thing's configuration status.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2121,9 +2059,8 @@ Gets the thing's configuration status.
 
 **Returns:** JSON response with the thing's configuration status.
 
----
-
 ##### `setThingStatus(thingUID: str, enabled: bool, language: str = None)`
+
 Sets the thing's enabled status.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2132,27 +2069,24 @@ Sets the thing's enabled status.
 
 **Returns:** The API response.
 
----
-
 ##### `enableThing(thingUID: str)`
+
 Enables the thing.
 
 - `thingUID` *(str)* – The UID of the thing.
 
 **Returns:** The API response.
 
----
-
 ##### `disableThing(thingUID: str)`
+
 Disables the thing.
 
 - `thingUID` *(str)* – The UID of the thing.
 
 **Returns:** The API response.
 
----
-
 ##### `updateThingFirmware(thingUID: str, firmwareVersion: str, language: str = None)`
+
 Updates the firmware of a thing.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2161,9 +2095,8 @@ Updates the firmware of a thing.
 
 **Returns:** The API response.
 
----
-
 ##### `getThingFirmwareStatus(thingUID: str, language: str = None)`
+
 Gets the thing's firmware status.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2171,9 +2104,8 @@ Gets the thing's firmware status.
 
 **Returns:** JSON response with the firmware status.
 
----
-
 ##### `getThingFirmwares(thingUID: str, language: str = None)`
+
 Gets all available firmwares for the provided thing UID.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2181,9 +2113,8 @@ Gets all available firmwares for the provided thing UID.
 
 **Returns:** A list of available firmwares.
 
----
-
 ##### `getThingStatus(thingUID: str, language: str = None)`
+
 Gets the thing's status.
 
 - `thingUID` *(str)* – The UID of the thing.
@@ -2198,22 +2129,21 @@ The `Transformations` class provides methods to interact with transformations in
 #### Methods
 
 ##### `getTransformations()`
+
 Retrieves a list of all transformations.
 
 **Returns:** A list of transformations (JSON).
 
----
-
 ##### `getTransformation(transformationUID: str)`
+
 Gets a single transformation by its UID.
 
 - `transformationUID` *(str)* – The UID of the transformation to retrieve.
 
 **Returns:** The transformation (JSON).
 
----
-
 ##### `updateTransformation(transformationUID: str, transformationData)`
+
 Updates a single transformation.
 
 - `transformationUID` *(str)* – The UID of the transformation to update.
@@ -2221,18 +2151,16 @@ Updates a single transformation.
 
 **Returns:** The response to the transformation update request (JSON).
 
----
-
 ##### `deleteTransformation(transformationUID: str)`
+
 Deletes a single transformation by its UID.
 
 - `transformationUID` *(str)* – The UID of the transformation to delete.
 
 **Returns:** The response to the transformation delete request (JSON).
 
----
-
 ##### `getTransformationServices()`
+
 Gets all transformation services available.
 
 **Returns:** A list of transformation services (JSON).
@@ -2244,6 +2172,7 @@ The `UI` class provides methods to interact with UI components and tiles in the 
 #### Methods
 
 ##### `getUiComponents(namespace: str, summary: bool = False)`
+
 Retrieves all registered UI components within the specified namespace.
 
 - `namespace` *(str)* – The namespace for which UI components should be retrieved.
@@ -2251,9 +2180,8 @@ Retrieves all registered UI components within the specified namespace.
 
 **Returns:** A list of UI components (JSON).
 
----
-
 ##### `addUiComponent(namespace: str, componentData)`
+
 Adds a UI component to the specified namespace.
 
 - `namespace` *(str)* – The namespace where the UI component should be added.
@@ -2261,9 +2189,8 @@ Adds a UI component to the specified namespace.
 
 **Returns:** The response to the request (JSON).
 
----
-
 ##### `getUiComponent(namespace: str, componentUID: str)`
+
 Retrieves a specific UI component in the specified namespace.
 
 - `namespace` *(str)* – The namespace where the UI component is located.
@@ -2271,9 +2198,8 @@ Retrieves a specific UI component in the specified namespace.
 
 **Returns:** The UI component (JSON).
 
----
-
 ##### `updateUiComponent(namespace: str, componentUID: str, componentData)`
+
 Updates a specific UI component in the specified namespace.
 
 - `namespace` *(str)* – The namespace where the UI component should be updated.
@@ -2282,9 +2208,8 @@ Updates a specific UI component in the specified namespace.
 
 **Returns:** The response to the request (JSON).
 
----
-
 ##### `deleteUiComponent(namespace: str, componentUID: str)`
+
 Removes a specific UI component from the specified namespace.
 
 - `namespace` *(str)* – The namespace where the UI component should be removed.
@@ -2292,9 +2217,8 @@ Removes a specific UI component from the specified namespace.
 
 **Returns:** The response to the request (JSON).
 
----
-
 ##### `getUiTiles()`
+
 Retrieves all registered UI tiles.
 
 **Returns:** A list of UI tiles (JSON).
@@ -2306,6 +2230,7 @@ The `UUID` class provides a method to retrieve a unified unique identifier (UUID
 #### Methods
 
 ##### `getUUID()`
+
 Retrieves a unified unique identifier (UUID) for the system.
 
 **Returns:** A string containing the UUID.
@@ -2317,11 +2242,13 @@ The `Voice` class provides methods to interact with the voice processing system,
 #### Methods
 
 ##### `getDefaultVoice()`
+
 Gets the default voice used by the system.
 
 **Returns:** A dictionary with details of the default voice.
 
 ##### `startDialog()`
+
 Starts dialog processing for a given audio source.
 
 **Parameters:**
@@ -2338,6 +2265,7 @@ Starts dialog processing for a given audio source.
 **Returns:** The response from the server.
 
 ##### `stopDialog()`
+
 Stops dialog processing for a given audio source.
 
 **Parameters:**
@@ -2346,6 +2274,7 @@ Stops dialog processing for a given audio source.
 **Returns:** The response from the server.
 
 ##### `getInterpreters()`
+
 Gets the list of all interpreters.
 
 **Parameters:**
@@ -2354,6 +2283,7 @@ Gets the list of all interpreters.
 **Returns:** A list of interpreters if successful.
 
 ##### `interpretText()`
+
 Sends a text to the default human language interpreter.
 
 **Parameters:**
@@ -2364,6 +2294,7 @@ Sends a text to the default human language interpreter.
 **Returns:** The response from the server.
 
 ##### `getInterpreter()`
+
 Gets a single interpreter.
 
 **Parameters:**
@@ -2373,6 +2304,7 @@ Gets a single interpreter.
 **Returns:** The details of the interpreter.
 
 ##### `interpretTextBatch()`
+
 Sends a text to a given human language interpreter(s).
 
 **Parameters:**
@@ -2383,6 +2315,7 @@ Sends a text to a given human language interpreter(s).
 **Returns:** The response from the server.
 
 ##### `listenAndAnswer()`
+
 Executes a simple dialog sequence without keyword spotting for a given audio source.
 
 **Parameters:**
@@ -2397,6 +2330,7 @@ Executes a simple dialog sequence without keyword spotting for a given audio sou
 **Returns:** The response from the server.
 
 ##### `sayText()`
+
 Speaks a given text with a given voice through the given audio sink.
 
 **Parameters:**
@@ -2408,6 +2342,7 @@ Speaks a given text with a given voice through the given audio sink.
 **Returns:** The response from the server.
 
 ##### `getVoices()`
+
 Gets the list of all voices.
 
 **Returns:** A list of voices if successful.
