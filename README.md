@@ -53,7 +53,7 @@ pip install python-openhab-rest-client
 
 ## Usage
 
-Basically, you always need the 'OpenHABClient'. Regardless of whether you carry out a normal REST request or one via SSE. This looks as follows:
+Basically, you always need the `OpenHABClient`. Regardless of whether you carry out a normal `REST request` or one via `SSE`. This looks as follows:
 
 ### Authentication
 
@@ -65,11 +65,11 @@ from openhab import OpenHABClient
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 ```
 
-The 'url', the 'username' and the 'password' can also vary. In particular, it is possible that 'url' could be a remote IP address or even the openHAB cloud.
+The `url`, the `username` and the `password` can also vary. In particular, it is possible that `url` could be a remote IP address or even the openHAB cloud.
 
 #### Token-based Authentication
 
-It is also conceivable that a 'token' could be used instead of 'basic authentication', i.e. with a 'username' and 'password'. A 'token' is used by default in openHAB. The 'basic authentication' must actually be activated manually.
+It is also conceivable that a `token` could be used instead of `basic authentication`, i.e. with a `username` and `password`. A `token` is used by default in openHAB. The `basic authentication` must actually be activated manually.
 
 For token-based access, the initialization of the client is as follows:
 
@@ -77,13 +77,13 @@ For token-based access, the initialization of the client is as follows:
 client = OpenHABClient(url="http://127.0.0.1:8080", token="oh.openhab.U0doM1Lz4kJ6tPlVGjH17jjm4ZcTHIHi7sMwESzrIybKbCGySmBMtysPnObQLuLf7PgqnI7jWQ5LosySY8Q")
 ```
 
-Of course, your 'token' will probably look different here too.
+Of course, your `token` will probably look different here too.
 
 ### Requests
 
 #### Normal REST requests
 
-Depending on the 'endpoint', a corresponding class must be imported from the library. If you want to access endpoints of the REST API with which you want to access 'items', you import the 'Items' class, for example. There are then different functions in this class for each endpoint for items. More details can be found in the documentation.
+Depending on the `endpoint`, a corresponding class must be imported from the library. If you want to access endpoints of the REST API with which you want to access `items`, you import the `Items` class, for example. There are then different functions in this class for each endpoint for items. More details can be found in the documentation.
 
 An easy example could be:
 
@@ -101,7 +101,7 @@ print("All Items:", allItems)
 
 All normal REST requests are static. This means that they do not react to status changes. You would therefore have to send several REST requests in succession (polling). Or you can use the various evetnts from openHAB. This can be done using server-sent events (SSE) without polling. The server sends a message to the client exactly when it can make something available. With polling, on the other hand, you would have to constantly send requests to the server, which would significantly increase the network and server load.
 
-There are various [events](https://www.openhab.org/docs/developer/utils/events.html) in openHAB. For 'ItemEvents', 'ThingEvents', 'InboxEvents', 'LinkEvents' and 'ChannelEvents' there are own classes. However, there is also the 'Events' class.
+There are various [events](https://www.openhab.org/docs/developer/utils/events.html) in openHAB. For `ItemEvents`, `ThingEvents`, `InboxEvents`, `LinkEvents` and `ChannelEvents` there are own classes. However, there is also the `Events` class. More information can be found in the documentation.
 
 An example looks like this:
 
