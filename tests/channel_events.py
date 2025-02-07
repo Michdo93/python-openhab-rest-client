@@ -7,8 +7,8 @@ from openhab import OpenHABClient, ChannelEvents
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-channel_events = ChannelEvents(client)
+channelEvents = ChannelEvents(client)
 
 # Beispielaufrufe
-print(channel_events.ChannelDescriptionChangedEvent("*"))
-print(channel_events.ChannelTriggeredEvent("*"))
+print(channelEvents.ChannelDescriptionChangedEvent("*"))
+print(channelEvents.ChannelTriggeredEvent("*"))

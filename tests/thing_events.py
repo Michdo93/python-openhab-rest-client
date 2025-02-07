@@ -7,11 +7,11 @@ from openhab import OpenHABClient, ThingEvents
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-thing_events = ThingEvents(client)
+thingEvents = ThingEvents(client)
 
 # Beispielaufrufe
-print(thing_events.ThingAddedEvent("*"))
-print(thing_events.ThingRemovedEvent("*"))
-print(thing_events.ThingUpdatedEvent("*"))
-print(thing_events.ThingStatusInfoEvent("*"))
-print(thing_events.ThingStatusInfoChangedEvent("*"))
+print(thingEvents.ThingAddedEvent("*"))
+print(thingEvents.ThingRemovedEvent("*"))
+print(thingEvents.ThingUpdatedEvent("*"))
+print(thingEvents.ThingStatusInfoEvent("*"))
+print(thingEvents.ThingStatusInfoChangedEvent("*"))

@@ -9,46 +9,45 @@ from openhab import OpenHABClient, Inbox
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 
 # Inbox-API instanziieren
-inbox_api = Inbox(client)
+inboxApi = Inbox(client)
 
 # 1. Alle entdeckten Dinge abrufen
-"""
 try:
-    discovered_things = inbox_api.get_all_discovered_things()
-    print("Entdeckte Dinge:", discovered_things)
+    discoveredThings = inboxApi.getAllDiscoveredThings()
+    print("Entdeckte Dinge:", discoveredThings)
 except Exception as e:
     print("Fehler beim Abrufen der entdeckten Dinge:", e)
 
 # 2. Ein Entdeckungsergebnis entfernen
-thing_uid_to_remove = "avmfritz:fritzbox:192_168_3_1"
+thingUidToRemove = "avmfritz:fritzbox:192_168_3_1"
 try:
-    response = inbox_api.remove_discovery_result(thing_uid_to_remove)
-    print(f"Entdeckungsergebnis '{thing_uid_to_remove}' entfernt:", response)
+    response = inboxApi.removeDiscoveryResult(thingUidToRemove)
+    print(f"Entdeckungsergebnis '{thingUidToRemove}' entfernt:", response)
 except Exception as e:
-    print(f"Fehler beim Entfernen des Entdeckungsergebnisses '{thing_uid_to_remove}':", e)
-"""
+    print(f"Fehler beim Entfernen des Entdeckungsergebnisses '{thingUidToRemove}':", e)
+
 # 3. Ein Gerät genehmigen
-thing_uid_to_approve = "avmfritz:fritzbox:192_168_2_1"
-thing_label = "Mein FritzBox Router"
+thingUidToApprove = "avmfritz:fritzbox:192_168_2_1"
+thingLabel = "Mein FritzBox Router"
 try:
-    response = inbox_api.approve_discovery_result(thing_uid_to_approve, thing_label)
-    print(f"Entdeckungsergebnis '{thing_uid_to_approve}' genehmigt:", response)
+    response = inboxApi.approveDiscoveryResult(thingUidToApprove, thingLabel)
+    print(f"Entdeckungsergebnis '{thingUidToApprove}' genehmigt:", response)
 except Exception as e:
-    print(f"Fehler beim Genehmigen des Entdeckungsergebnisses '{thing_uid_to_approve}':", e)
-"""
+    print(f"Fehler beim Genehmigen des Entdeckungsergebnisses '{thingUidToApprove}':", e)
+
 # 4. Ein Entdeckungsergebnis ignorieren
-thing_uid_to_ignore = "avmfritz:fritzbox:192_168_2_1"
+thingUidToIgnore = "avmfritz:fritzbox:192_168_2_1"
 try:
-    response = inbox_api.ignore_discovery_result(thing_uid_to_ignore)
-    print(f"Entdeckungsergebnis '{thing_uid_to_ignore}' ignoriert:", response)
+    response = inboxApi.ignoreDiscoveryResult(thingUidToIgnore)
+    print(f"Entdeckungsergebnis '{thingUidToIgnore}' ignoriert:", response)
 except Exception as e:
-    print(f"Fehler beim Ignorieren des Entdeckungsergebnisses '{thing_uid_to_ignore}':", e)
+    print(f"Fehler beim Ignorieren des Entdeckungsergebnisses '{thingUidToIgnore}':", e)
 
 # 5. Ein ignoriertes Gerät wieder sichtbar machen
-thing_uid_to_unignore = "avmfritz:fritzbox:192_168_2_1"
+thingUidToUnignore = "avmfritz:fritzbox:192_168_2_1"
 try:
-    response = inbox_api.unignore_discovery_result(thing_uid_to_unignore)
-    print(f"Entdeckungsergebnis '{thing_uid_to_unignore}' wieder aktiviert:", response)
+    response = inboxApi.unignoreDiscoveryResult(thingUidToUnignore)
+    print(f"Entdeckungsergebnis '{thingUidToUnignore}' wieder aktiviert:", response)
 except Exception as e:
-    print(f"Fehler beim Wiederherstellen des Entdeckungsergebnisses '{thing_uid_to_unignore}':", e)
-"""
+    print(f"Fehler beim Wiederherstellen des Entdeckungsergebnisses '{thingUidToUnignore}':", e)
+

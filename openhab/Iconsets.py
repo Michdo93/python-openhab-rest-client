@@ -1,5 +1,4 @@
-from .client import OpenHABClient
-
+from .Client import OpenHABClient
 
 class Iconsets:
     def __init__(self, client: OpenHABClient):

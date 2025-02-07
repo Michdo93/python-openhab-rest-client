@@ -8,89 +8,89 @@ from openhab import OpenHABClient, Addons
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-addons_api = Addons(client)
+addonsApi = Addons(client)
 
 # Teste den Endpunkt, um alle Add-ons zu holen
-def test_get_addons():
-    print("Teste get_addons...")
-    response = addons_api.get_addons()
-    print("Antwort von get_addons:", json.dumps(response, indent=2))
+def testGetAddons():
+    print("Teste getAddons...")
+    response = addonsApi.getAddons()
+    print("Antwort von getAddons:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um ein spezifisches Add-on zu holen
-def test_get_addon():
-    addon_id = "binding-astro"
-    print(f"Teste get_addon für ID {addon_id}...")
-    response = addons_api.get_addon(addon_id)
-    print(f"Antwort von get_addon für {addon_id}:", json.dumps(response, indent=2))
+def testGetAddon():
+    addonId = "binding-astro"
+    print(f"Teste getAddon für ID {addonId}...")
+    response = addonsApi.getAddon(addonId)
+    print(f"Antwort von getAddon für {addonId}:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um ein Add-on zu installieren
-def test_install_addon():
-    addon_id = "binding-astro"
-    print(f"Teste install_addon für ID {addon_id}...")
-    response = addons_api.install_addon(addon_id)
-    print(f"Antwort von install_addon für {addon_id}:", json.dumps(response, indent=2))
+def testInstallAddon():
+    addonId = "binding-astro"
+    print(f"Teste installAddon für ID {addonId}...")
+    response = addonsApi.installAddon(addonId)
+    print(f"Antwort von installAddon für {addonId}:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um ein Add-on zu deinstallieren
-def test_uninstall_addon():
-    addon_id = "binding-astro"
-    print(f"Teste uninstall_addon für ID {addon_id}...")
-    response = addons_api.uninstall_addon(addon_id)
-    print(f"Antwort von uninstall_addon für {addon_id}:", json.dumps(response, indent=2))
+def testUninstallAddon():
+    addonId = "binding-astro"
+    print(f"Teste uninstallAddon für ID {addonId}...")
+    response = addonsApi.uninstallAddon(addonId)
+    print(f"Antwort von uninstallAddon für {addonId}:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um Add-on-Typen zu holen
-def test_get_addon_types():
-    print("Teste get_addon_types...")
-    response = addons_api.get_addon_types()
-    print("Antwort von get_addon_types:", json.dumps(response, indent=2))
+def testGetAddonTypes():
+    print("Teste getAddonTypes...")
+    response = addonsApi.getAddonTypes()
+    print("Antwort von getAddonTypes:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um empfohlene Add-ons zu holen
-def test_get_addon_suggestions():
-    print("Teste get_addon_suggestions...")
-    response = addons_api.get_addon_suggestions()
-    print("Antwort von get_addon_suggestions:", json.dumps(response, indent=2))
+def testGetAddonSuggestions():
+    print("Teste getAddonSuggestions...")
+    response = addonsApi.getAddonSuggestions()
+    print("Antwort von getAddonSuggestions:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um die Add-on-Konfiguration zu holen
-def test_get_addon_config():
-    addon_id = "binding-astro"
-    print(f"Teste get_addon_config für ID {addon_id}...")
-    response = addons_api.get_addon_config(addon_id)
-    print(f"Antwort von get_addon_config für {addon_id}:", json.dumps(response, indent=2))
+def testGetAddonConfig():
+    addonId = "binding-astro"
+    print(f"Teste getAddonConfig für ID {addonId}...")
+    response = addonsApi.getAddonConfig(addonId)
+    print(f"Antwort von getAddonConfig für {addonId}:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um die Add-on-Konfiguration zu aktualisieren
-def test_update_addon_config():
-    addon_id = "binding-astro"  # OpenHAB Binding für Sonnen- und Mondzeiten
-    config_data = {
+def testUpdateAddonConfig():
+    addonId = "binding-astro"  # OpenHAB Binding für Sonnen- und Mondzeiten
+    configData = {
         "latitude": 52.52,  # Berlin
         "longitude": 13.405, 
         "interval": 300  # Aktualisierung alle 5 Minuten
     }
-    print(f"Teste update_addon_config für ID {addon_id} mit {config_data}...")
-    response = addons_api.update_addon_config(addon_id, config_data)
-    print(f"Antwort von update_addon_config für {addon_id}:", json.dumps(response, indent=2))
+    print(f"Teste updateAddonConfig für ID {addonId} mit {configData}...")
+    response = addonsApi.updateAddonConfig(addonId, configData)
+    print(f"Antwort von updateAddonConfig für {addonId}:", json.dumps(response, indent=2))
 
 # Teste den Endpunkt, um Add-on-Services zu holen
-def test_get_addon_services():
-    print("Teste get_addon_services...")
-    response = addons_api.get_addon_services()
-    print("Antwort von get_addon_services:", json.dumps(response, indent=2))
+def testGetAddonServices():
+    print("Teste getAddonServices...")
+    response = addonsApi.getAddonServices()
+    print("Antwort von getAddonServices:", json.dumps(response, indent=2))
 
-def test_install_addon_from_url():
+def testInstallAddonFromUrl():
     # Ersetze diese URL durch eine echte OpenHAB-Add-on-URL
     url = "https://repo1.maven.org/maven2/org/smarthomej/addons/bundles/org.smarthomej.binding.amazonechocontrol/4.2.0/org.smarthomej.binding.amazonechocontrol-4.2.0.kar"
     
-    print(f"Teste install_addon_from_url für URL {url}...")
-    response = addons_api.install_addon_from_url(url)
-    print(f"Antwort von install_addon_from_url für URL {url}:", json.dumps(response, indent=2))
+    print(f"Teste installAddonFromUrl für URL {url}...")
+    response = addonsApi.installAddonFromUrl(url)
+    print(f"Antwort von installAddonFromUrl für URL {url}:", json.dumps(response, indent=2))
 
 if __name__ == "__main__":
     # Führe alle Tests aus
-    #test_get_addons()
-    #test_get_addon()
-    #test_install_addon()
-    #test_uninstall_addon()
-    #test_get_addon_types()
-    #test_get_addon_suggestions()
-    #test_get_addon_config()
-    #test_update_addon_config()
-    #test_get_addon_services()
-    test_install_addon_from_url()
+    testGetAddons()
+    testGetAddon()
+    testInstallAddon()
+    testUninstallAddon()
+    testGetAddonTypes()
+    testGetAddonSuggestions()
+    testGetAddonConfig()
+    testUpdateAddonConfig()
+    testGetAddonServices()
+    testInstallAddonFromUrl()

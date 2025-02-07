@@ -7,7 +7,7 @@ from openhab import OpenHABClient, ProfileTypes
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-profile_types_api = ProfileTypes(client)
+profileTypesApi = ProfileTypes(client)
 
 # Teste Profiltypen
-print(profile_types_api.get_profile_types())
+print(profileTypesApi.getProfileTypes())

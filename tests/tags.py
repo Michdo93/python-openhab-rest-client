@@ -7,17 +7,17 @@ from openhab import OpenHABClient, Tags
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-tags_api = Tags(client)
+tagsApi = Tags(client)
 
 # Beispiele für die Tags-API
-def tags_examples():
+def tagsExamples():
     # Alle Tags abrufen
-    all_tags = tags_api.get_tags()
-    print("All Tags:", all_tags)
+    allTags = tagsApi.getTags()
+    print("All Tags:", allTags)
 
     # Ein neues Tag erstellen
     # Beispiel für das Tag-Datenobjekt
-    new_tag_data = {
+    newTagData = {
         "uid": "CustomTag",
         "name": "CustomTag",
         "label": "My Custom Tag",
@@ -27,28 +27,27 @@ def tags_examples():
     }
 
     try:
-        response = tags_api.create_tag(new_tag_data)
+        response = tagsApi.createTag(newTagData)
         print("Tag Created:", response)
     except Exception as e:
         print("Error creating tag:", e)
 
     # Details zu einem Tag abrufen
-    tag_details = tags_api.get_tag("Property_Voltage")
-    print("Details for newTag:", tag_details)
+    tagDetails = tagsApi.getTag("Property_Voltage")
+    print("Details for newTag:", tagDetails)
 
     # Ein Tag aktualisieren
-    updated_tag_data = {
+    updatedTagData = {
         "id": "Property_Voltage",
         "label": "Updated Tag"
     }
-    tags_api.update_tag("Property_Voltage", new_tag_data)
+    tagsApi.updateTag("Property_Voltage", newTagData)
     print("newTag updated.")
 
     # Ein Tag löschen
-    tags_api.delete_tag("Property_Voltage")
+    tagsApi.deleteTag("Property_Voltage")
     print("newTag deleted.")
 
 # Funktion ausführen
 if __name__ == "__main__":
-    tags_examples()
-  
+    tagsExamples()

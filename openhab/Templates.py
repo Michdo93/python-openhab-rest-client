@@ -1,4 +1,4 @@
-from .client import OpenHABClient
+from .Client import OpenHABClient
 
 class Templates:
     def __init__(self, client: OpenHABClient):

@@ -7,22 +7,22 @@ from openhab import OpenHABClient, Templates
 
 # OpenHABClient initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-templates_api = Templates(client)
+templatesApi = Templates(client)
 
 # Alle Templates abrufen
 try:
-    all_templates = templates_api.get_all_templates()
+    allTemplates = templatesApi.getAllTemplates()
     print("Alle Templates:")
-    for template in all_templates:
+    for template in allTemplates:
         print(f"- {template['uid']}: {template['label']}")
 except Exception as e:
     print(f"Fehler beim Abrufen der Templates: {e}")
 
 # Spezifisches Template abrufen
 try:
-    template_uid = "example_template_uid"  # Beispiel-UID
-    specific_template = templates_api.get_template_by_uid(template_uid)
+    templateUid = "example_template_uid"  # Beispiel-UID
+    specificTemplate = templatesApi.getTemplateByUID(templateUid)
     print("\nDetails des spezifischen Templates:")
-    print(specific_template)
+    print(specificTemplate)
 except Exception as e:
     print(f"Fehler beim Abrufen des spezifischen Templates: {e}")

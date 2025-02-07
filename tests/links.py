@@ -12,10 +12,10 @@ from openhab import OpenHABClient, Links
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 
 # Links-Klasse instanziieren
-links_api = Links(client)
+linksApi = Links(client)
 
 # Test-Daten (basierend auf deiner Liste)
-test_links = [
+testLinks = [
     {"itemName": "Sunrise_Time", "channelUID": "astro:sun:home:rise#start"},
     {"itemName": "Sunset_Time", "channelUID": "astro:sun:home:set#start"},
     {"itemName": "Azimuth", "channelUID": "astro:sun:home:position#azimuth"},
@@ -26,49 +26,49 @@ test_links = [
 ]
 
 try:
-    #print("\n**1. Alle Links abrufen**")
-    #all_links = links_api.get_all_links()
-    #print(json.dumps(all_links, indent=2))
+    print("\n**1. Alle Links abrufen**")
+    allLinks = linksApi.getAllLinks()
+    print(json.dumps(allLinks, indent=2))
     
-    item_name = "Sunrise_Time2"
-    channel_uid = "astro:sun:home:rise#start"
+    itemName = "Sunrise_Time2"
+    channelUid = "astro:sun:home:rise#start"
 
-    print(f"\n**2. Einzelnen Link abrufen: {item_name} -> {channel_uid}**")
+    print(f"\n**2. Einzelnen Link abrufen: {itemName} -> {channelUid}**")
     try:
-        single_link = links_api.get_individual_link(item_name, channel_uid)
-        print(json.dumps(single_link, indent=2))
+        singleLink = linksApi.getIndividualLink(itemName, channelUid)
+        print(json.dumps(singleLink, indent=2))
     except Exception as e:
         print(f"Fehler: {e}")
 
-    print(f"\n**3. Lösche den Link: {item_name} -> {channel_uid}**")
+    print(f"\n**3. Lösche den Link: {itemName} -> {channelUid}**")
     try:
-        unlink_response = links_api.unlink_item_from_channel(item_name, channel_uid)
-        print(f"Link entfernt: {unlink_response}")
+        unlinkResponse = linksApi.unlinkItemFromChannel(itemName, channelUid)
+        print(f"Link entfernt: {unlinkResponse}")
         time.sleep(1)  # Kleine Pause für API-Stabilität
     except Exception as e:
         print(f"Fehler: {e}")
 
-    print(f"\n**4. Verknüpfe Item erneut: {item_name} -> {channel_uid}**")
+    print(f"\n**4. Verknüpfe Item erneut: {itemName} -> {channelUid}**")
     try:
         config = {}  # Falls Konfiguration notwendig ist, hier ergänzen
-        link_response = links_api.link_item_to_channel(item_name, channel_uid, config)
-        print(f"Link erstellt: {json.dumps(link_response, indent=2)}")
+        linkResponse = linksApi.linkItemToChannel(itemName, channelUid, config)
+        print(f"Link erstellt: {json.dumps(linkResponse, indent=2)}")
     except Exception as e:
         print(f"Fehler: {e}")
     
-    #print("\n**5. Orphan-Links abrufen**")
-    #try:
-    #    orphan_links = links_api.get_orphan_links()
-    #    print(json.dumps(orphan_links, indent=2))
-    #except Exception as e:
-    #    print(f"Fehler bei Orphan-Links: {e}")
+    print("\n**5. Orphan-Links abrufen**")
+    try:
+        orphanLinks = linksApi.getOrphanLinks()
+        print(json.dumps(orphanLinks, indent=2))
+    except Exception as e:
+        print(f"Fehler bei Orphan-Links: {e}")
 
-    #print("\n**6. Unbenutzte Links bereinigen**")
-    #try:
-    #    purge_response = links_api.purge_unused_links()
-    #    print(f"Unbenutzte Links bereinigt: {purge_response}")
-    #except Exception as e:
-    #    print(f"Fehler: {e}")
+    print("\n**6. Unbenutzte Links bereinigen**")
+    try:
+        purgeResponse = linksApi.purgeUnusedLinks()
+        print(f"Unbenutzte Links bereinigt: {purgeResponse}")
+    except Exception as e:
+        print(f"Fehler: {e}")
 
 except Exception as e:
     print(f"**Gesamtfehler:** {e}")

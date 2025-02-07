@@ -7,10 +7,10 @@ from openhab import OpenHABClient, Audio
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-audio_api = Audio(client)
+audioApi = Audio(client)
 
 # Teste Audio-Endpunkte
-print(audio_api.get_default_sink())
-print(audio_api.get_default_source())
-print(audio_api.get_sinks())
-print(audio_api.get_sources())
+print(audioApi.getDefaultSink())
+print(audioApi.getDefaultSource())
+print(audioApi.getSinks())
+print(audioApi.getSources())

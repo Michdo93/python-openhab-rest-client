@@ -7,22 +7,22 @@ from openhab import OpenHABClient, ThingTypes
 
 # OpenHABClient initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-thing_types_api = ThingTypes(client)
+thingTypesApi = ThingTypes(client)
 
 # Alle Thing-Typen abrufen
 try:
-    all_thing_types = thing_types_api.get_all_thing_types()
+    allThingTypes = thingTypesApi.getAllThingTypes()
     print("Alle Thing-Typen:")
-    for thing_type in all_thing_types:
-        print(f"- {thing_type['UID']}: {thing_type['label']}")
+    for thingType in allThingTypes:
+        print(f"- {thingType['UID']}: {thingType['label']}")
 except Exception as e:
     print(f"Fehler beim Abrufen der Thing-Typen: {e}")
 
 # Spezifischen Thing-Typ abrufen
 try:
-    thing_type_uid = "mqtt:homeassistant"  # Beispiel-UID
-    specific_thing_type = thing_types_api.get_thing_type(thing_type_uid)
+    thingTypeUid = "mqtt:homeassistant"  # Beispiel-UID
+    specificThingType = thingTypesApi.getThingType(thingTypeUid)
     print("\nDetails des spezifischen Thing-Typs:")
-    print(specific_thing_type)
+    print(specificThingType)
 except Exception as e:
     print(f"Fehler beim Abrufen des spezifischen Thing-Typs: {e}")

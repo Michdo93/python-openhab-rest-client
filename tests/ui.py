@@ -7,16 +7,16 @@ from openhab import OpenHABClient, UI
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-ui = UI(client)
+uiApi = UI(client)
 
 # Alle UI-Komponenten im Namespace "home" abrufen
 namespace = "home"
-ui_components = ui.get_ui_components(namespace)
+uiComponents = uiApi.getUiComponents(namespace)
 print("Alle UI-Komponenten:\n")
-print(ui_components)
+print(uiComponents)
 
 # Eine neue UI-Komponente hinzufügen
-component_data = {
+componentData = {
     "component": "Button",
     "config": {
         "label": "Turn On Light",
@@ -36,18 +36,18 @@ component_data = {
     "timestamp": "2025-01-27T15:37:35.741Z",
     "type": "button"
 }
-new_component = ui.add_ui_component(namespace, component_data)
+newComponent = uiApi.addUiComponent(namespace, componentData)
 print("Neue UI-Komponente:\n")
-print(new_component)
+print(newComponent)
 
 # Eine spezifische UI-Komponente abrufen
-component_uid = "unique-button-uid"
-component = ui.get_ui_component(namespace, component_uid)
+componentUid = "unique-button-uid"
+component = uiApi.getUiComponent(namespace, componentUid)
 print("Einzelne UI-Komponente:\n")
 print(component)
 
 # Eine UI-Komponente aktualisieren
-updated_component_data = {
+updatedComponentData = {
     "component": "Button",
     "config": {
         "label": "Turn Off Light",
@@ -55,16 +55,16 @@ updated_component_data = {
     },
     "uid": "unique-button-uid"
 }
-updated_component = ui.update_ui_component(namespace, component_uid, updated_component_data)
+updatedComponent = uiApi.updateUiComponent(namespace, componentUid, updatedComponentData)
 print("Geänderte UI-Komponente:\n")
-print(updated_component)
+print(updatedComponent)
 
 # Eine UI-Komponente löschen
-deleted_component = ui.delete_ui_component(namespace, component_uid)
+deletedComponent = uiApi.deleteUiComponent(namespace, componentUid)
 print("Gelöschte UI-Komponente:\n")
-print(deleted_component)
+print(deletedComponent)
 
 # Alle UI-Kacheln abrufen
-ui_tiles = ui.get_ui_tiles()
+uiTiles = uiApi.getUiTiles()
 print("Kacheln einer UI-Komponente:\n")
-print(ui_tiles)
+print(uiTiles)

@@ -9,44 +9,44 @@ def main():
     # OpenHAB-Client initialisieren
     client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 
-    service_id = "org.openhab.i18n"
+    serviceId = "org.openhab.i18n"
     
     # Services-API-Objekt erstellen
-    services_api = Services(client)
+    servicesApi = Services(client)
 
     # 1. Alle Services abrufen
     print("Alle Services:")
-    all_services = services_api.get_services(language="de")
-    print(all_services)
+    allServices = servicesApi.getServices(language="de")
+    print(allServices)
 
     # 2. Einzelnen Service abrufen
     print("Einzelner Service:")
-    single_service = services_api.get_service(service_id)
-    print(single_service)
+    singleService = servicesApi.getService(serviceId)
+    print(singleService)
     
     # 3. Konfiguration eines spezifischen Services abrufen
-    print(f"\nKonfiguration für den Service {service_id}:")
-    service_config = services_api.get_service_config(service_id)
-    print(service_config)
+    print(f"\nKonfiguration für den Service {serviceId}:")
+    serviceConfig = servicesApi.getServiceConfig(serviceId)
+    print(serviceConfig)
     
     # 4. Konfiguration für einen Service aktualisieren
-    new_config = {
+    newConfig = {
         "enabled": True,
         "setting1": "newValue1"
     }
-    print(f"\nAktualisierte Konfiguration für {service_id}:")
-    old_config = services_api.update_service_config(service_id, new_config)
-    print("Alte Konfiguration:", old_config)
+    print(f"\nAktualisierte Konfiguration für {serviceId}:")
+    oldConfig = servicesApi.updateServiceConfig(serviceId, newConfig)
+    print("Alte Konfiguration:", oldConfig)
     
     # 5. Konfiguration eines Services löschen
-    print(f"\nService-Konfiguration für {service_id} löschen:")
-    deleted_config = services_api.delete_service_config(service_id)
-    print("Gelöschte Konfiguration:", deleted_config)
+    print(f"\nService-Konfiguration für {serviceId} löschen:")
+    deletedConfig = servicesApi.deleteServiceConfig(serviceId)
+    print("Gelöschte Konfiguration:", deletedConfig)
 
     # 6. Alle Kontexte eines Services abrufen
-    print(f"\nKontexte für {service_id}:")
-    service_contexts = services_api.get_service_contexts(service_id)
-    print(service_contexts)
+    print(f"\nKontexte für {serviceId}:")
+    serviceContexts = servicesApi.getServiceContexts(serviceId)
+    print(serviceContexts)
 
 if __name__ == "__main__":
     main()

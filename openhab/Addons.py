@@ -1,5 +1,5 @@
 import json
-from .client import OpenHABClient
+from .Client import OpenHABClient
 import urllib.parse
 
 class Addons:

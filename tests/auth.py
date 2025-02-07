@@ -12,34 +12,34 @@ from openhab import OpenHABClient, Auth
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-auth_api = Auth(client)
+authApi = Auth(client)
 
 # 1. Alle API-Tokens abrufen
-#tokens = auth_api.get_api_tokens()
-#print("API Tokens:", tokens)
+tokens = authApi.getApiTokens()
+print("API Tokens:", tokens)
 
 # 2. Ein API-Token widerrufen
-#revoke_response = auth_api.revoke_api_token("openhab")
-#print("Token widerrufen:", revoke_response)
+revokeResponse = authApi.revokeApiToken("openhab")
+print("Token widerrufen:", revokeResponse)
 
 # 3. Sessions abfragen
-sessions = auth_api.get_sessions()
+sessions = authApi.getSessions()
 print("Sessions:", json.dumps(sessions, indent=4))
 
 # 4. Refresh-Token erstellen (simuliert durch einen spezifischen API-Endpunkt oder OAuth)
 # Ersetzt die Parameter durch gültige Werte, falls erforderlich
-token_response = auth_api.get_token(
-    grant_type="authorization_code",  # Für die Demo: Nutze einen gültigen grant_type
+tokenResponse = authApi.getToken(
+    grantType="authorization_code",  # Für die Demo: Nutze einen gültigen grantType
     code="your-auth-code",
-    redirect_uri="http://127.0.0.1",
-    client_id="your-client-id"
+    redirectUri="http://127.0.0.1",
+    clientID="your-client-id"
 )
-print("Token Response:", json.dumps(token_response, indent=4))
+print("Token Response:", json.dumps(tokenResponse, indent=4))
 
 # 5. Mit einem gültigen Refresh-Token abmelden
-refresh_token = token_response.get("refresh_token", "")
-if refresh_token:
-    logout_response = auth_api.logout(refresh_token=refresh_token)
-    print("Logout Response:", json.dumps(logout_response, indent=4))
+refreshToken = tokenResponse.get("refresh_token", "")
+if refreshToken:
+    logoutResponse = authApi.logout(refreshToken=refreshToken)
+    print("Logout Response:", json.dumps(logoutResponse, indent=4))
 else:
     print("Kein Refresh-Token vorhanden. Abmelden nicht möglich.")

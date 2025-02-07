@@ -1,4 +1,4 @@
-from .client import OpenHABClient
+from .Client import OpenHABClient
 import json
 
 class Actions:
@@ -25,7 +25,7 @@ class Actions:
 
         return self.client.get(f"/actions/{thingUID}", header=header)
 
-    def execute_action(self, thingUID: str, actionUID: str, actionInputs: dict, language: str = None) -> str:
+    def executeAction(self, thingUID: str, actionUID: str, actionInputs: dict, language: str = None) -> str:
         """
         Executes a thing action.
 

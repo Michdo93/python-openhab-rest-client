@@ -7,8 +7,8 @@ from openhab import OpenHABClient, ModuleTypes
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-module_types_api = ModuleTypes(client)
+moduleTypesApi = ModuleTypes(client)
 
 # Teste Modultypen
-print(module_types_api.get_module_types())
-print(module_types_api.get_module_type("timer.GenericCronTrigger"))
+print(moduleTypesApi.getModuleTypes())
+print(moduleTypesApi.getModuleType("timer.GenericCronTrigger"))

@@ -7,9 +7,9 @@ from openhab import OpenHABClient, InboxEvents
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-inbox_events = InboxEvents(client)
+inboxEvents = InboxEvents(client)
 
 # Beispielaufrufe
-print(inbox_events.InboxAddedEvent("*"))
-print(inbox_events.InboxRemovedEvent("*"))
-print(inbox_events.InboxUpdatedEvent("*"))
+print(inboxEvents.InboxAddedEvent("*"))
+print(inboxEvents.InboxRemovedEvent("*"))
+print(inboxEvents.InboxUpdatedEvent("*"))

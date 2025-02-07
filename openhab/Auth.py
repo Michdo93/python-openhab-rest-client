@@ -1,5 +1,5 @@
 from urllib.parse import urlencode
-from .client import OpenHABClient
+from .Client import OpenHABClient
 import json
 
 class Auth:

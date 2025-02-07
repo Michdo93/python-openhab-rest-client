@@ -8,21 +8,21 @@ from openhab import OpenHABClient, ItemEvents
 
 # Client initialisieren
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-item_events = ItemEvents(client)
+itemEvents = ItemEvents(client)
 
 # Beispielaufrufe
-print(item_events.ItemEvent())
-print(item_events.ItemAddedEvent("*"))
-print(item_events.ItemRemovedEvent("*"))
-print(item_events.ItemUpdatedEvent("*"))
-print(item_events.ItemCommandEvent("*"))
-print(item_events.ItemStateEvent("*"))
-print(item_events.ItemStatePredictedEvent("*"))
-print(item_events.ItemStateChangedEvent("*"))
-print(item_events.GroupItemStateChangedEvent("*", "*"))
+print(itemEvents.ItemEvent())
+print(itemEvents.ItemAddedEvent("*"))
+print(itemEvents.ItemRemovedEvent("*"))
+print(itemEvents.ItemUpdatedEvent("*"))
+print(itemEvents.ItemCommandEvent("*"))
+print(itemEvents.ItemStateEvent("*"))
+print(itemEvents.ItemStatePredictedEvent("*"))
+print(itemEvents.ItemStateChangedEvent("*"))
+print(itemEvents.GroupItemStateChangedEvent("*", "*"))
 
 
-response =  item_events.ItemStateChangedEvent()
+response =  itemEvents.ItemStateChangedEvent()
 
 with response as events:
     for line in events.iter_lines():

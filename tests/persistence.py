@@ -10,52 +10,52 @@ from openhab import OpenHABClient, Persistence
 client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
 
 # Persistence-Klasse instanziieren
-persistence_api = Persistence(client)
+persistenceApi = Persistence(client)
 
 # Alle Persistence-Dienste abrufen
-#try:
-#    services = persistence_api.get_all_services()
-#    print("Alle Persistence-Dienste:", json.dumps(services, indent=4))
-#except Exception as e:
-#    print("Fehler beim Abrufen der Persistence-Dienste:", e)
+try:
+    services = persistenceApi.getAllServices()
+    print("Alle Persistence-Dienste:", json.dumps(services, indent=4))
+except Exception as e:
+    print("Fehler beim Abrufen der Persistence-Dienste:", e)
 
 # Konfiguration eines bestimmten Persistence-Dienstes abrufen
-service_id = "mapdb"
-#try:
-#    config = persistence_api.get_service_configuration(service_id)
-#    print(f"Konfiguration für {service_id}:", json.dumps(config, indent=4))
-#except Exception as e:
-#    print("Fehler beim Abrufen der Konfiguration:", e)
+serviceId = "mapdb"
+try:
+    config = persistenceApi.getServiceConfiguration(serviceId)
+    print(f"Konfiguration für {serviceId}:", json.dumps(config, indent=4))
+except Exception as e:
+    print("Fehler beim Abrufen der Konfiguration:", e)
 
 # Konfiguration eines bestimmten Persistence-Dienstes setzen
-new_config = {"retention": "30d"}
-#try:
-#    updated_config = persistence_api.set_service_configuration(service_id, new_config)
-#    print(f"Aktualisierte Konfiguration für {service_id}:", json.dumps(updated_config, indent=4))
-#except Exception as e:
-#    print("Fehler beim Setzen der Konfiguration:", e)
+newConfig = {"retention": "30d"}
+try:
+    updatedConfig = persistenceApi.setServiceConfiguration(serviceId, newConfig)
+    print(f"Aktualisierte Konfiguration für {serviceId}:", json.dumps(updatedConfig, indent=4))
+except Exception as e:
+    print("Fehler beim Setzen der Konfiguration:", e)
 
 # Konfiguration eines bestimmten Persistence-Dienstes löschen
-#try:
-#    delete_response = persistence_api.delete_service_configuration(service_id)
-#    print(f"Konfiguration für {service_id} gelöscht:", json.dumps(delete_response, indent=4))
-#except Exception as e:
-#    print("Fehler beim Löschen der Konfiguration:", e)
+try:
+    deleteResponse = persistenceApi.deleteServiceConfiguration(serviceId)
+    print(f"Konfiguration für {serviceId} gelöscht:", json.dumps(deleteResponse, indent=4))
+except Exception as e:
+    print("Fehler beim Löschen der Konfiguration:", e)
 
 # Items für einen Persistence-Dienst abrufen
-#try:
-#    items = persistence_api.get_items_for_service(service_id)
-#    print(f"Items für den Dienst {service_id}:", json.dumps(items, indent=4))
-#except Exception as e:
-#    print("Fehler beim Abrufen der Items:", e)
+try:
+    items = persistenceApi.getItemsForService(serviceId)
+    print(f"Items für den Dienst {serviceId}:", json.dumps(items, indent=4))
+except Exception as e:
+    print("Fehler beim Abrufen der Items:", e)
 
 # Persistence-Daten für ein Item abrufen
-item_name = "TemperatureSensor1"
-start_time = "2025-01-01T00:00:00.000Z"
-end_time = "2025-01-31T23:59:59.999Z"
+itemName = "TemperatureSensor1"
+startTime = "2025-01-01T00:00:00.000Z"
+endTime = "2025-01-31T23:59:59.999Z"
 try:
-    item_data = persistence_api.get_item_persistence_data(service_id, item_name, start_time=start_time, end_time=end_time)
-    print(f"Persistence-Daten für {item_name}:", json.dumps(item_data, indent=4))
+    itemData = persistenceApi.getItemPersistenceData(serviceId, itemName, startTime=startTime, endTime=endTime)
+    print(f"Persistence-Daten für {itemName}:", json.dumps(itemData, indent=4))
 except Exception as e:
     print("Fehler beim Abrufen der Persistence-Daten für Item:", e)
 
@@ -63,16 +63,16 @@ except Exception as e:
 time = "2025-01-27T15:30:00.000Z"  # Zeit im richtigen Format
 state = "22.5"  # Beispiel für den Zustand des Items
 try:
-    response = persistence_api.store_item_data(service_id, item_name, time, state)
+    response = persistenceApi.storeItemData(serviceId, itemName, time, state)
     print("Daten erfolgreich gespeichert:", response)
 except Exception as e:
     print("Fehler beim Speichern der Daten:", e)
 
 # Persistence-Daten für ein Item löschen
-start_time_delete = "2025-01-01T00:00:00.000Z"
-end_time_delete = "2025-01-31T23:59:59.999Z"
+startTimeDelete = "2025-01-01T00:00:00.000Z"
+endTimeDelete = "2025-01-31T23:59:59.999Z"
 try:
-    delete_item_response = persistence_api.delete_item_data(service_id, item_name, start_time_delete, end_time_delete)
-    print(f"Persistence-Daten für {item_name} gelöscht:", json.dumps(delete_item_response, indent=4))
+    deleteItemResponse = persistenceApi.deleteItemData(serviceId, itemName, startTimeDelete, endTimeDelete)
+    print(f"Persistence-Daten für {itemName} gelöscht:", json.dumps(deleteItemResponse, indent=4))
 except Exception as e:
     print("Fehler beim Löschen der Persistence-Daten für Item:", e)
