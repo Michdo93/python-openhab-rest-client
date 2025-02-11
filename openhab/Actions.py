@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Actions:
     def __init__(self, client: OpenHABClient):
@@ -23,7 +25,30 @@ class Actions:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/actions/{thingUID}", header=header)
+        try:
+            response = self.client.get(f"/actions/{thingUID}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 204:
+                return {"error": "No actions found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 204:
+            return {"error": "No actions found."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def executeAction(self, thingUID: str, actionUID: str, actionInputs: dict, language: str = None) -> str:
         """
@@ -40,4 +65,32 @@ class Actions:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.post(f"/actions/{thingUID}/{actionUID}", header=header, data=json.dumps(actionInputs))
+        try:
+            response = self.client.post(
+                f"/actions/{thingUID}/{actionUID}", header=header, data=json.dumps(actionInputs))
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 404:
+                return {"error": "Action not found."}
+            elif status_code == 500:
+                return {"error": "Creation of action handler or execution failed."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "Action not found."}
+        elif status_code == 500:
+            return {"error": "Creation of action handler or execution failed."}
+
+        return {"error": f"Unexpected response: {status_code}"}

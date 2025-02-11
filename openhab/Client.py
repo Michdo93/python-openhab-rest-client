@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 class OpenHABClient:
     def __init__(self, url: str, username: str = None, password: str = None, token: str = None):
         """
@@ -76,7 +77,8 @@ class OpenHABClient:
         :raises ValueError: If the method is invalid or if the resource path is not provided.
         """
         if not resourcePath or not method:
-            raise ValueError('You must specify a valid resource path and HTTP method!')
+            raise ValueError(
+                'You must specify a valid resource path and HTTP method!')
 
         method = method.lower()
         header = header or {}
@@ -96,11 +98,14 @@ class OpenHABClient:
             if method == "get":
                 response = self.session.get(url, params=params, timeout=5)
             elif method == "post":
-                response = self.session.post(url, data=data, params=params, timeout=5)
+                response = self.session.post(
+                    url, data=data, params=params, timeout=5)
             elif method == "put":
-                response = self.session.put(url, data=data, params=params, timeout=5)
+                response = self.session.put(
+                    url, data=data, params=params, timeout=5)
             elif method == "delete":
-                response = self.session.delete(url, data=data, params=params, timeout=5)
+                response = self.session.delete(
+                    url, data=data, params=params, timeout=5)
             else:
                 raise ValueError("Invalid HTTP method provided!")
 
@@ -113,7 +118,8 @@ class OpenHABClient:
                 else:
                     return response.text  # Anderen Text zurückgeben
 
-            return {"status": response.status_code}  # Nur Status zurückgeben, wenn keine Antwort vorhanden ist
+            # Nur Status zurückgeben, wenn keine Antwort vorhanden ist
+            return {"status": response.status_code}
         except requests.exceptions.RequestException as err:
             print(f"Request error occurred: {err}")
             raise

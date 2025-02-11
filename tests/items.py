@@ -104,12 +104,12 @@ def examples():
     #print("Semantic item for testLocation:", semanticItem)
 
     # Einem Item ein Tag hinzufügen
-    itemsApi.addTag("testSwitch", "NewTag")
-    print("Tag added to testSwitch.")
+    #itemsApi.addTag("testSwitch", "NewTag")
+    #print("Tag added to testSwitch.")
 
     # Einem Item ein Tag entfernen
-    itemsApi.removeTag("testSwitch", "NewTag")
-    print("Tag removed from testSwitch.")
+    #itemsApi.removeTag("testSwitch", "NewTag")
+    #print("Tag removed from testSwitch.")
 
     # Verwaiste Metadaten löschen
     itemsApi.purgeOrphanedMetadata()

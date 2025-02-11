@@ -1,4 +1,6 @@
 from .Client import OpenHABClient
+import requests
+
 
 class ChannelTypes:
     def __init__(self, client: OpenHABClient):
@@ -26,7 +28,35 @@ class ChannelTypes:
         if prefixes:
             params["prefixes"] = prefixes
 
-        return self.client.get("/channel-types", header=header, params=params)
+        try:
+            response = self.client.get(
+                "/channel-types", header=header, params=params)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getChannelTypeByUid(self, channelTypeUid: str, language: str = None) -> dict:
         """
@@ -41,7 +71,35 @@ class ChannelTypes:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/channel-types/{channelTypeUid}", header=header)
+        try:
+            response = self.client.get(
+                f"/channel-types/{channelTypeUid}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getLinkableItemTypes(self, channelTypeUid: str) -> list:
         """
@@ -51,4 +109,33 @@ class ChannelTypes:
 
         :return: A list of item types.
         """
-        return self.client.get(f"/channel-types/{channelTypeUid}/linkableItemTypes")
+
+        try:
+            response = self.client.get(
+                f"/channel-types/{channelTypeUid}/linkableItemTypes")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

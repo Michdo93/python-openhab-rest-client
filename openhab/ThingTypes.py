@@ -1,4 +1,6 @@
 from .Client import OpenHABClient
+import requests
+
 
 class ThingTypes:
     def __init__(self, client: OpenHABClient):
@@ -18,13 +20,42 @@ class ThingTypes:
 
         :return: A list of thing types.
         """
+        header = {"Content-Type": "application/json"}
         params = {}
         if bindingId:
             params["bindingId"] = bindingId
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get("/thing-types", header={"Content-Type": "application/json"}, params=params)
+        try:
+            response = self.client.get(
+                "/thing-types", header=header, params=params)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingType(self, thingTypeUID: str, language: str = None) -> dict:
         """
@@ -39,4 +70,32 @@ class ThingTypes:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/thing-types/{thingTypeUID}", header=header)
+        try:
+            response = self.client.get(
+                f"/thing-types/{thingTypeUID}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

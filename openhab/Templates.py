@@ -1,4 +1,6 @@
 from .Client import OpenHABClient
+import requests
+
 
 class Templates:
     def __init__(self, client: OpenHABClient):
@@ -20,7 +22,34 @@ class Templates:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get("/templates", header=header)
+        try:
+            response = self.client.get("/templates", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getTemplateByUID(self, templateUID: str, language: str = None) -> dict:
         """
@@ -28,11 +57,39 @@ class Templates:
 
         :param templateUID: The UID of the template.
         :param language: (Optional) Language setting for the Accept-Language header.
-        
+
         :return: A dictionary with the details of the template.
         """
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/templates/{templateUID}", header=header)
+        try:
+            response = self.client.get(
+                f"/templates/{templateUID}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

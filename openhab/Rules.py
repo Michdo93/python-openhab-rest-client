@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Rules:
     def __init__(self, client: OpenHABClient):
@@ -21,7 +23,35 @@ class Rules:
 
         :return: A list of rules (JSON objects).
         """
-        return self.client.get("/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly})
+        try:
+            response = self.client.get(
+                "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def createRule(self, ruleData: dict):
         """
@@ -31,7 +61,35 @@ class Rules:
 
         :return: The created rule (JSON).
         """
-        return self.client.post("/rules", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.post(
+                "/rules", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getRule(self, ruleUID: str):
         """
@@ -41,7 +99,34 @@ class Rules:
 
         :return: The rule object (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}")
+        try:
+            response = self.client.get(f"/rules/{ruleUID}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateRule(self, ruleUID: str, ruleData: dict):
         """
@@ -52,7 +137,35 @@ class Rules:
 
         :return: The updated rule (JSON).
         """
-        return self.client.put(f"/rules/{ruleUID}", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.put(
+                f"/rules/{ruleUID}", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteRule(self, ruleUID: str):
         """
@@ -62,7 +175,35 @@ class Rules:
 
         :return: The API response (status code).
         """
-        return self.client.delete(f"/rules/{ruleUID}", header={"Accept": "application/json"})
+        try:
+            response = self.client.delete(
+                f"/rules/{ruleUID}", header={"Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getModule(self, ruleUID: str, moduleCategory: str, moduleId: str):
         """
@@ -74,7 +215,35 @@ class Rules:
 
         :return: The module (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}", header={"Accept": "application/json"})
+        try:
+            response = self.client.get(
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}", header={"Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getModuleConfig(self, ruleUID: str, moduleCategory: str, moduleId: str):
         """
@@ -86,7 +255,35 @@ class Rules:
 
         :return: The module configuration (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config")
+        try:
+            response = self.client.get(
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleId: str, param: str):
         """
@@ -99,7 +296,35 @@ class Rules:
 
         :return: The configuration parameter value (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}", header={'Accept': 'text/plain'})
+        try:
+            response = self.client.get(
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}", header={'Accept': 'text/plain'})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def setModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleId: str, param: str, value: str):
         """
@@ -113,17 +338,72 @@ class Rules:
 
         :return: The API response (status code).
         """
-        return self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}", data=json.dumps(value), header={'Content-Type': 'text/plain'})
+        try:
+            response = self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}",
+                                       data=json.dumps(value), header={'Content-Type': 'text/plain'})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getActions(self, ruleUID: str):
         """
         Gets the rule actions.
-        
+
         :param ruleUID: The UID of the rule.
 
         :return: A list of actions (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/actions")
+        try:
+            response = self.client.get(f"/rules/{ruleUID}/actions")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getConditions(self, ruleUID: str):
         """
@@ -133,28 +413,110 @@ class Rules:
 
         :return: A list of conditions (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/conditions")
+        try:
+            response = self.client.get(f"/rules/{ruleUID}/conditions")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getConfiguration(self, ruleUID: str):
         """
         Gets the rule configuration values.
-        
+
         :param ruleUID: The UID of the rule.
 
         :return: The configuration of the rule (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/config")
+        try:
+            response = self.client.get(f"/rules/{ruleUID}/config")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateConfiguration(self, ruleUID: str, configData: dict):
         """
         Sets the rule configuration values.
-        
+
         :param ruleUID: The UID of the rule.
         :param configData: The new configuration data (as a dictionary).
 
         :return: The updated configuration (JSON).
         """
-        return self.client.put(f"/rules/{ruleUID}/config", data=json.dumps(configData), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.put(f"/rules/{ruleUID}/config", data=json.dumps(
+                configData), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def setRuleState(self, ruleUID: str, enable: bool):
         """
@@ -165,7 +527,35 @@ class Rules:
 
         :return: The API response (status code).
         """
-        return self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", header={"Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"})
+        try:
+            response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", header={
+                                        "Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def enableRule(self, ruleUID: str):
         return self.setRuleState(ruleUID, True)
@@ -182,7 +572,35 @@ class Rules:
 
         :return: The API response (status code).
         """
-        return self.client.post(f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {})
+        try:
+            response = self.client.post(
+                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getTriggers(self, ruleUID: str):
         """
@@ -192,7 +610,34 @@ class Rules:
 
         :return: A list of triggers (JSON).
         """
-        return self.client.get(f"/rules/{ruleUID}/triggers")
+        try:
+            response = self.client.get(f"/rules/{ruleUID}/triggers")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def simulateSchedule(self, fromTime: str, untilTime: str):
         """
@@ -203,4 +648,32 @@ class Rules:
 
         :return: The simulation results (JSON).
         """
-        return self.client.get("/rules/schedule/simulations", params={"from": fromTime, "until": untilTime}, header={'Accept': 'application/json'})
+        try:
+            response = self.client.get("/rules/schedule/simulations", params={
+                                       "from": fromTime, "until": untilTime}, header={'Accept': 'application/json'})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

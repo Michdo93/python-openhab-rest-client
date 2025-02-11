@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Logging:
     def __init__(self, client: OpenHABClient):
@@ -15,8 +17,35 @@ class Logging:
         Get all loggers.
 
         :return: A list of loggers with names and levels.
-        """        
-        return self.client.get("/logging")
+        """
+        try:
+            response = self.client.get("/logging")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getSingleLogger(self, loggerName: str) -> dict:
         """
@@ -25,8 +54,35 @@ class Logging:
         :param loggerName: The name of the logger.
 
         :return: The logger with the specified name and level.
-        """        
-        return self.client.get(f"/logging/{loggerName}")
+        """
+        try:
+            response = self.client.get(f"/logging/{loggerName}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def modifyOrAddLogger(self, loggerName: str, level: str) -> dict:
         """
@@ -42,7 +98,35 @@ class Logging:
             "level": level
         }
 
-        return self.client.put(f"/logging/{loggerName}", data=json.dumps(data), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.put(
+                f"/logging/{loggerName}", data=json.dumps(data), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def removeLogger(self, loggerName: str) -> dict:
         """
@@ -51,5 +135,32 @@ class Logging:
         :param loggerName: The name of the logger.
 
         :return: The API response after removing the logger.
-        """        
-        return self.client.delete(f"/logging/{loggerName}")
+        """
+        try:
+            response = self.client.delete(f"/logging/{loggerName}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

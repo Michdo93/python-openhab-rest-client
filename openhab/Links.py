@@ -1,6 +1,8 @@
 from .Client import OpenHABClient
 import json
 from urllib.parse import quote
+import requests
+
 
 class Links:
     def __init__(self, client: OpenHABClient):
@@ -25,8 +27,36 @@ class Links:
             params["channelUID"] = channelUID
         if itemName:
             params["itemName"] = itemName
-        
-        return self.client.get("/links", params=params, header={"Content-Type": "application/json"})
+
+        try:
+            response = self.client.get(
+                "/links", params=params, header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getIndividualLink(self, itemName: str, channelUID: str) -> dict:
         """
@@ -39,8 +69,36 @@ class Links:
         """
         itemName = quote(itemName, safe="")
         channelUID = quote(channelUID, safe="")
-        
-        return self.client.get(f"/links/{itemName}/{channelUID}", header={"Accept": "application/json"})
+
+        try:
+            response = self.client.get(
+                f"/links/{itemName}/{channelUID}", header={"Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def linkItemToChannel(self, itemName: str, channelUID: str, configuration: dict) -> dict:
         """
@@ -54,8 +112,36 @@ class Links:
         """
         itemName = quote(itemName, safe="")
         channelUID = quote(channelUID, safe="")
-        
-        return self.client.put(f"/links/{itemName}/{channelUID}", data=json.dumps({"itemName": itemName, "channelUID": channelUID, "configuration": configuration}), header={"Content-Type": "application/json"})
+
+        try:
+            response = self.client.put(f"/links/{itemName}/{channelUID}", data=json.dumps(
+                {"itemName": itemName, "channelUID": channelUID, "configuration": configuration}), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def unlinkItemFromChannel(self, itemName: str, channelUID: str) -> dict:
         """
@@ -68,8 +154,36 @@ class Links:
         """
         itemName = quote(itemName, safe="")
         channelUID = quote(channelUID, safe="")
-        
-        return self.client.delete(f"/links/{itemName}/{channelUID}", header={"Content-Type": "application/json"})
+
+        try:
+            response = self.client.delete(
+                f"/links/{itemName}/{channelUID}", header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteAllLinks(self, object: str) -> dict:
         """
@@ -79,7 +193,34 @@ class Links:
 
         :return: The API response when all links are successfully deleted.
         """
-        return self.client.delete(f"/links/{object}")
+        try:
+            response = self.client.delete(f"/links/{object}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getOrphanLinks(self) -> list:
         """
@@ -87,12 +228,67 @@ class Links:
 
         :return: A list of orphan links.
         """
-        return self.client.get("/links/orphans", header={"Accept": "application/json"})
+        try:
+            response = self.client.get(
+                "/links/orphans", header={"Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def purgeUnusedLinks(self) -> dict:
         """
         Remove unused/orphaned links.
 
         :return: The API response when the links are successfully removed.
-        """        
-        return self.client.post("/links/purge")
+        """
+        try:
+            response = self.client.post("/links/purge")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

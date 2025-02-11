@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Events:
     def __init__(self, client: OpenHABClient):
@@ -18,9 +20,35 @@ class Events:
 
         :return: A SSE stream of events.
         """
-        return self.client._OpenHABClient__executeSSE(
-            self.client.url + f"/rest/events" + (f"?topics={topics}" if topics else "")
-        )
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events" + (f"?topics={topics}" if topics else ""))
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def initiateStateTracker(self) -> str:
         """
@@ -28,8 +56,35 @@ class Events:
 
         :return: The connection ID as a string.
         """
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + "/rest/events/states", header={"Accept": "*/*"})
 
-        return self.client._OpenHABClient__executeSSE(self.client.url + "/rest/events/states", header={"Accept": "*/*"} )
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateSseConnectionItems(self, connectionId: str, items: list) -> str:
         """
@@ -40,8 +95,36 @@ class Events:
 
         :return: A success message when the update is completed.
         """
-                
-        return self.client.post(f"/rest/events/states/{connectionId}", data=json.dumps(items), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.post(f"/rest/events/states/{connectionId}", data=json.dumps(
+                items), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
 
 class ItemEvents:
     def __init__(self, client: OpenHABClient):
@@ -58,7 +141,35 @@ class ItemEvents:
 
         :return: A SSE stream of item events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemAddedEvent(self, itemName: str = "*"):
         """
@@ -68,7 +179,35 @@ class ItemEvents:
 
         :return: A SSE stream of added item events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/added")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/added")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemRemovedEvent(self, itemName: str = "*"):
         """
@@ -78,7 +217,35 @@ class ItemEvents:
 
         :return: A SSE stream of removed item events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/removed")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/removed")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemUpdatedEvent(self, itemName: str = "*"):
         """
@@ -88,8 +255,35 @@ class ItemEvents:
 
         :return: A SSE stream of updated item events.
         """
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/updated")
 
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/updated")
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemCommandEvent(self, itemName: str = "*"):
         """
@@ -99,7 +293,35 @@ class ItemEvents:
 
         :return: A SSE stream of item command events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/command")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/command")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemStateEvent(self, itemName: str = "*"):
         """
@@ -109,8 +331,35 @@ class ItemEvents:
 
         :return: A SSE stream of item state events.
         """
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/state")
 
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/state")
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemStatePredictedEvent(self, itemName: str = "*"):
         """
@@ -120,7 +369,35 @@ class ItemEvents:
 
         :return: A SSE stream of item state predicted events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statepredicted")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statepredicted")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemStateChangedEvent(self, itemName: str = "*"):
         """
@@ -130,7 +407,35 @@ class ItemEvents:
 
         :return: A SSE stream of item state changed events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statechanged")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/statechanged")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def GroupItemStateChangedEvent(self, itemName: str, memberName: str):
         """
@@ -141,7 +446,36 @@ class ItemEvents:
 
         :return: A SSE stream of group item state changed events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/items/{itemName}/{memberName}/statechanged")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/items/{itemName}/{memberName}/statechanged")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
 
 class ThingEvents:
     def __init__(self, client: OpenHABClient):
@@ -160,7 +494,35 @@ class ThingEvents:
 
         :return: A SSE stream of added thing events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/added")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/added")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ThingRemovedEvent(self, thingUID: str = "*"):
         """
@@ -170,7 +532,35 @@ class ThingEvents:
 
         :return: A SSE stream of removed thing events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/removed")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/removed")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ThingUpdatedEvent(self, thingUID: str = "*"):
         """
@@ -180,7 +570,35 @@ class ThingEvents:
 
         :return: A SSE stream of updated thing events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/updated")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/updated")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ThingStatusInfoEvent(self, thingUID: str = "*"):
         """
@@ -190,7 +608,35 @@ class ThingEvents:
 
         :return: A SSE stream of thing status information events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/status")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/status")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ThingStatusInfoChangedEvent(self, thingUID: str = "*"):
         """
@@ -200,7 +646,36 @@ class ThingEvents:
 
         :return: A SSE stream of thing status information changed events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/statuschanged")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/things/{thingUID}/statuschanged")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
 
 class InboxEvents:
     def __init__(self, client: OpenHABClient):
@@ -219,7 +694,35 @@ class InboxEvents:
 
         :return: A SSE stream of added inbox events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/added")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/added")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def InboxRemovedEvent(self, thingUID: str = "*"):
         """
@@ -229,7 +732,35 @@ class InboxEvents:
 
         :return: A SSE stream of removed inbox events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/removed")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/removed")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def InboxUpdatedEvent(self, thingUID: str = "*"):
         """
@@ -239,7 +770,36 @@ class InboxEvents:
 
         :return: A SSE stream of updated inbox events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/updated")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/inbox/{thingUID}/updated")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
 
 class LinkEvents:
     def __init__(self, client: OpenHABClient):
@@ -259,7 +819,35 @@ class LinkEvents:
 
         :return: A SSE stream of added item-channel link events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/added")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/added")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ItemChannelLinkRemovedEvent(self, itemName: str = "*", channelUID: str = "*"):
         """
@@ -270,7 +858,36 @@ class LinkEvents:
 
         :return: A SSE stream of removed item-channel link events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/removed")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/links/{itemName}-{channelUID}/removed")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
 
 class ChannelEvents:
     def __init__(self, client: OpenHABClient):
@@ -289,7 +906,35 @@ class ChannelEvents:
 
         :return: A SSE stream of channel description changed events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/descriptionchanged")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/descriptionchanged")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ChannelTriggeredEvent(self, channelUID: str = "*"):
         """
@@ -299,4 +944,32 @@ class ChannelEvents:
 
         :return: A SSE stream of channel triggered events.
         """
-        return self.client._OpenHABClient__executeSSE(self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/triggered")
+        try:
+            response = self.client._OpenHABClient__executeSSE(
+                self.client.url + f"/rest/events?topics=openhab/channels/{channelUID}/triggered")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

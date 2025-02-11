@@ -10,13 +10,13 @@ client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password
 transformationsApi = Transformations(client)
 
 # Alle Transformationen abrufen
-transformationsList = transformationsApi.getTransformations()
-print(transformationsList)
+#transformationsList = transformationsApi.getTransformations()
+#print(transformationsList)
 
 # Eine spezifische Transformation abrufen
 uid = "en.map"
-transformation = transformationsApi.getTransformation(uid)
-print(transformation)
+#transformation = transformationsApi.getTransformation(uid)
+#print(transformation)
 
 # Eine Transformation aktualisieren
 updatedData = {
@@ -30,8 +30,8 @@ updatedData = {
 #print(updatedTransformation)
 
 # Eine Transformation löschen
-#deletedTransformation = transformationsApi.deleteTransformation(uid)
-#print(deletedTransformation)
+deletedTransformation = transformationsApi.deleteTransformation(uid)
+print(deletedTransformation)
 
 # Alle Transformation-Dienste abrufen
 services = transformationsApi.getTransformationServices()

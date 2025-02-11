@@ -19,12 +19,12 @@ tokens = authApi.getApiTokens()
 print("API Tokens:", tokens)
 
 # 2. Ein API-Token widerrufen
-revokeResponse = authApi.revokeApiToken("openhab")
-print("Token widerrufen:", revokeResponse)
+#revokeResponse = authApi.revokeApiToken("openhab")
+#print("Token widerrufen:", revokeResponse)
 
 # 3. Sessions abfragen
-sessions = authApi.getSessions()
-print("Sessions:", json.dumps(sessions, indent=4))
+#sessions = authApi.getSessions()
+#print("Sessions:", json.dumps(sessions, indent=4))
 
 # 4. Refresh-Token erstellen (simuliert durch einen spezifischen API-Endpunkt oder OAuth)
 # Ersetzt die Parameter durch gültige Werte, falls erforderlich

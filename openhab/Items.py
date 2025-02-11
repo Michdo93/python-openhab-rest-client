@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Items:
     def __init__(self, client: OpenHABClient):
@@ -47,9 +49,37 @@ class Items:
         }
 
         # Remove None values from parameters
-        params = {key: value for key, value in params.items() if value is not None}
+        params = {key: value for key,
+                  value in params.items() if value is not None}
 
-        return self.client.get("/items", header=header, params=params)
+        try:
+            response = self.client.get("/items", header=header, params=params)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def addOrUpdateItems(self, items: list):
         """
@@ -59,7 +89,35 @@ class Items:
 
         :return: A response object or confirmation that the items were successfully added or updated.
         """
-        return self.client.put("/items", data=json.dumps(items), header={"Content-Type": "application/json"})
+        try:
+            response = self.client.put(
+                "/items", data=json.dumps(items), header={"Content-Type": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getItem(self, itemName: str, language: str = None, metadata: str = ".*", recursive: bool = True):
         """
@@ -81,7 +139,35 @@ class Items:
             "recursive": str(recursive).lower(),
         }
 
-        return self.client.get(f"/items/{itemName}", header=header, params=params)
+        try:
+            response = self.client.get(
+                f"/items/{itemName}", header=header, params=params)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def addOrUpdateItem(self, itemName: str, itemData: dict, language: str = None):
         """
@@ -96,8 +182,36 @@ class Items:
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
-        
-        return self.client.put(f"/items/{itemName}", header=header, data=json.dumps(itemData))
+
+        try:
+            response = self.client.put(
+                f"/items/{itemName}", header=header, data=json.dumps(itemData))
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def sendCommand(self, itemName: str, command: str):
         """
@@ -108,7 +222,35 @@ class Items:
 
         :return: A response object or confirmation that the command was successfully sent.
         """
-        return self.client.post(f"/items/{itemName}", header={"Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"}, data=command)
+        try:
+            response = self.client.post(f"/items/{itemName}", header={
+                                        "Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"}, data=command)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def postUpdate(self, itemName: str, state: str):
         """
@@ -129,7 +271,34 @@ class Items:
 
         :return: A response object or confirmation that the item was successfully deleted.
         """
-        return self.client.delete(f"/items/{itemName}")
+        try:
+            response = self.client.delete(f"/items/{itemName}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def addGroupMember(self, itemName: str, memberItemName: str):
         """
@@ -140,7 +309,35 @@ class Items:
 
         :return: A response object or confirmation that the group member was successfully added.
         """
-        return self.client.put(f"/items/{itemName}/members/{memberItemName}")
+        try:
+            response = self.client.put(
+                f"/items/{itemName}/members/{memberItemName}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def removeGroupMember(self, itemName: str, memberItemName: str):
         """
@@ -151,7 +348,35 @@ class Items:
 
         :return: A response object or confirmation that the group member was successfully removed.
         """
-        return self.client.delete(f"/items/{itemName}/members/{memberItemName}")
+        try:
+            response = self.client.delete(
+                f"/items/{itemName}/members/{memberItemName}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def addMetadata(self, itemName: str, namespace: str, metadata: dict):
         """
@@ -163,7 +388,35 @@ class Items:
 
         :return: A response object or confirmation that the metadata was successfully added.
         """
-        return self.client.put(f"/items/{itemName}/metadata/{namespace}", header={"Content-Type": "application/json"}, data=json.dumps(metadata))
+        try:
+            response = self.client.put(f"/items/{itemName}/metadata/{namespace}", header={
+                                       "Content-Type": "application/json"}, data=json.dumps(metadata))
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def removeMetadata(self, itemName: str, namespace: str):
         """
@@ -174,7 +427,35 @@ class Items:
 
         :return: A response object or confirmation that the metadata was successfully removed.
         """
-        return self.client.delete(f"/items/{itemName}/metadata/{namespace}")
+        try:
+            response = self.client.delete(
+                f"/items/{itemName}/metadata/{namespace}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getMetadataNamespaces(self, itemName: str, language: str = None):
         """
@@ -185,11 +466,39 @@ class Items:
 
         :return: A list of namespaces associated with the item.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/items/{itemName}/metadata/namespaces", header=header)
+        try:
+            response = self.client.get(
+                f"/items/{itemName}/metadata/namespaces", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getSemanticItem(self, itemName: str, semanticClass: str, language: str = None):
         """
@@ -205,7 +514,35 @@ class Items:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/items/{itemName}/semantic/{semanticClass}", header=header)
+        try:
+            response = self.client.get(
+                f"/items/{itemName}/semantic/{semanticClass}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getItemState(self, itemName: str):
         """
@@ -215,7 +552,34 @@ class Items:
 
         :return: A dictionary containing the current state of the item.
         """
-        return self.client.get(f"/items/{itemName}/state")
+        try:
+            response = self.client.get(f"/items/{itemName}/state")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateItemState(self, itemName: str, state: str, language: str = None):
         """
@@ -227,12 +591,41 @@ class Items:
 
         :return: A response object or confirmation that the state was successfully updated.
         """
-        header = {"Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"}
+        header = {"Content-type": "text/plain; charset=utf-8",
+                  "Accept": "text/plain"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f"/items/{itemName}/state", header=header, data=state)
-            
+        try:
+            response = self.client.put(
+                f"/items/{itemName}/state", header=header, data=state)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
     def addTag(self, itemName: str, tag: str):
         """
         Adds a tag to an item.
@@ -242,7 +635,34 @@ class Items:
 
         :return: A response object or confirmation that the tag was successfully added.
         """
-        return self.client.put(f"/items/{itemName}/tags/{tag}")
+        try:
+            response = self.client.put(f"/items/{itemName}/tags/{tag}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def removeTag(self, itemName: str, tag: str):
         """
@@ -253,7 +673,34 @@ class Items:
 
         :return: A response object or confirmation that the tag was successfully removed.
         """
-        return self.client.delete(f"/items/{itemName}/tags/{tag}")
+        try:
+            response = self.client.delete(f"/items/{itemName}/tags/{tag}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def purgeOrphanedMetadata(self):
         """
@@ -261,4 +708,31 @@ class Items:
 
         :return: A response object or confirmation that orphaned metadata was successfully purged.
         """
-        return self.client.post("/items/metadata/purge")
+        try:
+            response = self.client.post("/items/metadata/purge")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

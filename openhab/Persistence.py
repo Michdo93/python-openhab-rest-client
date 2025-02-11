@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Persistence:
     def __init__(self, client: OpenHABClient):
@@ -15,8 +17,35 @@ class Persistence:
         Gets a list of persistence services.
 
         :return: A list of persistence services with IDs, labels, and types.
-        """        
-        return self.client.get("/persistence")
+        """
+        try:
+            response = self.client.get("/persistence")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getServiceConfiguration(self, serviceId: str) -> dict:
         """
@@ -25,8 +54,35 @@ class Persistence:
         :param serviceId: The ID of the persistence service.
 
         :return: The configuration of the service.
-        """        
-        return self.client.get(f"/persistence/{serviceId}")
+        """
+        try:
+            response = self.client.get(f"/persistence/{serviceId}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def setServiceConfiguration(self, serviceId: str, config: dict) -> dict:
         """
@@ -36,8 +92,36 @@ class Persistence:
         :param config: The configuration data.
 
         :return: The response from the API after modification.
-        """        
-        return self.client.put(f"/persistence/{serviceId}", data=json.dumps({'serviceId': serviceId}), header={"Content-Type": "application/json", "Accept": "application/json"})
+        """
+        try:
+            response = self.client.put(f"/persistence/{serviceId}", data=json.dumps(
+                {'serviceId': serviceId}), header={"Content-Type": "application/json", "Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteServiceConfiguration(self, serviceId: str) -> dict:
         """
@@ -47,7 +131,34 @@ class Persistence:
 
         :return: The response from the API after deleting the configuration.
         """
-        return self.client.delete(f"/persistence/{serviceId}")
+        try:
+            response = self.client.delete(f"/persistence/{serviceId}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getItemsForService(self, serviceId: str) -> dict:
         """
@@ -57,8 +168,35 @@ class Persistence:
 
         :return: A list of items with their last and earliest timestamps.
         """
-        
-        return self.client.get(f"/persistence/items?serviceId={serviceId}")
+        try:
+            response = self.client.get(
+                f"/persistence/items?serviceId={serviceId}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getItemPersistenceData(self, serviceId: str, itemName: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50) -> dict:
         """
@@ -73,7 +211,35 @@ class Persistence:
 
         :return: The retrieved data points of the item.
         """
-        return self.client.get(f"/persistence/items/{itemName}", params={"serviceId": serviceId, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength})
+        try:
+            response = self.client.get(f"/persistence/items/{itemName}", params={
+                                       "serviceId": serviceId, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def storeItemData(self, serviceId: str, itemName: str, time: str, state: str) -> dict:
         """
@@ -86,7 +252,35 @@ class Persistence:
 
         :return: The response from the API after storing the data.
         """
-        return self.client.put(f"/persistence/items/{itemName}", params={"serviceId": serviceId, "time": time, "state": state})
+        try:
+            response = self.client.put(f"/persistence/items/{itemName}", params={
+                                       "serviceId": serviceId, "time": time, "state": state})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteItemData(self, serviceId: str, itemName: str, startTime: str, endTime: str) -> dict:
         """
@@ -99,5 +293,32 @@ class Persistence:
 
         :return: The response from the API after deleting the data.
         """
+        try:
+            response = self.client.delete(f"/persistence/items/{itemName}", params={
+                                          "serviceId": serviceId, "starttime": startTime, "endtime": endTime})
 
-        return self.client.delete(f"/persistence/items/{itemName}", params={"serviceId": serviceId, "starttime": startTime, "endtime": endTime})
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

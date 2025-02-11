@@ -1,4 +1,6 @@
 from .Client import OpenHABClient
+import requests
+
 
 class Sitemaps:
     def __init__(self, client: OpenHABClient):
@@ -15,7 +17,34 @@ class Sitemaps:
 
         :return: A list of sitemaps (JSON).
         """
-        return self.client.get("/sitemaps")
+        try:
+            response = self.client.get("/sitemaps")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getSitemap(self, sitemapName: str, language=None, type=None, jsonCallback=None, includeHidden=False):
         """
@@ -29,7 +58,40 @@ class Sitemaps:
 
         :return: The sitemap object (JSON).
         """
-        return self.client.get(f"/sitemaps/{sitemapName}", header={"type": type, "jsoncallback": jsonCallback, "includeHidden": includeHidden}, params={"Accept-Language": language} if language else {})
+        if includeHidden:
+            includeHidden = "true"
+        else:
+            includeHidden = "false"
+
+        try:
+            response = self.client.get(f"/sitemaps/{sitemapName}", header={"type": type, "jsoncallback": jsonCallback,
+                                                                           "includeHidden": includeHidden}, params={"Accept-Language": language} if language else {})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getSitemapPage(self, sitemapName: str, pageId: str, subscriptionID=None, includeHidden=False):
         """
@@ -42,7 +104,40 @@ class Sitemaps:
 
         :return: The sitemap page (JSON).
         """
-        return self.client.get(f"/sitemaps/{sitemapName}/{pageId}", params={"subscriptionID": subscriptionID, "includeHidden": includeHidden})
+        if includeHidden:
+            includeHidden = "true"
+        else:
+            includeHidden = "false"
+
+        try:
+            response = self.client.get(f"/sitemaps/{sitemapName}/{pageId}", params={
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getFullSitemap(self, sitemapName: str, subscriptionID=None, includeHidden=False):
         """
@@ -54,7 +149,40 @@ class Sitemaps:
 
         :return: The complete sitemap (JSON).
         """
-        return self.client.get(f"/sitemaps/{sitemapName}/*", params={"subscriptionID": subscriptionID, "includeHidden": includeHidden})
+        if includeHidden:
+            includeHidden = "true"
+        else:
+            includeHidden = "false"
+
+        try:
+            response = self.client.get(f"/sitemaps/{sitemapName}/*", params={
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getSitemapEvents(self, subscriptionID: str, sitemap=None, pageId=None):
         """
@@ -66,7 +194,35 @@ class Sitemaps:
 
         :return: The events (JSON).
         """
-        return self.client.get(f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemap, "pageId": pageId})
+        try:
+            response = self.client.get(
+                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemap, "pageId": pageId})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getFullSitemapEvents(self, subscriptionID: str, sitemap=None):
         """
@@ -77,7 +233,35 @@ class Sitemaps:
 
         :return: The events for the entire sitemap (JSON).
         """
-        return self.client.get(f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemap})
+        try:
+            response = self.client.get(
+                f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemap})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def subscribeToSitemapEvents(self):
         """
@@ -85,4 +269,31 @@ class Sitemaps:
 
         :return: The response to the subscription request (JSON).
         """
-        return self.client.post("/sitemaps/events/subscribe")
+        try:
+            response = self.client.post("/sitemaps/events/subscribe")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Voice:
     def __init__(self, client: OpenHABClient):
@@ -16,10 +18,38 @@ class Voice:
 
         :return: A dictionary with the details of the default voice.
         """
-        return self.client.get('/voice/defaultvoice', header={"Accept": "application/json"})
+        try:
+            response = self.client.get(
+                '/voice/defaultvoice', header={"Accept": "application/json"})
 
-    def startDialog(self, sourceID: str, ksID: str = None, sttID: str = None, 
-                    ttsID: str = None, voiceID: str = None, hliIDs: str = None, 
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
+    def startDialog(self, sourceID: str, ksID: str = None, sttID: str = None,
+                    ttsID: str = None, voiceID: str = None, hliIDs: str = None,
                     sinkID: str = None, keyword: str = None, listeningItem: str = None):
         """
         Start dialog processing for a given audio source.
@@ -33,10 +63,38 @@ class Voice:
         :param sinkID: The ID of the audio output (optional).
         :param keyword: The keyword used to start the dialog (optional).
         :param listeningItem: The name of the item to listen to (optional).
-        
+
         :return: The response from the server.
         """
-        return self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttID': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem})
+        try:
+            response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttID': sttID, 'ttsId': ttsID,
+                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def stopDialog(self, sourceID: str):
         """
@@ -45,7 +103,35 @@ class Voice:
         :param sourceID: The ID of the audio source.
         :return: The response from the server.
         """
-        return self.client.post('/voice/dialog/stop', params={'sourceId': sourceID})
+        try:
+            response = self.client.post(
+                '/voice/dialog/stop', params={'sourceId': sourceID})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getInterpreters(self, language: str = None):
         """
@@ -59,7 +145,34 @@ class Voice:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get('/voice/interpreters', header=header)
+        try:
+            response = self.client.get('/voice/interpreters', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def interpretText(self, text: str, language: str, IDs: list = None):
         """
@@ -75,7 +188,35 @@ class Voice:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.post('/voice/interpreters', header=header, params={'ids': ','.join(IDs)} if IDs else {}, data={'text': text})
+        try:
+            response = self.client.post('/voice/interpreters', header=header, params={
+                                        'ids': ','.join(IDs)} if IDs else {}, data={'text': text})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getInterpreter(self, interpreterID: str, language: str = None):
         """
@@ -89,8 +230,36 @@ class Voice:
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
-        
-        return self.client.get(f'/voice/interpreters/{interpreterID}', header=header)
+
+        try:
+            response = self.client.get(
+                f'/voice/interpreters/{interpreterID}', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def interpretTextBatch(self, text: str, language: str, IDs: list):
         """
@@ -106,7 +275,35 @@ class Voice:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.post('/voice/interpreters', header=header, params={'ids': ','.join(IDs)}, data=json.dumps({'text': text}))
+        try:
+            response = self.client.post('/voice/interpreters', header=header, params={
+                                        'ids': ','.join(IDs)}, data=json.dumps({'text': text}))
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def listenAndAnswer(self, sourceID: str, sttID: str, ttsID: str, voiceID: str,
                         hliIDs: list = None, sinkID: str = None, listeningItem: str = None):
@@ -120,10 +317,38 @@ class Voice:
         :param hliIDs: A list of interpreter IDs (optional).
         :param sinkID: The ID of the audio output (optional).
         :param listeningItem: The name of the item to listen to (optional).
-        
+
         :return: The response from the server.
         """
-        return self.client.post('/voice/listenandanswer', data={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem})
+        try:
+            response = self.client.post('/voice/listenandanswer', data={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
+                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def sayText(self, text: str, voiceID: str, sinkID: str, volume: str = '100'):
         """
@@ -133,10 +358,38 @@ class Voice:
         :param voiceID: The ID of the voice.
         :param sinkID: The ID of the audio output.
         :param volume: The volume level (default: 100).
-        
+
         :return: The response from the server.
         """
-        return self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data={'text': text}, header={"Content-Type": "text/plain"})
+        try:
+            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data={
+                                        'text': text}, header={"Content-Type": "text/plain"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getVoices(self):
         """
@@ -144,4 +397,32 @@ class Voice:
 
         :return: A list of voices if successful.
         """
-        return self.client.get('/voice/voices', header={"Accept": "application/json"})
+        try:
+            response = self.client.get(
+                '/voice/voices', header={"Accept": "application/json"})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

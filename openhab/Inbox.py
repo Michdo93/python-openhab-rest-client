@@ -1,5 +1,6 @@
 from .Client import OpenHABClient
-import json
+import requests
+
 
 class Inbox:
     def __init__(self, client: OpenHABClient):
@@ -15,10 +16,38 @@ class Inbox:
         Get all discovered things.
 
         :param includeIgnored: Whether ignored entries should also be included (default: True).
-        
+
         :return: A list of discovered things with details such as UID, flag, label, and properties.
-        """        
-        return self.client.get("/inbox", params={"includeIgnored": str(includeIgnored).lower()})
+        """
+        try:
+            response = self.client.get(
+                "/inbox", params={"includeIgnored": str(includeIgnored).lower()})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def removeDiscoveryResult(self, thingUID: str) -> dict:
         """
@@ -27,13 +56,40 @@ class Inbox:
         :param thingUID: The UID of the discovered thing to be removed.
 
         :return: The API response to the delete request.
-        """        
-        return self.client.delete(f"/inbox/{thingUID}")
+        """
+        try:
+            response = self.client.delete(f"/inbox/{thingUID}")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def approveDiscoveryResult(self, thingUID: str, thingLabel: str, newThingID: str = None, language: str = None) -> dict:
         """
         Approves the discovery result by adding the thing to the registry.
-        
+
         :param thingUID: The UID of the discovered thing.
         :param thingLabel: The new name of the thing.
         :param newThingID: Optional: The new thing ID.
@@ -41,7 +97,35 @@ class Inbox:
 
         :return: The API response to the approval request.
         """
-        return self.client.post(f"/inbox/{thingUID}/approve", header={"Accept-Language": language, "Content-Type": "text/plain"} if language else {"Content-Type": "text/plain"}, params={"newThingID": newThingID} if newThingID else {}, data=thingLabel)
+        try:
+            response = self.client.post(f"/inbox/{thingUID}/approve", header={"Accept-Language": language, "Content-Type": "text/plain"} if language else {
+                                        "Content-Type": "text/plain"}, params={"newThingID": newThingID} if newThingID else {}, data=thingLabel)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def ignoreDiscoveryResult(self, thingUID: str) -> dict:
         """
@@ -51,7 +135,34 @@ class Inbox:
 
         :return: The API response to the ignore request.
         """
-        return self.client.post(f"/inbox/{thingUID}/ignore")
+        try:
+            response = self.client.post(f"/inbox/{thingUID}/ignore")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def unignoreDiscoveryResult(self, thingUID: str) -> dict:
         """
@@ -61,4 +172,31 @@ class Inbox:
 
         :return: The API response to the unignore request.
         """
-        return self.client.post(f"/inbox/{thingUID}/unignore")
+        try:
+            response = self.client.post(f"/inbox/{thingUID}/unignore")
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

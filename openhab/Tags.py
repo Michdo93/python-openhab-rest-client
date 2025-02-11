@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Tags:
     def __init__(self, client: OpenHABClient):
@@ -18,7 +20,35 @@ class Tags:
 
         :return: A list of semantic tags (JSON).
         """
-        return self.client.get("/tags", header={"Accept-Language": language} if language else {})
+        try:
+            response = self.client.get(
+                "/tags", header={"Accept-Language": language} if language else {})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def createTag(self, tagData, language=None):
         """
@@ -29,11 +59,40 @@ class Tags:
 
         :return: The response to the tag creation request (JSON).
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+            "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.post("/tags", data=json.dumps(tagData), header=header)
+        try:
+            response = self.client.post(
+                "/tags", data=json.dumps(tagData), header=header)
+
+               if isinstance(response, dict) and "status" in response:
+                    status_code = response["status"]
+                else:
+                    return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getTag(self, tagID: str, language=None):
         """
@@ -44,11 +103,39 @@ class Tags:
 
         :return: The tag object and its sub-tags (JSON).
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+            "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f"/tags/{tagID}", header=header)
+        try:
+            response = self.client.get(f"/tags/{tagID}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateTag(self, tagID: str, tagData, language=None):
         """
@@ -60,11 +147,40 @@ class Tags:
 
         :return: The response to the tag update request (JSON).
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+            "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f"/tags/{tagID}", data=json.dumps(tagData), header=header)
+        try:
+            response = self.client.put(
+                f"/tags/{tagID}", data=json.dumps(tagData), header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteTag(self, tagID: str, language=None):
         """
@@ -75,8 +191,36 @@ class Tags:
 
         :return: The response to the tag deletion request (JSON).
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+            "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.delete(f"/tags/{tagID}", header=header)
+        try:
+            response = self.client.delete(f"/tags/{tagID}", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}

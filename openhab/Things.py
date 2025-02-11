@@ -1,5 +1,7 @@
 from .Client import OpenHABClient
 import json
+import requests
+
 
 class Things:
     def __init__(self, client: OpenHABClient):
@@ -24,7 +26,35 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get('/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, header=header)
+        try:
+            response = self.client.get(
+                '/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def createThing(self, thingData: dict, language: str = None):
         """
@@ -35,11 +65,40 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.post('/things', data=json.dumps(thingData), header=header)
+        try:
+            response = self.client.post(
+                '/things', data=json.dumps(thingData), header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingByUID(self, thingUID: str, language: str = None):
         """
@@ -54,7 +113,34 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f'/things/{thingUID}', header=header)
+        try:
+            response = self.client.get(f'/things/{thingUID}', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateThing(self, thingUID: str, thingData: dict, language: str = None):
         """
@@ -66,11 +152,40 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f'/things/{thingUID}', data=json.dumps(thingData), header=header)
+        try:
+            response = self.client.put(
+                f'/things/{thingUID}', data=json.dumps(thingData), header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def deleteThing(self, thingUID: str, force: bool = False, language: str = None):
         """
@@ -82,7 +197,35 @@ class Things:
 
         :return: The API response.
         """
-        return self.client.delete(f'/things/{thingUID}', params={'force': force}, header={'Accept-Language': language} if language else {})
+        try:
+            response = self.client.delete(f'/things/{thingUID}', params={'force': force}, header={
+                                          'Accept-Language': language} if language else {})
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def updateThingConfiguration(self, thingUID: str, configurationData: dict, language: str = None):
         """
@@ -94,11 +237,40 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f'/things/{thingUID}/config', data=json.dumps(configurationData), header=header)
+        try:
+            response = self.client.put(
+                f'/things/{thingUID}/config', data=json.dumps(configurationData), header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingConfigStatus(self, thingUID: str, language: str = None):
         """
@@ -113,8 +285,36 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f'/things/{thingUID}/config/status', header=header)
-    
+        try:
+            response = self.client.get(
+                f'/things/{thingUID}/config/status', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
+
     def setThingStatus(self, thingUID: str, enabled: bool, language: str = None):
         """
         Sets the thing's enabled status.
@@ -129,11 +329,39 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f'/things/{thingUID}/enable', data="true" if enabled else "false", header=header)
+        try:
+            response = self.client.put(
+                f'/things/{thingUID}/enable', data="true" if enabled else "false", header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def enableThing(self, thingUID: str):
         return self.setThingStatus(thingUID, True)
-    
+
     def disableThing(self, thingUID: str):
         return self.setThingStatus(thingUID, False)
 
@@ -147,11 +375,40 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        header = {"Content-Type": "application/json",
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
-        return self.client.put(f'/things/{thingUID}/firmware/{firmwareVersion}', header=header)
+        try:
+            response = self.client.put(
+                f'/things/{thingUID}/firmware/{firmwareVersion}', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingFirmwareStatus(self, thingUID: str, language: str = None):
         """
@@ -166,7 +423,35 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f'/things/{thingUID}/firmware/status', header=header)
+        try:
+            response = self.client.get(
+                f'/things/{thingUID}/firmware/status', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingFirmwares(self, thingUID: str, language: str = None):
         """
@@ -181,7 +466,35 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f'/things/{thingUID}/firmwares', header=header)
+        try:
+            response = self.client.get(
+                f'/things/{thingUID}/firmwares', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
 
     def getThingStatus(self, thingUID: str, language: str = None):
         """
@@ -196,4 +509,32 @@ class Things:
         if language:
             header["Accept-Language"] = language
 
-        return self.client.get(f'/things/{thingUID}/status', header=header)
+        try:
+            response = self.client.get(
+                f'/things/{thingUID}/status', header=header)
+
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
+
+        except requests.exceptions.HTTPError as err:
+            status_code = err.response.status_code
+            if status_code == 405:
+                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            elif status_code == 404:
+                return {"error": "UID not found."}
+            else:
+                return {"error": f"HTTP error {status_code}: {str(err)}"}
+
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
+        if status_code == 200:
+            return {"message": "OK"}
+        elif status_code == 404:
+            return {"error": "UID not found."}
+        elif status_code == 405:
+            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+
+        return {"error": f"Unexpected response: {status_code}"}
