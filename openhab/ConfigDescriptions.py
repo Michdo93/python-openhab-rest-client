@@ -39,11 +39,7 @@ class ConfigDescriptions:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -51,10 +47,6 @@ class ConfigDescriptions:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -82,10 +74,10 @@ class ConfigDescriptions:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Invalid URI syntax."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -95,8 +87,8 @@ class ConfigDescriptions:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Not found."}
+        elif status_code == 400:
+            return {"error": "Invalid URI syntax."}
 
         return {"error": f"Unexpected response: {status_code}"}

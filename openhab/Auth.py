@@ -35,10 +35,10 @@ class Auth:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 401:
+                return {"error": "User is not authenticated."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "User not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -48,9 +48,9 @@ class Auth:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "User not found."}
+        elif status_code == 401:
+            return {"error": "User is not authenticated."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -78,10 +78,10 @@ class Auth:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 401:
+                return {"error": "User is not authenticated."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "User not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -91,9 +91,9 @@ class Auth:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "User not found."}
+        elif status_code == 401:
+            return {"error": "User is not authenticated."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -121,10 +121,10 @@ class Auth:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 401:
+                return {"error": "User is not authenticated."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "User not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -134,9 +134,9 @@ class Auth:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "User not found."}
+        elif status_code == 401:
+            return {"error": "User is not authenticated."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -162,10 +162,10 @@ class Auth:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 401:
+                return {"error": "User is not authenticated."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "User not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -175,9 +175,9 @@ class Auth:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "User not found."}
+        elif status_code == 401:
+            return {"error": "User is not authenticated."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -225,10 +225,8 @@ class Auth:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 400:
+                return {"error": "Invalid request parameters."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -237,9 +235,7 @@ class Auth:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        elif status_code == 400:
+            return {"error": "Invalid request parameters."}
 
         return {"error": f"Unexpected response: {status_code}"}

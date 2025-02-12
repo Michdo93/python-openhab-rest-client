@@ -31,11 +31,7 @@ class Tags:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -43,10 +39,6 @@ class Tags:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -60,7 +52,7 @@ class Tags:
         :return: The response to the tag creation request (JSON).
         """
         header = {"Content-Type": "application/json",
-            "Accept": "application/json"}
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -68,29 +60,29 @@ class Tags:
             response = self.client.post(
                 "/tags", data=json.dumps(tagData), header=header)
 
-               if isinstance(response, dict) and "status" in response:
-                    status_code = response["status"]
-                else:
-                    return response
+            if isinstance(response, dict) and "status" in response:
+                status_code = response["status"]
+            else:
+                return response
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 400:
+                return {"error": "The tag identifier is invalid or the tag label is missing."}
+            elif status_code == 409:
+                return {"error": "A tag with the same identifier already exists."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
 
-        if status_code == 200:
-            return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        if status_code == 201:
+            return {"message": "Created"}
+        elif status_code == 400:
+            return {"error": "The tag identifier is invalid or the tag label is missing."}
+        elif status_code == 409:
+            return {"error": "A tag with the same identifier already exists."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -104,7 +96,7 @@ class Tags:
         :return: The tag object and its sub-tags (JSON).
         """
         header = {"Content-Type": "application/json",
-            "Accept": "application/json"}
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -118,10 +110,8 @@ class Tags:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Semantic tag not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -131,9 +121,7 @@ class Tags:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Semantic tag not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -148,7 +136,7 @@ class Tags:
         :return: The response to the tag update request (JSON).
         """
         header = {"Content-Type": "application/json",
-            "Accept": "application/json"}
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -164,9 +152,9 @@ class Tags:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+                return {"error": "Semantic tag not editable."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Semantic tag not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -176,9 +164,9 @@ class Tags:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
+            return {"error": "Semantic tag not found."}
         elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Semantic tag not editable."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -192,7 +180,7 @@ class Tags:
         :return: The response to the tag deletion request (JSON).
         """
         header = {"Content-Type": "application/json",
-            "Accept": "application/json"}
+                  "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -207,9 +195,9 @@ class Tags:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+                return {"error": "Semantic tag not removable."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Semantic tag not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -217,10 +205,10 @@ class Tags:
             return {"error": f"Request error: {str(err)}"}
 
         if status_code == 200:
-            return {"message": "OK"}
+            return {"message": "OK, was deleted."}
         elif status_code == 404:
-            return {"error": "UID not found."}
+            return {"error": "Semantic tag not found."}
         elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Semantic tag not removable."}
 
         return {"error": f"Unexpected response: {status_code}"}

@@ -31,10 +31,8 @@ class Events:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 400:
+                return {"error": "Topic is empty or contains invalid characters."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -43,10 +41,8 @@ class Events:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        elif status_code == 400:
+            return {"error": "Topic is empty or contains invalid characters."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -67,11 +63,7 @@ class Events:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -79,10 +71,6 @@ class Events:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -106,10 +94,8 @@ class Events:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Unknown connectionID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -119,9 +105,7 @@ class Events:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Unknown connectionID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -152,11 +136,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -164,10 +144,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -190,11 +166,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -202,10 +174,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -228,11 +196,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -240,10 +204,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -266,11 +226,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -278,10 +234,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -304,11 +256,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -316,10 +264,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -342,11 +286,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -354,10 +294,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -380,11 +316,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -392,10 +324,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -418,11 +346,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -430,10 +354,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -457,11 +377,7 @@ class ItemEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -469,10 +385,6 @@ class ItemEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -505,11 +417,7 @@ class ThingEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -517,10 +425,6 @@ class ThingEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -543,11 +447,7 @@ class ThingEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -555,10 +455,6 @@ class ThingEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -581,11 +477,7 @@ class ThingEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -593,10 +485,6 @@ class ThingEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -619,11 +507,7 @@ class ThingEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -631,10 +515,6 @@ class ThingEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -657,11 +537,7 @@ class ThingEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -669,10 +545,6 @@ class ThingEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -705,11 +577,7 @@ class InboxEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -717,10 +585,6 @@ class InboxEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -743,11 +607,7 @@ class InboxEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -755,10 +615,6 @@ class InboxEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -781,11 +637,7 @@ class InboxEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -793,10 +645,6 @@ class InboxEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -830,11 +678,7 @@ class LinkEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -842,10 +686,6 @@ class LinkEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -869,11 +709,7 @@ class LinkEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -881,10 +717,6 @@ class LinkEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -917,11 +749,7 @@ class ChannelEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -929,10 +757,6 @@ class ChannelEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -955,11 +779,7 @@ class ChannelEvents:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -967,9 +787,5 @@ class ChannelEvents:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}

@@ -27,11 +27,7 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -39,10 +35,6 @@ class Sitemaps:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -74,11 +66,7 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -86,10 +74,6 @@ class Sitemaps:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -120,10 +104,10 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Invalid subscription id has been provided."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Sitemap with requested name does not exist or page does not exist, or page refers to a non-linkable widget."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -133,9 +117,9 @@ class Sitemaps:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Sitemap with requested name does not exist or page does not exist, or page refers to a non-linkable widget."}
+        elif status_code == 400:
+            return {"error": "Invalid subscription id has been provided."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -165,10 +149,10 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Invalid subscription id has been provided."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Sitemap with requested name does not exist."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -178,9 +162,9 @@ class Sitemaps:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Sitemap with requested name does not exist."}
+        elif status_code == 400:
+            return {"error": "Invalid subscription id has been provided."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -205,10 +189,10 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Missing sitemap or page parameter, or page not linked successfully to the subscription."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Subscription not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -218,9 +202,9 @@ class Sitemaps:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Subscription not found."}
+        elif status_code == 400:
+            return {"error": "Missing sitemap or page parameter, or page not linked successfully to the subscription."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -244,10 +228,10 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Missing sitemap parameter, or sitemap not linked successfully to the subscription."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "Subscription not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -257,9 +241,9 @@ class Sitemaps:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Subscription not found."}
+        elif status_code == 400:
+            return {"error": "Missing sitemap parameter, or sitemap not linked successfully to the subscription."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -279,21 +263,17 @@ class Sitemaps:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 503:
+                return {"error": "Subscriptions limit reached."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
 
-        if status_code == 200:
-            return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        if status_code == 201:
+            return {"message": "Subscription created."}
+        elif status_code == 503:
+            return {"error": "Subscriptions limit reached."}
 
         return {"error": f"Unexpected response: {status_code}"}

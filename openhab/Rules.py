@@ -34,11 +34,7 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -46,10 +42,6 @@ class Rules:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -72,22 +64,26 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 400:
+                return {"error": "Creation refused: Missing required parameter."}
+            elif status_code == 409:
+                return {"error": "Creation refused: Rule with the same UID already exists."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
 
-        if status_code == 200:
-            return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        if status_code == 201:
+            location = response.headers.get("Location")
+            return {
+                "message": "Rule successfully created.",
+                "location": location if location else "No Location header provided."
+            }
+        elif status_code == 400:
+            return {"error": "Creation refused: Missing required parameter."}
+        elif status_code == 409:
+            return {"error": "Creation refused: Rule with the same UID already exists."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -109,10 +105,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -122,9 +116,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -148,10 +140,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -161,9 +151,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -186,10 +174,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -199,9 +185,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -226,10 +210,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -239,9 +221,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -266,10 +246,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -279,9 +257,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -307,10 +283,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -320,9 +294,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -349,10 +321,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -362,9 +332,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -386,10 +354,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -399,9 +365,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -423,10 +387,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -436,9 +398,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -460,10 +420,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -473,9 +431,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -499,10 +455,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -512,9 +466,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -538,10 +490,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -551,9 +501,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -583,10 +531,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -596,9 +542,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -620,10 +564,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Rule corresponding to the given UID does not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -633,9 +575,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Rule corresponding to the given UID does not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -659,10 +599,8 @@ class Rules:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 400:
+                return {"error": "The max. simulation duration of 180 days is exceeded."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -671,9 +609,7 @@ class Rules:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+        elif status_code == 400:
+            return {"error": "The max. simulation duration of 180 days is exceeded."}
 
         return {"error": f"Unexpected response: {status_code}"}
