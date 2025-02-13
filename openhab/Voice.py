@@ -29,10 +29,8 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "No default voice was found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -42,9 +40,7 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "No default voice was found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -77,10 +73,10 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "One of the given ids is wrong."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -90,9 +86,9 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "One of the given ids is wrong."}
+        elif status_code == 400:
+            return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -115,9 +111,9 @@ class Voice:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+                return {"error": "No dialog processing is started for the audio source."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "No audio source was found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -127,9 +123,9 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "No audio source was found."}
+        elif status_code == 400:
+            return {"error": "No dialog processing is started for the audio source."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -155,11 +151,7 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -167,10 +159,6 @@ class Voice:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -184,7 +172,7 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = {"Content-Type": "text/plain"}
+        header = {"Content-Type": "text /plain"}
         if language:
             header["Accept-Language"] = language
 
@@ -199,10 +187,10 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Interpretation exception occurs."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "No human language interpreter was found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -212,9 +200,9 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "No human language interpreter was found."}
+        elif status_code == 400:
+            return {"error": "Interpretation exception occurs."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -242,10 +230,8 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
+            if status_code == 404:
+                return {"error": "Interpreter not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -255,9 +241,7 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "Interpreter not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -286,10 +270,10 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Interpretation exception occurs."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "No human language interpreter was found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -299,9 +283,9 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "No human language interpreter was found."}
+        elif status_code == 400:
+            return {"error": "Interpretation exception occurs."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -331,10 +315,10 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            if status_code == 400:
+                return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
             elif status_code == 404:
-                return {"error": "UID not found."}
+                return {"error": "One of the given ids is wrong."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -344,9 +328,9 @@ class Voice:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
+            return {"error": "One of the given ids is wrong."}
+        elif status_code == 400:
+            return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -372,11 +356,7 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -384,10 +364,6 @@ class Voice:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -408,11 +384,7 @@ class Voice:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
-                return {"error": "UID not found."}
-            else:
+            if status_code != 200:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
@@ -420,9 +392,5 @@ class Voice:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "UID not found."}
-        elif status_code == 405:
-            return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
 
         return {"error": f"Unexpected response: {status_code}"}
