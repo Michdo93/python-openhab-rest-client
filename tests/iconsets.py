@@ -5,15 +5,23 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from openhab import OpenHABClient, Iconsets
 
-# Client initialisieren
-client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
+# Test retrieving all Iconsets
+def testGetAllIconsets(iconsetsAPI: Iconsets, language: str = None):
+    print("\n~~~~ Test #1: getAllIconsets() ~~~~\n")
 
-# Iconsets-Klasse instanziieren
-iconsetsApi = Iconsets(client)
+    try:
+        iconsets = iconsetsAPI.getAllIconsets(language)
+        print("Available Iconsets:", iconsets)
+    except Exception as e:
+        print("Error retrieving Iconsets:", e)
 
-# Alle Iconsets abrufen
-try:
-    iconsets = iconsetsApi.getAllIconsets(language="de")
-    print("Verfügbare Iconsets:", iconsets)
-except Exception as e:
-    print("Fehler beim Abrufen der Iconsets:", e)
+if __name__ == "__main__":
+    # Initialize OpenHAB client
+    client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
+    iconsetsAPI = Iconsets(client)
+
+    # Variables
+    language = "de"
+
+    # Run all tests
+    testGetAllIconsets(iconsetsAPI, language)   # Test #1

@@ -1,28 +1,157 @@
 import sys
 import os
 
-# Füge den Projektwurzelpfad (eine Ebene höher) zum Python-Suchpfad hinzu
+# Add the project root path (one level up) to the Python search path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from openhab import OpenHABClient, Items
 
-# Client initialisieren (ersetze 'http://openhab-url' mit deiner URL und 'auth_token' mit deinem Token)
-#client = OpenHABClient(base_url='http://openhab-url', auth_token='your_auth_token')
-client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-itemsApi = Items(client)
+# Test fetching all items
+def testGetAllItems(itemsAPI: Items):
+    print("\n~~~~ Test #1: getAllItems() ~~~~\n")
 
-# Beispiele für jede Methode in Items
-def examples():
-    
-    # Alle Items abrufen
-    allItems = itemsApi.getAllItems()
-    print("All Items:", allItems)
+    try:
+        allItems = itemsAPI.getAllItems()
+        print("All Items:", allItems)
+    except Exception as e:
+        print(f"Error fetching all items: {e}")
 
-    
-    # Ein einzelnes Item abrufen
-    testSwitch = itemsApi.getItem("testSwitch")
-    print("testSwitch Details:", testSwitch)
-    
-    # Neues Item hinzufügen oder aktualisieren
+# Test fetching a specific item
+def testGetItem(itemsAPI: Items, itemName: str):
+    print("\n~~~~ Test #2: getItem() ~~~~\n")
+
+    try:
+        item = itemsAPI.getItem(itemName)
+        print(f"Details for {itemName}:", item)
+    except Exception as e:
+        print(f"Error fetching item '{itemName}': {e}")
+
+# Test adding or updating a single item
+def testAddOrUpdateItem(itemsAPI: Items, itemName: str, itemData: dict):
+    print("\n~~~~ Test #3: addOrUpdateItem() ~~~~\n")
+
+    try:
+        itemsAPI.addOrUpdateItem(itemName, itemData)
+        print(f"Item '{itemName}' added or updated.")
+    except Exception as e:
+        print(f"Error adding or updating item '{itemName}': {e}")
+
+# Test adding or updating multiple items
+def testAddOrUpdateItems(itemsAPI: Items, items: list):
+    print("\n~~~~ Test #4: addOrUpdateItems() ~~~~\n")
+
+    try:
+        itemsAPI.addOrUpdateItems(items)
+        print("Multiple items added or updated.")
+    except Exception as e:
+        print(f"Error adding or updating multiple items: {e}")
+
+# Test sending a command to an item
+def testSendCommand(itemsAPI: Items, itemName: str, command: str):
+    print("\n~~~~ Test #5: sendCommand() ~~~~\n")
+
+    try:
+        itemsAPI.sendCommand(itemName, command)
+        print(f"Command '{command}' sent to '{itemName}'.")
+    except Exception as e:
+        print(f"Error sending command to '{itemName}': {e}")
+
+# Test updating the state of an item
+def testUpdateItemState(itemsAPI: Items, itemName: str, state: str):
+    print("\n~~~~ Test #6: updateItemState() ~~~~\n")
+
+    try:
+        itemsAPI.updateItemState(itemName, state)
+        print(f"State of '{itemName}' updated to '{state}'.")
+    except Exception as e:
+        print(f"Error updating state of '{itemName}': {e}")
+
+# Test fetching the state of an item
+def testGetItemState(itemsAPI: Items, itemName: str):
+    print("\n~~~~ Test #7: getItemState() ~~~~\n")
+
+    try:
+        state = itemsAPI.getItemState(itemName)
+        print(f"State of '{itemName}':", state)
+    except Exception as e:
+        print(f"Error fetching state of '{itemName}': {e}")
+
+# Test deleting an item
+def testDeleteItem(itemsAPI: Items, itemName: str):
+    print("\n~~~~ Test #8: deleteItem() ~~~~\n")
+
+    try:
+        itemsAPI.deleteItem(itemName)
+        print(f"Item '{itemName}' deleted.")
+    except Exception as e:
+        print(f"Error deleting item '{itemName}': {e}")
+
+# Test adding a group member
+def testAddGroupMember(itemsAPI: Items, groupName: str, itemName: str):
+    print("\n~~~~ Test #9: addGroupMember() ~~~~\n")
+
+    try:
+        itemsAPI.addGroupMember(groupName, itemName)
+        print(f"Item '{itemName}' added to group '{groupName}'.")
+    except Exception as e:
+        print(f"Error adding item '{itemName}' to group '{groupName}': {e}")
+
+# Test removing a group member
+def testRemoveGroupMember(itemsAPI: Items, groupName: str, itemName: str):
+    print("\n~~~~ Test #10: removeGroupMember() ~~~~\n")
+
+    try:
+        itemsAPI.removeGroupMember(groupName, itemName)
+        print(f"Item '{itemName}' removed from group '{groupName}'.")
+    except Exception as e:
+        print(f"Error removing item '{itemName}' from group '{groupName}': {e}")
+
+# Test adding metadata to an item
+def testAddMetadata(itemsAPI: Items, itemName: str, namespace: str, metadata: dict):
+    print("\n~~~~ Test #11: addMetadata() ~~~~\n")
+
+    try:
+        itemsAPI.addMetadata(itemName, namespace, metadata)
+        print(f"Metadata added to '{itemName}' in namespace '{namespace}'.")
+    except Exception as e:
+        print(f"Error adding metadata to '{itemName}': {e}")
+
+# Test removing metadata from an item
+def testRemoveMetadata(itemsAPI: Items, itemName: str, namespace: str):
+    print("\n~~~~ Test #12: removeMetadata() ~~~~\n")
+
+    try:
+        itemsAPI.removeMetadata(itemName, namespace)
+        print(f"Metadata removed from '{itemName}' in namespace '{namespace}'.")
+    except Exception as e:
+        print(f"Error removing metadata from '{itemName}': {e}")
+
+# Test fetching metadata namespaces of an item
+def testGetMetadataNamespaces(itemsAPI: Items, itemName: str):
+    print("\n~~~~ Test #13: getMetadataNamespaces() ~~~~\n")
+
+    try:
+        namespaces = itemsAPI.getMetadataNamespaces(itemName)
+        print(f"Metadata namespaces for '{itemName}':", namespaces)
+    except Exception as e:
+        print(f"Error fetching metadata namespaces for '{itemName}': {e}")
+
+# Test purging orphaned metadata
+def testPurgeOrphanedMetadata(itemsAPI: Items):
+    print("\n~~~~ Test #14: purgeOrphanedMetadata() ~~~~\n")
+
+    try:
+        itemsAPI.purgeOrphanedMetadata()
+        print("Orphaned metadata purged.")
+    except Exception as e:
+        print(f"Error purging orphaned metadata: {e}")
+
+if __name__ == "__main__":
+    # Initialize OpenHAB client
+    client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
+    itemsAPI = Items(client)
+
+    # Define test variables
+    testItemName = "testSwitch"
     newItemData = {
         "type": "Switch",
         "name": "newSwitch",
@@ -31,90 +160,26 @@ def examples():
         "tags": ["SwitchTag"],
         "category": "Switch"
     }
-    itemsApi.addOrUpdateItem("newSwitch", newItemData)
-    print("New Switch added/updated.")
-    
-    # Liste von Items hinzufügen oder aktualisieren
-    newItems = [
-        {
-            "type": "Number",
-            "name": "newNumber",
-            "label": "New Number",
-            "groupNames": ["Static"],
-            "tags": ["NumberTag"],
-            "category": "Number"
-        },
-        {
-            "type": "String",
-            "name": "newString",
-            "label": "New String",
-            "groupNames": ["Static"],
-            "tags": ["StringTag"],
-            "category": "String"
-        }
-    ]
-    itemsApi.addOrUpdateItems(newItems)
-    print("New Items added/updated.")
-    
-    # Befehl an ein Item senden
-    itemsApi.sendCommand("testSwitch", "ON")
-    print("Command sent to testSwitch.")
-
-    # Zustand eines Items aktualisieren
-    itemsApi.updateItemState("testNumber", "42")
-    print("State of testNumber updated.")
-
-    # Zustand eines Items abrufen
-    testSwitchState = itemsApi.getItemState("testSwitch")
-    print("testSwitch State:", testSwitchState)
-
-    # Ein Item löschen
-    itemsApi.deleteItem("newSwitch")
-    print("newSwitch deleted.")
-
-    # Gruppenmitglied hinzufügen
-    itemsApi.addGroupMember("Static", "newNumber")
-    print("newNumber added to Static group.")
-
-    # Gruppenmitglied entfernen
-    itemsApi.removeGroupMember("Static", "newNumber")
-    print("newNumber removed from Static group.")
-    
-    # Metadaten hinzufügen
-    metadata = {
+    testMetadata = {
         "value": "metadata_value",
         "config": {
             "key1": "value1",
             "key2": "value2"
         }
     }
-    itemsApi.addMetadata("testSwitch", "exampleNamespace", metadata)
-    print("Metadata added to testSwitch.")
-
-    # Metadaten entfernen
-    itemsApi.removeMetadata("testSwitch", "exampleNamespace")
-    print("Metadata removed from testSwitch.")
-
-    # Metadaten-Namespaces eines Items abrufen
-    metadataNamespaces = itemsApi.getMetadataNamespaces("testSwitch")
-    print("Metadata namespaces for testSwitch:", metadataNamespaces)
     
-    # Item mit semantischer Klasse abrufen
-    #semanticItem = itemsApi.getSemanticItem("testLocation", "Location")
-    #print("Semantic item for testLocation:", semanticItem)
-
-    # Einem Item ein Tag hinzufügen
-    #itemsApi.addTag("testSwitch", "NewTag")
-    #print("Tag added to testSwitch.")
-
-    # Einem Item ein Tag entfernen
-    #itemsApi.removeTag("testSwitch", "NewTag")
-    #print("Tag removed from testSwitch.")
-
-    # Verwaiste Metadaten löschen
-    itemsApi.purgeOrphanedMetadata()
-    print("Orphaned metadata purged.")
-    
-# Funktion ausführen
-if __name__ == "__main__":
-    examples()
+    # Run tests
+    testGetAllItems(itemsAPI)
+    testGetItem(itemsAPI, testItemName)
+    testAddOrUpdateItem(itemsAPI, "newSwitch", newItemData)
+    testAddOrUpdateItems(itemsAPI, [newItemData])
+    testSendCommand(itemsAPI, testItemName, "ON")
+    testUpdateItemState(itemsAPI, "testNumber", "42")
+    testGetItemState(itemsAPI, testItemName)
+    testDeleteItem(itemsAPI, "newSwitch")
+    testAddGroupMember(itemsAPI, "Static", "testNumber")
+    testRemoveGroupMember(itemsAPI, "Static", "testNumber")
+    testAddMetadata(itemsAPI, testItemName, "exampleNamespace", testMetadata)
+    testRemoveMetadata(itemsAPI, testItemName, "exampleNamespace")
+    testGetMetadataNamespaces(itemsAPI, testItemName)
+    testPurgeOrphanedMetadata(itemsAPI)

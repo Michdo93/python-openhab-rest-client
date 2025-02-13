@@ -74,17 +74,17 @@ class Events:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def updateSseConnectionItems(self, connectionId: str, items: list) -> str:
+    def updateSSEConnectionItems(self, connectionID: str, items: list) -> str:
         """
         Changes the list of items a SSE connection will receive state updates for.
 
-        :param connectionId: The ID of the existing connection.
+        :param connectionID: The ID of the existing connection.
         :param items: A SSE stream of item names to subscribe to for state updates.
 
         :return: A success message when the update is completed.
         """
         try:
-            response = self.client.post(f"/rest/events/states/{connectionId}", data=json.dumps(
+            response = self.client.post(f"/rest/events/states/{connectionID}", data=json.dumps(
                 items), header={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:

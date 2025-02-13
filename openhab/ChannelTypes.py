@@ -50,11 +50,11 @@ class ChannelTypes:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getChannelTypeByUid(self, channelTypeUid: str, language: str = None) -> dict:
+    def getChannelTypeByUID(self, channelTypeUID: str, language: str = None) -> dict:
         """
         Retrieves the item types the given trigger channel type UID can be linked to.
 
-        :param channelTypeUid: The unique UID of the channel type.
+        :param channelTypeUID: The unique UID of the channel type.
         :param language: Optional header 'Accept-Language' to specify the preferred language.
 
         :return: Details of the specific channel type.
@@ -65,7 +65,7 @@ class ChannelTypes:
 
         try:
             response = self.client.get(
-                f"/channel-types/{channelTypeUid}", header=header)
+                f"/channel-types/{channelTypeUID}", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -89,18 +89,18 @@ class ChannelTypes:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getLinkableItemTypes(self, channelTypeUid: str) -> list:
+    def getLinkableItemTypes(self, channelTypeUID: str) -> list:
         """
         Retrieves the item types that can be linked to the specified trigger channel type.
 
-        :param channelTypeUid: The unique UID of the channel type.
+        :param channelTypeUID: The unique UID of the channel type.
 
         :return: A list of item types.
         """
 
         try:
             response = self.client.get(
-                f"/channel-types/{channelTypeUid}/linkableItemTypes")
+                f"/channel-types/{channelTypeUID}/linkableItemTypes")
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

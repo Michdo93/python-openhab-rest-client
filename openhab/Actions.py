@@ -37,6 +37,8 @@ class Actions:
             status_code = err.response.status_code
             if status_code == 204:
                 return {"error": "No actions found."}
+            elif status_code == 404:
+                return {"error": f"Thing not found: {thingUID}"}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -47,6 +49,8 @@ class Actions:
             return {"message": "OK"}
         elif status_code == 204:
             return {"error": "No actions found."}
+        elif status_code == 404:
+            return {"error": f"Thing not found: {thingUID}"}
 
         return {"error": f"Unexpected response: {status_code}"}
 

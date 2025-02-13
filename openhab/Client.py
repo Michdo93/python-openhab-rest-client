@@ -89,10 +89,12 @@ class OpenHABClient:
         # Ensure resource path starts with "/rest"
         if not resourcePath.startswith("/rest"):
             resourcePath = f"/rest{resourcePath}"
+        
+        url = f"{self.url}{resourcePath}"
 
         # Update session headers
         self.session.headers.update(header)
-
+        """
         try:
             url = f"{self.url}{resourcePath}"
             if method == "get":
@@ -123,6 +125,30 @@ class OpenHABClient:
         except requests.exceptions.RequestException as err:
             print(f"Request error occurred: {err}")
             raise
+        """
+        if method == "get":
+            response = self.session.get(url, params=params, headers=header, timeout=5)
+        elif method == "post":
+            response = self.session.post(url, data=data, params=params, headers=header, timeout=5)
+        elif method == "put":
+            response = self.session.put(url, data=data, params=params, headers=header, timeout=5)
+        elif method == "delete":
+            response = self.session.delete(url, data=data, params=params, headers=header, timeout=5)
+        else:
+            raise ValueError("Invalid HTTP method provided!")
+
+        # Pass on mistakes directly instead of catching them here!
+        response.raise_for_status()
+
+        # If the response is empty, but there was still no error, we return the status code
+        if not response.text.strip():
+            return {"status": response.status_code}
+
+        # Return JSON response, if available
+        if "application/json" in response.headers.get("Content-Type", ""):
+            return response.json()
+        
+        return response.text  # Fallback: Return text response
 
     def __executeSSE(self, url: str):
         """
