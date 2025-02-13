@@ -35,5 +35,5 @@ if __name__ == "__main__":
     channelUID = "*"
 
     # Run tests
-    testItemChannelLinkAddedEvent(linkEvents, itemName, channelUID)
-    testItemChannelLinkRemovedEvent(linkEvents, itemName, channelUID)
+    testItemChannelLinkAddedEvent(linkEvents, itemName, channelUID)     # Test#1
+    testItemChannelLinkRemovedEvent(linkEvents, itemName, channelUID)   # Test#2

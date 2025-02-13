@@ -169,17 +169,17 @@ if __name__ == "__main__":
     }
     
     # Run tests
-    testGetAllItems(itemsAPI)
-    testGetItem(itemsAPI, testItemName)
-    testAddOrUpdateItem(itemsAPI, "newSwitch", newItemData)
-    testAddOrUpdateItems(itemsAPI, [newItemData])
-    testSendCommand(itemsAPI, testItemName, "ON")
-    testUpdateItemState(itemsAPI, "testNumber", "42")
-    testGetItemState(itemsAPI, testItemName)
-    testDeleteItem(itemsAPI, "newSwitch")
-    testAddGroupMember(itemsAPI, "Static", "testNumber")
-    testRemoveGroupMember(itemsAPI, "Static", "testNumber")
-    testAddMetadata(itemsAPI, testItemName, "exampleNamespace", testMetadata)
-    testRemoveMetadata(itemsAPI, testItemName, "exampleNamespace")
-    testGetMetadataNamespaces(itemsAPI, testItemName)
-    testPurgeOrphanedMetadata(itemsAPI)
+    testGetAllItems(itemsAPI)                                                   # Test#1
+    testGetItem(itemsAPI, testItemName)                                         # Test#2
+    testAddOrUpdateItem(itemsAPI, "newSwitch", newItemData)                     # Test#3
+    testAddOrUpdateItems(itemsAPI, [newItemData])                               # Test#4
+    testSendCommand(itemsAPI, testItemName, "ON")                               # Test#5
+    testUpdateItemState(itemsAPI, "testNumber", "42")                           # Test#6
+    testGetItemState(itemsAPI, testItemName)                                    # Test#7
+    testDeleteItem(itemsAPI, "newSwitch")                                       # Test#8
+    testAddGroupMember(itemsAPI, "Static", "testNumber")                        # Test#9
+    testRemoveGroupMember(itemsAPI, "Static", "testNumber")                     # Test#10
+    testAddMetadata(itemsAPI, testItemName, "exampleNamespace", testMetadata)   # Test#11
+    testRemoveMetadata(itemsAPI, testItemName, "exampleNamespace")              # Test#12
+    testGetMetadataNamespaces(itemsAPI, testItemName)                           # Test#13
+    testPurgeOrphanedMetadata(itemsAPI)                                         # Test#14
