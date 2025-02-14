@@ -42,7 +42,7 @@ class Systeminfo:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getUomInfo(self, language: str = None):
+    def getUoMInfo(self, language: str = None):
         """
         Get all supported dimensions and their system units.
 
