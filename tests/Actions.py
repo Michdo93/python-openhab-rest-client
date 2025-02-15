@@ -5,44 +5,13 @@ import pytz
 
 # Add the project root path (one level up) to the Python search path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from openhab import OpenHABClient, Actions
-
-# Test the endpoint to retrieve all Actions of a Thing
-def testGetAllActions(actionsAPI: Actions, thingUID: str, language: str = None):
-    print("\n~~~~ Test #1 getAllActions(thingUID) ~~~~\n")
-
-    try:
-        actions = actionsAPI.getAllActions(thingUID, language)
-
-        if isinstance(actions, dict) and "error" in actions:
-            print(f"Error retrieving actions: {actions['error']}")
-        else:
-            print("Available actions:")
-            for action in actions:
-                print(f"Action UID: {action['actionUid']}, Label: {action['label']}")
-    except Exception as e:
-        print(f"Error retrieving actions: {e}")
-
-# Test the endpoint to execute an Action of a Thing
-def testExecuteAction(actionsAPI: Actions, thingUID: str, actionUID: str, actionInputs: dict, language: str = None):
-    print("\n~~~~ Test #2 executeAction(thingUID, actionUID, actionInputs) ~~~~\n")
-
-    try:
-        # Execute the action
-        response = actionsAPI.executeAction(thingUID, actionUID, actionInputs, language)
-        
-        # Check the response type
-        if isinstance(response, dict):
-            print(f"Action response: {response}")
-        else:
-            print(f"Unexpected response type: {type(response)}")
-    except Exception as e:
-        print(f"Error executing action: {e}")
+from openhab import OpenHABClient
+from openhab.tests import ActionsTest
 
 if __name__ == "__main__":
     # Initialize OpenHAB client (replace with your OpenHAB URL and authentication details)
     client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
-    actionsAPI = Actions(client)
+    actionsTest = ActionsTest(client)
 
     # Retrieve all available actions for a given Thing
     thingUID = "astro:sun:b54938fe5c"  # Example Thing UID
@@ -66,5 +35,5 @@ if __name__ == "__main__":
     }
 
     # Execute all tests
-    testGetAllActions(actionsAPI, thingUID)                             # Test #1
-    testExecuteAction(actionsAPI, thingUID, actionUID, actionInputs)    # Test #2
+    actionsTest.testGetAllActions(thingUID)                             # Test #1
+    actionsTest.testExecuteAction(thingUID, actionUID, actionInputs)    # Test #2
