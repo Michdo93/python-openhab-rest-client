@@ -53,7 +53,7 @@ pip install python-openhab-rest-client
 
 ## Usage
 
-Basically, you always need the `OpenHABClient`. Regardless of whether you carry out a normal `REST request` or one via `SSE`. This looks as follows:
+Basically, you always need the `OpenHABClient`. Regardless of whether you carry out a normal `REST request` or one via `SSE`.
 
 ### Authentication
 
@@ -127,6 +127,40 @@ with response as events:
                 print("Event could not be converted to JSON")
 ```
 
+### Tests
+
+There is also a test function for each function. This means that every class that you import also has a test class that you can import. These tests work with a try-catch, as well as with a print output. Neither the value of the REST API nor something like True or False is returned. Effectively, however, the actual function is called from this test function and also executed in full, unless an exception is thrown.
+
+In other words... For example, if you use the following import,
+
+```python
+from openhab import Items
+```
+
+then the test class to be imported would be the following:
+
+```python
+from openhab.tests import ItemsTest
+```
+
+From e.g. the following function
+
+```python
+
+itemsAPI = Items(client)
+itemsAPI.sendCommand("testSwitch", "ON")
+```
+
+then becomes the following function for the test:
+
+```python
+
+itemsTest = ItemsTest(client)
+itemsTest.testSendCommand("testSwitch", "ON")
+```
+
+However, both would also really execute a sendCommand in openHAB. The test classes test whether a function can be executed. In the end, it can only not be executed if the endpoint does not exist or has been implemented incorrectly. However, a non-existent endpoint can also occur, for example, if the name of the item is incorrect.
+
 ## Full list of Methods
 
 ### OpenHABClient
@@ -138,6 +172,8 @@ with response as events:
 ##### Constructor
 
 ```python
+from openhab import OpenHABClient
+
 OpenHABClient(url: str, username: str = None, password: str = None, token: str = None)
 ```
 ###### Parameters:
@@ -247,8 +283,7 @@ The `Actions` class provides methods to interact with the OpenHAB actions API. I
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from actions import Actions
+from openhab import OpenHABClient, Actions
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 actions = Actions(client)
@@ -416,8 +451,7 @@ The `Audio` class provides methods for interacting with the OpenHAB audio API. I
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from audio import Audio
+from openhab import OpenHABClient, Audio
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 audio = Audio(client)
@@ -500,8 +534,7 @@ The `Auth` class provides methods for handling authentication in OpenHAB, includ
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from auth import Auth
+from openhab import OpenHABClient, Auth
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 auth = Auth(client)
@@ -509,7 +542,7 @@ auth = Auth(client)
 
 #### Methods
 
-##### `getApiTokens(language: str = None) -> dict`
+##### `getAPITokens(language: str = None) -> dict`
 
 Retrieves the API tokens associated with the authenticated user.
 
@@ -522,11 +555,11 @@ Retrieves the API tokens associated with the authenticated user.
 ###### Example:
 
 ```python
-tokens = auth.getApiTokens()
+tokens = auth.getAPITokens()
 print(tokens)
 ```
 
-##### `revokeApiToken(tokenName: str, language: str = None) -> dict`
+##### `revokeAPIToken(tokenName: str, language: str = None) -> dict`
 
 Revokes a specific API token associated with the authenticated user.
 
@@ -540,7 +573,7 @@ Revokes a specific API token associated with the authenticated user.
 ###### Example:
 
 ```python
-response = auth.revokeApiToken("my_token")
+response = auth.revokeAPIToken("my_token")
 print(response)
 ```
 
@@ -579,14 +612,14 @@ sessions = auth.getSessions()
 print(sessions)
 ```
 
-##### `getToken(grantType: str, code: str = None, redirectUri: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict`
+##### `getToken(grantType: str, code: str = None, redirectURI: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict`
 
 Obtains access and refresh tokens.
 
 **Parameters:**
 - `grantType` (str): The type of grant being requested.
 - `code` (str, optional): Authorization code for authentication.
-- `redirectUri` (str, optional): Redirect URI for OAuth authentication.
+- `redirectURI` (str, optional): Redirect URI for OAuth authentication.
 - `clientID` (str, optional): Client ID for authentication.
 - `refreshToken` (str, optional): Refresh token for token renewal.
 - `codeVerifier` (str, optional): Code verifier for PKCE authentication.
@@ -601,7 +634,7 @@ Obtains access and refresh tokens.
 token_response = auth.getToken(
     grantType="authorization_code",
     code="auth_code",
-    redirectUri="http://localhost/callback",
+    redirectURI="http://localhost/callback",
     clientID="client123",
     codeVerifier="verifier123"
 )
@@ -615,11 +648,10 @@ The `ChannelTypes` class provides methods to interact with OpenHAB's channel typ
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from channel_types import ChannelTypes
+from openhab import OpenHABClient, ChannelTypes
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
-channel_types = ChannelTypes(client)
+channelTypes = ChannelTypes(client)
 ```
 
 #### Methods
@@ -642,12 +674,12 @@ channels = channel_types.getAllChannelTypes(language="en", prefixes="zwave")
 print(channels)
 ```
 
-##### `getChannelTypeByUid(channelTypeUid: str, language: str = None) -> dict`
+##### `getChannelTypeByUID(channelTypeUID: str, language: str = None) -> dict`
 
 Retrieves details of a specific channel type by its UID.
 
 **Parameters:**
-- `channelTypeUid` (str): The unique identifier of the channel type.
+- `channelTypeUID` (str): The unique identifier of the channel type.
 - `language` (str, optional): The preferred language for the response.
 
 **Returns:**
@@ -656,16 +688,16 @@ Retrieves details of a specific channel type by its UID.
 ###### Example:
 
 ```python
-channel_details = channel_types.getChannelTypeByUid("zwave:switch_binary", language="en")
-print(channel_details)
+channelDetails = channelTypes.getChannelTypeByUID("zwave:switch_binary", language="en")
+print(channelDetails)
 ```
 
-##### `getLinkableItemTypes(channelTypeUid: str) -> list`
+##### `getLinkableItemTypes(channelTypeUID: str) -> list`
 
 Retrieves the item types that can be linked to a specified trigger channel type.
 
 **Parameters:**
-- `channelTypeUid` (str): The unique identifier of the channel type.
+- `channelTypeUID` (str): The unique identifier of the channel type.
 
 **Returns:**
 - `list`: A list of item types that can be linked to the given channel type.
@@ -673,8 +705,8 @@ Retrieves the item types that can be linked to a specified trigger channel type.
 ###### Example:
 
 ```python
-linkable_items = channel_types.getLinkableItemTypes("zwave:switch_binary")
-print(linkable_items)
+linkableItems = channelTypes.getLinkableItemTypes("zwave:switch_binary")
+print(linkableItems)
 ```
 
 ### ConfigDescriptions
@@ -684,11 +716,10 @@ The `ConfigDescriptions` class provides methods to interact with OpenHAB's confi
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from config_descriptions import ConfigDescriptions
+from openhab import OpenHABClient, ConfigDescriptions
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
-config_descriptions = ConfigDescriptions(client)
+configDescriptions = ConfigDescriptions(client)
 ```
 
 #### Methods
@@ -707,7 +738,7 @@ Retrieves all available configuration descriptions.
 ###### Example:
 
 ```python
-configs = config_descriptions.getAllConfigDescriptions(language="en", scheme="thing")
+configs = configDescriptions.getAllConfigDescriptions(language="en", scheme="thing")
 print(configs)
 ```
 
@@ -725,7 +756,7 @@ Retrieves a specific configuration description by its URI.
 ###### Example:
 
 ```python
-config_details = config_descriptions.getConfigDescriptionByUri("thing-type:zwave:device", language="en")
+configDetails = configDescriptions.getConfigDescriptionByURI("thing-type:zwave:device", language="en")
 print(config_details)
 ```
 
@@ -736,8 +767,7 @@ The `Discovery` class provides methods to interact with OpenHAB's discovery serv
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from discovery import Discovery
+from openhab import OpenHABClient, Discovery
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 discovery = Discovery(client)
@@ -782,8 +812,7 @@ The `Events` class provides methods to interact with OpenHAB's event service. It
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from events import Events
+from openhab import OpenHABClient, Events
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 events = Events(client)
@@ -818,16 +847,16 @@ Initiates a new item state tracker connection.
 ###### Example:
 
 ```python
-connection_id = events.initiateStateTracker()
-print(connection_id)
+connectionID = events.initiateStateTracker()
+print(connectionID)
 ```
 
-##### `updateSseConnectionItems(connectionId: str, items: list) -> str`
+##### `updateSSEConnectionItems(connectionID: str, items: list) -> str`
 
 Changes the list of items an SSE connection will receive state updates for.
 
 **Parameters:**
-- `connectionId` (str): The ID of the existing connection.
+- `connectionID` (str): The ID of the existing connection.
 - `items` (list): A list of item names to subscribe to for state updates.
 
 **Returns:**
@@ -836,8 +865,8 @@ Changes the list of items an SSE connection will receive state updates for.
 ###### Example:
 
 ```python
-success_message = events.updateSseConnectionItems("connection-id", ["item1", "item2"])
-print(success_message)
+successMessage = events.updateSSEConnectionItems(connectionID, ["item1", "item2"])
+print(successMessage)
 ```
 
 #### `ItemEvents` Class
@@ -1066,8 +1095,7 @@ The `Iconsets` class provides methods to interact with OpenHAB's icon sets. It a
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from iconsets import Iconsets
+from openhab import OpenHABClient, Iconsets
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 iconsets = Iconsets(client)
@@ -1099,8 +1127,7 @@ The `Inbox` class provides methods to interact with the inbox of discovered thin
 #### Initialization
 
 ```python
-from .client import OpenHABClient
-from inbox import Inbox
+from openhab import OpenHABClient, Inbox
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 inbox = Inbox(client)
@@ -1121,8 +1148,8 @@ Gets all discovered things, optionally including ignored ones.
 ###### Example:
 
 ```python
-discovered_things = inbox.getAllDiscoveredThings()
-print(discovered_things)
+discoveredThings = inbox.getAllDiscoveredThings()
+print(discoveredThings)
 ```
 
 ##### `removeDiscoveryResult(thingUID: str) -> dict`
@@ -1202,8 +1229,7 @@ The `Items` class provides methods for managing OpenHAB items via the REST API. 
 #### **Initilization**
 
 ```python
-from .client import OpenHABClient
-from items import Items
+from openhab import OpenHABClient, Items
 
 client = OpenHABClient("http://openhab-server:8080", username="user", password="pass")
 items = Items(client)
@@ -1227,8 +1253,8 @@ Retrieves all available items.
 **Example:**
 
 ```python
-all_items = items.getAllItems(language="de", type="Switch")
-print(all_items)
+allItems = items.getAllItems(language="de", type="Switch")
+print(allItems)
 ```
 
 ##### `addOrUpdateItems(items: list) -> dict`
@@ -1257,8 +1283,8 @@ Gets the details of a single item.
 **Example:**
 
 ```python
-item_data = items.getItem("LivingRoomLight")
-print(item_data)
+itemData = items.getItem("LivingRoomLight")
+print(itemData)
 ```
 
 ##### `addOrUpdateItem(itemName: str, itemData: dict, ...) -> dict`
@@ -1273,8 +1299,8 @@ Adds or updates an item.
 **Example:**
 
 ```python
-new_item = {"type": "Switch", "label": "New Light"}
-response = items.addOrUpdateItem("NewLight", new_item)
+newItem = {"type": "Switch", "label": "New Light"}
+response = items.addOrUpdateItem("NewLight", newItem)
 print(response)
 ```
 
@@ -1373,8 +1399,8 @@ Returns the item of a specific semantic class.
 **Example:**
 
 ```python
-semantic_item = items.getSemanticItem("Thermostat", "Point")
-print(semantic_item)
+semanticItem = items.getSemanticItem("Thermostat", "Point")
+print(semanticItem)
 ```
 
 ##### `getItemState(itemName: str) -> dict`
@@ -1568,44 +1594,44 @@ Retrieves a list of available persistence services.
 
 **Returns:** A list of persistence services with their IDs, labels, and types.  
 
-##### `getServiceConfiguration(serviceId: str) -> dict`
+##### `getServiceConfiguration(serviceID: str) -> dict`
 
 Retrieves the configuration of a specific persistence service.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 
 **Returns:** A dictionary containing the service configuration.  
 
-##### `setServiceConfiguration(serviceId: str, config: dict) -> dict`
+##### `setServiceConfiguration(serviceID: str, config: dict) -> dict`
 
 Sets the configuration of a persistence service.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 - `config` *(dict)* – The configuration data for the service.  
 
 **Returns:** The API response after modifying the configuration.  
 
-##### `deleteServiceConfiguration(serviceId: str) -> dict`
+##### `deleteServiceConfiguration(serviceID: str) -> dict`
 
 Deletes the configuration of a persistence service.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 
 **Returns:** The API response after deleting the configuration.  
 
-##### `getItemsForService(serviceId: str) -> dict`
+##### `getItemsForService(serviceID: str) -> dict`
 
 Retrieves a list of items available in a specific persistence service.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 
 **Returns:** A list of items with their last and earliest timestamps.  
 
-##### `getItemPersistenceData(serviceId: str, itemName: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50) -> dict`
+##### `getItemPersistenceData(serviceID: str, itemName: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50) -> dict`
 
 Retrieves persistence data for a specific item from a persistence service.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 - `itemName` *(str)* – The name of the item.  
 - `startTime` *(Optional, str)* – The start time for the data. Defaults to one day before `endTime`.  
 - `endTime` *(Optional, str)* – The end time for the data. Defaults to the current time.  
@@ -1614,22 +1640,22 @@ Retrieves persistence data for a specific item from a persistence service.
 
 **Returns:** The retrieved data points of the item.  
 
-##### `storeItemData(serviceId: str, itemName: str, time: str, state: str) -> dict`
+##### `storeItemData(serviceID: str, itemName: str, time: str, state: str) -> dict`
 
 Stores persistence data for a specific item.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 - `itemName` *(str)* – The name of the item.  
 - `time` *(str)* – The timestamp for the stored data.  
 - `state` *(str)* – The state value to be stored.  
 
 **Returns:** The API response after storing the data.  
 
-##### `deleteItemData(serviceId: str, itemName: str, startTime: str, endTime: str) -> dict`
+##### `deleteItemData(serviceID: str, itemName: str, startTime: str, endTime: str) -> dict`
 
 Deletes persistence data for a specific item within a given time range.
 
-- `serviceId` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* – The ID of the persistence service.  
 - `itemName` *(str)* – The name of the item.  
 - `startTime` *(str)* – The start time of the data to be deleted.  
 - `endTime` *(str)* – The end time of the data to be deleted.  
@@ -1817,12 +1843,12 @@ Retrieves a specific sitemap by name.
 
 **Returns:** The sitemap object (JSON).
 
-##### `getSitemapPage(sitemapName: str, pageId: str, subscriptionID: str = None, includeHidden: bool = False) -> dict`
+##### `getSitemapPage(sitemapName: str, pageID: str, subscriptionID: str = None, includeHidden: bool = False) -> dict`
 
 Retrieves the data for a specific page within a sitemap.
 
 - `sitemapName` *(str)* – The name of the sitemap.  
-- `pageId` *(str)* – The ID of the page.  
+- `pageID` *(str)* – The ID of the page.  
 - `subscriptionID` *(Optional, str)* – Query parameter for the subscription ID.  
 - `includeHidden` *(Optional, bool, default=False)* – Whether hidden widgets should be included.  
 
@@ -1839,13 +1865,13 @@ Retrieves data for an entire sitemap.
 
 **Returns:** The complete sitemap (JSON).  
 
-##### `getSitemapEvents(subscriptionID: str, sitemap: str = None, pageId: str = None) -> dict`
+##### `getSitemapEvents(subscriptionID: str, sitemap: str = None, pageID: str = None) -> dict`
 
 Retrieves events for a specific sitemap or page.
 
 - `subscriptionID` *(str)* – The ID of the subscription.  
 - `sitemap` *(Optional, str)* – The name of the sitemap.  
-- `pageId` *(Optional, str)* – The ID of the page.  
+- `pageID` *(Optional, str)* – The ID of the page.  
 
 **Returns:** The events (JSON).  
 
@@ -1879,13 +1905,13 @@ Retrieves general system information.
 
 **Returns:** A dictionary containing system information (JSON).
 
-##### `getUomInfo(language: str = None) -> dict`
+##### `getUoMInfo(language: str = None) -> dict`
 
-Retrieves all supported units of measurement (UOM) and their system units.
+Retrieves all supported units of measurement (UoM) and their system units.
 
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
-**Returns:** A dictionary containing UOM information (JSON).
+**Returns:** A dictionary containing UoM information (JSON).
 
 ### Tags
 
@@ -1966,11 +1992,11 @@ The `ThingTypes` class provides methods to retrieve available thing types via th
 
 #### Methods
 
-##### `getAllThingTypes(bindingId: str = None, language: str = None) -> list`
+##### `getAllThingTypes(bindingID: str = None, language: str = None) -> list`
 
 Retrieves all available thing types without configuration descriptions, channels, and properties.
 
-- `bindingId` *(Optional, str)* – Filter the results by a specific binding ID.
+- `bindingID` *(Optional, str)* – Filter the results by a specific binding ID.
 - `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
 
 **Returns:** A list of thing types (JSON).
@@ -2247,7 +2273,7 @@ Gets the default voice used by the system.
 
 **Returns:** A dictionary with details of the default voice.
 
-##### `startDialog()`
+##### `startDialog(sourceID: str, ksID: str = None, sttID: str = None, ttsID: str = None, voiceID: str = None, hliIDs: str = None, sinkID: str = None, keyword: str = None, listeningItem: str = None)`
 
 Starts dialog processing for a given audio source.
 
@@ -2264,7 +2290,7 @@ Starts dialog processing for a given audio source.
 
 **Returns:** The response from the server.
 
-##### `stopDialog()`
+##### `stopDialog(sourceID: str)`
 
 Stops dialog processing for a given audio source.
 
@@ -2273,7 +2299,7 @@ Stops dialog processing for a given audio source.
 
 **Returns:** The response from the server.
 
-##### `getInterpreters()`
+##### `getInterpreters(language: str = None)`
 
 Gets the list of all interpreters.
 
@@ -2282,7 +2308,7 @@ Gets the list of all interpreters.
 
 **Returns:** A list of interpreters if successful.
 
-##### `interpretText()`
+##### `interpretText(text: str, language: str, IDs: list = None)`
 
 Sends a text to the default human language interpreter.
 
@@ -2293,7 +2319,7 @@ Sends a text to the default human language interpreter.
 
 **Returns:** The response from the server.
 
-##### `getInterpreter()`
+##### `getInterpreter(interpreterID: str, language: str = None)`
 
 Gets a single interpreter.
 
@@ -2303,7 +2329,7 @@ Gets a single interpreter.
 
 **Returns:** The details of the interpreter.
 
-##### `interpretTextBatch()`
+##### `interpretTextBatch(text: str, language: str, IDs: list)`
 
 Sends a text to a given human language interpreter(s).
 
@@ -2314,7 +2340,7 @@ Sends a text to a given human language interpreter(s).
 
 **Returns:** The response from the server.
 
-##### `listenAndAnswer()`
+##### `listenAndAnswer(sourceID: str, sttID: str, ttsID: str, voiceID: str, hliIDs: list = None, sinkID: str = None, listeningItem: str = None)`
 
 Executes a simple dialog sequence without keyword spotting for a given audio source.
 
@@ -2329,7 +2355,7 @@ Executes a simple dialog sequence without keyword spotting for a given audio sou
 
 **Returns:** The response from the server.
 
-##### `sayText()`
+##### `sayText(text: str, voiceID: str, sinkID: str, volume: str = '100')`
 
 Speaks a given text with a given voice through the given audio sink.
 
