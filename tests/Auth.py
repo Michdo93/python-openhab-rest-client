@@ -16,17 +16,17 @@ if __name__ == "__main__":
 
     grantType="authorization_code"  # Specify the grant type
     code="test-auth-code"           # Replace with a valid authorization code
-    redirectUri="http://localhost"  # Replace with the actual redirect URI
+    redirectURI="http://localhost"  # Replace with the actual redirect URI
     clientID="test-client-id"       # Replace with a valid client ID
 
     # Run all tests
-    authTest.testGetApiTokens()               # Test #1
-    authTest.testRevokeApiToken(tokenName)  # Test #2
+    authTest.testGetAPITokens()               # Test #1
+    authTest.testRevokeAPIToken(tokenName)  # Test #2
     authTest.testGetSessions()                # Test #3
     tokenResponse = authTest.testGetToken(
         grantType=grantType,
         code=code,
-        redirectUri=redirectUri,
+        redirectURI=redirectURI,
         clientID=clientID
     )                                       # Test #4
     authTest.testLogout(tokenResponse)      # Test #5

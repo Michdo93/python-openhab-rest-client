@@ -20,11 +20,11 @@ class ConfigDescriptionsTest:
             print(f"Error executing action: {e}")
 
     # Test fetching a specific configuration description by URI
-    def testGetConfigDescriptionByUri(self, uri: str, language: str = None):
-        print("\n~~~~ Test #2: getConfigDescriptionByUri() ~~~~\n")
+    def testGetConfigDescriptionByURI(self, uri: str, language: str = None):
+        print("\n~~~~ Test #2: getConfigDescriptionByURI() ~~~~\n")
 
         try:
-            response = self.configDescriptionsAPI.getConfigDescriptionByUri(uri=uri, language=language)
+            response = self.configDescriptionsAPI.getConfigDescriptionByURI(uri=uri, language=language)
             print(f"Configuration Description for URI '{uri}':", response)
         except ValueError as e:
             print(f"Error: {e}")

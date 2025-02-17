@@ -10,22 +10,22 @@ class AuthTest:
     def __init__(self, client: OpenHABClient):
         self.authAPI = Auth(client)
 
-    def testGetApiTokens(self, language: str = None):
+    def testGetAPITokens(self, language: str = None):
         """Test retrieving all API tokens."""
         print("\n~~~~ Test #1: getApiTokens() ~~~~\n")
         
         try:
-            tokens = self.authAPI.getApiTokens(language)
+            tokens = self.authAPI.getAPITokens(language)
             print("API Tokens:", json.dumps(tokens, indent=4))
         except Exception as e:
             print(f"Error retrieving API tokens: {e}")
 
-    def testRevokeApiToken(self, tokenName: str, language: str = None):
+    def testRevokeAPIToken(self, tokenName: str, language: str = None):
         """Test revoking an API token."""
         print("\n~~~~ Test #2: revokeApiToken() ~~~~\n")
 
         try:
-            revokeResponse = self.authAPI.revokeApiToken(tokenName, language)
+            revokeResponse = self.authAPI.revokeAPIToken(tokenName, language)
             print("Token revoked:", json.dumps(revokeResponse, indent=4))
         except Exception as e:
             print(f"Error revoking API token: {e}")
@@ -40,12 +40,12 @@ class AuthTest:
         except Exception as e:
             print(f"Error retrieving sessions: {e}")
 
-    def testGetToken(self, grantType: str, code: str = None, redirectUri: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None):
+    def testGetToken(self, grantType: str, code: str = None, redirectURI: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None):
         """Test obtaining an access token using the authorization code flow."""
         print("\n~~~~ Test #4: getToken(grantType, code, redirectUri, clientID, refreshToken, codeVerifier) ~~~~\n")
 
         try:
-            tokenResponse = self.authAPI.getToken(grantType=grantType, code=code, redirectUri=redirectUri, clientID=clientID, refreshToken=refreshToken, codeVerifier=codeVerifier, language=language)
+            tokenResponse = self.authAPI.getToken(grantType=grantType, code=code, redirectURI=redirectURI, clientID=clientID, refreshToken=refreshToken, codeVerifier=codeVerifier, language=language)
 
             if "error" in tokenResponse:
                 print(f"Error in token response: {tokenResponse['error']}")

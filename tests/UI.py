@@ -37,9 +37,9 @@ if __name__ == "__main__":
     }
 
     # Execute test functions
-    uiTest.testGetUiComponents(namespace)                                       # Test #1
-    uiTest.testAddUiComponent(namespace, componentData)                         # Test #2
-    uiTest.testGetUiComponent(namespace, componentUID)                          # Test #3
-    uiTest.testUpdateUiComponent(namespace, componentUID, updatedComponentData) # Test #4
-    uiTest.testDeleteUiComponent(namespace, componentUID)                       # Test #5
-    uiTest.testGetUiTiles()                                                     # Test #6
+    uiTest.testGetUIComponents(namespace)                                       # Test #1
+    uiTest.testAddUIComponent(namespace, componentData)                         # Test #2
+    uiTest.testGetUIComponent(namespace, componentUID)                          # Test #3
+    uiTest.testUpdateUIComponent(namespace, componentUID, updatedComponentData) # Test #4
+    uiTest.testDeleteUIComponent(namespace, componentUID)                       # Test #5
+    uiTest.testGetUITiles()                                                     # Test #6

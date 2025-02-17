@@ -77,12 +77,12 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSitemapPage(self, sitemapName: str, pageId: str, subscriptionID=None, includeHidden=False):
+    def getSitemapPage(self, sitemapName: str, pageID: str, subscriptionID=None, includeHidden=False):
         """
         Polls the data for one page of a sitemap.
 
         :param sitemapName: The name of the sitemap.
-        :param pageId: The ID of the page.
+        :param pageID: The ID of the page.
         :param subscriptionID: Optional query parameter for the subscription ID.
         :param includeHidden: Whether hidden widgets should be included.
 
@@ -94,7 +94,7 @@ class Sitemaps:
             includeHidden = "false"
 
         try:
-            response = self.client.get(f"/sitemaps/{sitemapName}/{pageId}", params={
+            response = self.client.get(f"/sitemaps/{sitemapName}/{pageID}", params={
                                        "subscriptionID": subscriptionID, "includeHidden": includeHidden})
 
             if isinstance(response, dict) and "status" in response:
@@ -168,19 +168,19 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSitemapEvents(self, subscriptionID: str, sitemap=None, pageId=None):
+    def getSitemapEvents(self, subscriptionID: str, sitemap=None, pageID=None):
         """
         Get sitemap events.
 
         :param subscriptionID: The ID of the subscription.
         :param sitemap: The name of the sitemap (optional).
-        :param pageId: The ID of the page (optional).
+        :param pageID: The ID of the page (optional).
 
         :return: The events (JSON).
         """
         try:
             response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemap, "pageId": pageId})
+                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemap, "pageId": pageID})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

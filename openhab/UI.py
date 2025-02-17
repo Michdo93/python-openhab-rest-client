@@ -12,7 +12,7 @@ class UI:
         """
         self.client = client
 
-    def getUiComponents(self, namespace: str, summary: bool = False):
+    def getUIComponents(self, namespace: str, summary: bool = False):
         """
         Get all registered UI components in the specified namespace.
 
@@ -43,7 +43,7 @@ class UI:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def addUiComponent(self, namespace: str, componentData):
+    def addUIComponent(self, namespace: str, componentData):
         """
         Add a UI component in the specified namespace.
 
@@ -74,7 +74,7 @@ class UI:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getUiComponent(self, namespace: str, componentUID: str):
+    def getUIComponent(self, namespace: str, componentUID: str):
         """
         Get a specific UI component in the specified namespace.
 
@@ -109,7 +109,7 @@ class UI:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def updateUiComponent(self, namespace: str, componentUID: str, componentData):
+    def updateUIComponent(self, namespace: str, componentUID: str, componentData):
         """
         Update a specific UI component in the specified namespace.
 
@@ -145,7 +145,7 @@ class UI:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def deleteUiComponent(self, namespace: str, componentUID: str):
+    def deleteUIComponent(self, namespace: str, componentUID: str):
         """
         Remove a specific UI component in the specified namespace.
 
@@ -180,7 +180,7 @@ class UI:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getUiTiles(self):
+    def getUITiles(self):
         """
         Get all registered UI tiles.
 

@@ -11,19 +11,19 @@ class ThingTypes:
         """
         self.client = client
 
-    def getAllThingTypes(self, bindingId: str = None, language: str = None) -> list:
+    def getAllThingTypes(self, bindingID: str = None, language: str = None) -> list:
         """
         Gets all available thing types without config description, channels, and properties.
 
-        :param bindingId: (Optional) Filter by binding ID.
+        :param bindingID: (Optional) Filter by binding ID.
         :param language: (Optional) Language setting for the Accept-Language header.
 
         :return: A list of thing types.
         """
         header = {"Content-Type": "application/json"}
         params = {}
-        if bindingId:
-            params["bindingId"] = bindingId
+        if bindingID:
+            params["bindingId"] = bindingID
         if language:
             header["Accept-Language"] = language
 

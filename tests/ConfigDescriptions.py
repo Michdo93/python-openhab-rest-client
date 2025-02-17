@@ -13,8 +13,8 @@ if __name__ == "__main__":
 
     # Define test variables
     language = "en"
-    configUri = "channel-type:mqtt:ha-channel"
+    configURI = "channel-type:mqtt:ha-channel"
 
     # Run all tests
     configDescriptionsTest.testGetAllConfigDescriptions(language)               # Test #1
-    configDescriptionsTest.testGetConfigDescriptionByUri(configUri, language)   # Test #2
+    configDescriptionsTest.testGetConfigDescriptionByURI(configURI, language)   # Test #2

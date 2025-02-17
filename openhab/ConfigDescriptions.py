@@ -50,7 +50,7 @@ class ConfigDescriptions:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getConfigDescriptionByUri(self, uri: str, language: str = None) -> dict:
+    def getConfigDescriptionByURI(self, uri: str, language: str = None) -> dict:
         """
         Retrieves a config description by URI.
 

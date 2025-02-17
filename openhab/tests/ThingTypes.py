@@ -11,12 +11,12 @@ class ThingTypesTest:
     def __init__(self, client: OpenHABClient):
         self.discoveryAPI = ThingTypes(client)
 
-    def testGetAllThingTypes(self):
+    def testGetAllThingTypes(self, bindingID: str = None,):
         """Retrieve all thing types"""
         print("\n~~~~ Test #1 getAllThingTypes() ~~~~\n")
 
         try:
-            allThingTypes = self.thingTypesAPI.getAllThingTypes()
+            allThingTypes = self.thingTypesAPI.getAllThingTypes(bindingID)
             print("All Thing Types:")
             print(json.dumps(allThingTypes, indent=4))
         except Exception as e:

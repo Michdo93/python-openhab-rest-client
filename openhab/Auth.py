@@ -13,7 +13,7 @@ class Auth:
         """
         self.client = client
 
-    def getApiTokens(self, language: str = None) -> dict:
+    def getAPITokens(self, language: str = None) -> dict:
         """
         Retrieve the API tokens associated with the authenticated user.
 
@@ -54,7 +54,7 @@ class Auth:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def revokeApiToken(self, tokenName: str, language: str = None) -> dict:
+    def revokeAPIToken(self, tokenName: str, language: str = None) -> dict:
         """
         Revoke a specific API token associated with the authenticated user.
 
@@ -181,7 +181,7 @@ class Auth:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getToken(self, grantType: str, code: str = None, redirectUri: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict:
+    def getToken(self, grantType: str, code: str = None, redirectURI: str = None, clientID: str = None, refreshToken: str = None, codeVerifier: str = None, language: str = None) -> dict:
         """
         Obtain access and refresh tokens.
 
@@ -203,7 +203,7 @@ class Auth:
         body = {
             "grant_type": grantType,
             "code": code,
-            "redirect_uri": redirectUri,
+            "redirect_uri": redirectURI,
             "client_id": clientID,
             "refresh_token": refreshToken,
             "code_verifier": codeVerifier

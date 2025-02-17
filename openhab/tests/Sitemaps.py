@@ -31,15 +31,15 @@ class SitemapsTest:
         except Exception as e:
             print(f"Error retrieving sitemap {sitemapName}: {e}")
 
-    def testGetSitemapPage(self, sitemapName: str, pageId: str):
+    def testGetSitemapPage(self, sitemapName: str, pageID: str):
         """Retrieve a specific sitemap page"""
-        print("\n~~~~ Test #3 getSitemapPage(sitemapName, pageId) ~~~~\n")
+        print("\n~~~~ Test #3 getSitemapPage(sitemapName, pageID) ~~~~\n")
 
         try:
-            sitemapPage = self.sitemapsAPI.getSitemapPage(sitemapName, pageId)
+            sitemapPage = self.sitemapsAPI.getSitemapPage(sitemapName, pageID)
             print(json.dumps(sitemapPage, indent=4))
         except Exception as e:
-            print(f"Error retrieving sitemap page {pageId} from {sitemapName}: {e}")
+            print(f"Error retrieving sitemap page {pageID} from {sitemapName}: {e}")
 
     def testGetFullSitemap(self, sitemapName: str):
         """Retrieve all data of a sitemap"""
