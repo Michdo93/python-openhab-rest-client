@@ -189,19 +189,19 @@ class Rules:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getModule(self, ruleUID: str, moduleCategory: str, moduleId: str):
+    def getModule(self, ruleUID: str, moduleCategory: str, moduleID: str):
         """
         Gets the rule's module corresponding to the given category and ID.
 
         :param ruleUID: The UID of the rule.
         :param moduleCategory: The category of the module.
-        :param moduleId: The ID of the module.
+        :param moduleID: The ID of the module.
 
         :return: The module (JSON).
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}", header={"Accept": "application/json"})
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -225,19 +225,19 @@ class Rules:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getModuleConfig(self, ruleUID: str, moduleCategory: str, moduleId: str):
+    def getModuleConfig(self, ruleUID: str, moduleCategory: str, moduleID: str):
         """
         Gets the module's configuration.
 
         :param ruleUID: The UID of the rule.
         :param moduleCategory: The category of the module.
-        :param moduleId: The ID of the module.
+        :param moduleID: The ID of the module.
 
         :return: The module configuration (JSON).
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config")
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config")
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -261,20 +261,20 @@ class Rules:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleId: str, param: str):
+    def getModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleID: str, param: str):
         """
         Gets the module's configuration parameter.
 
         :param ruleUID: The UID of the rule.
         :param moduleCategory: The category of the module.
-        :param moduleId: The ID of the module.
+        :param moduleID: The ID of the module.
         :param param: The name of the configuration parameter.
 
         :return: The configuration parameter value (JSON).
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}", header={'Accept': 'text/plain'})
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}", header={'Accept': 'text/plain'})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -298,20 +298,20 @@ class Rules:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def setModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleId: str, param: str, value: str):
+    def setModuleConfigParam(self, ruleUID: str, moduleCategory: str, moduleID: str, param: str, value: str):
         """
         Sets the module's configuration parameter value.
 
         :param ruleUID: The UID of the rule.
         :param moduleCategory: The category of the module.
-        :param moduleId: The ID of the module.
+        :param moduleID: The ID of the module.
         :param param: The name of the configuration parameter.
         :param value: The value to set for the configuration parameter.
 
         :return: The API response (status code).
         """
         try:
-            response = self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleId}/config/{param}",
+            response = self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}",
                                        data=json.dumps(value), header={'Content-Type': 'text/plain'})
 
             if isinstance(response, dict) and "status" in response:
@@ -481,7 +481,7 @@ class Rules:
         """
         try:
             response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", header={
-                                        "Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"})
+                                        "Content-Type": "text/plain; charset=utf-8", "Accept": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

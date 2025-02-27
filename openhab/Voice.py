@@ -46,7 +46,7 @@ class Voice:
 
     def startDialog(self, sourceID: str, ksID: str = None, sttID: str = None,
                     ttsID: str = None, voiceID: str = None, hliIDs: str = None,
-                    sinkID: str = None, keyword: str = None, listeningItem: str = None):
+                    sinkID: str = None, keyword: str = None, listeningItem: str = None, language: str = None):
         """
         Start dialog processing for a given audio source.
 
@@ -59,12 +59,17 @@ class Voice:
         :param sinkID: The ID of the audio output (optional).
         :param keyword: The keyword used to start the dialog (optional).
         :param listeningItem: The name of the item to listen to (optional).
+        :param language: The language for the request (optional).
 
         :return: The response from the server.
         """
+        header = None
+        if language:
+            header = {"Accept-Language": language}
+
         try:
-            response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttID': sttID, 'ttsId': ttsID,
-                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem})
+            response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttId': sttID, 'ttsId': ttsID,
+                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -75,8 +80,8 @@ class Voice:
             status_code = err.response.status_code
             if status_code == 400:
                 return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
-            elif status_code == 404:
-                return {"error": "One of the given ids is wrong."}
+            #elif status_code == 404:
+            #    return {"error": "One of the given ids is wrong."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -85,8 +90,8 @@ class Voice:
 
         if status_code == 200:
             return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "One of the given ids is wrong."}
+        #elif status_code == 404:
+        #    return {"error": "One of the given ids is wrong."}
         elif status_code == 400:
             return {"error": "Services are missing or language is not supported by services or dialog processing is already started for the audio source."}
 
@@ -162,7 +167,7 @@ class Voice:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def interpretText(self, text: str, language: str, IDs: list = None):
+    def interpretText(self, text: str, language: str = None):
         """
         Sends a text to the default human language interpreter.
 
@@ -172,13 +177,12 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = {"Content-Type": "text /plain"}
+        header = {"Content-Type": "text/plain", "Accept": "text/plain"}
         if language:
             header["Accept-Language"] = language
 
         try:
-            response = self.client.post('/voice/interpreters', header=header, params={
-                                        'ids': ','.join(IDs)} if IDs else {}, data={'text': text})
+            response = self.client.post('/voice/interpreters', header=header, data=text)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -215,7 +219,7 @@ class Voice:
 
         :return: The details of the interpreter.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -245,7 +249,7 @@ class Voice:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def interpretTextBatch(self, text: str, language: str, IDs: list):
+    def interpretTextBatch(self, text: str, IDs: list, language: str = None):
         """
         Sends a text to a given human language interpreter(s).
 
@@ -255,13 +259,13 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = {"Content-Type": "text/plain"}
+        header = {"Content-Type": "text/plain", "Accept": "text/plain"}
         if language:
             header["Accept-Language"] = language
 
         try:
             response = self.client.post('/voice/interpreters', header=header, params={
-                                        'ids': ','.join(IDs)}, data=json.dumps({'text': text}))
+                                        'ids': ','.join(IDs)}, data=text)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -290,7 +294,7 @@ class Voice:
         return {"error": f"Unexpected response: {status_code}"}
 
     def listenAndAnswer(self, sourceID: str, sttID: str, ttsID: str, voiceID: str,
-                        hliIDs: list = None, sinkID: str = None, listeningItem: str = None):
+                        hliIDs: list, sinkID: str, listeningItem: str, language: str = None):
         """
         Executes a simple dialog sequence without keyword spotting for a given audio source.
 
@@ -301,12 +305,17 @@ class Voice:
         :param hliIDs: A list of interpreter IDs (optional).
         :param sinkID: The ID of the audio output (optional).
         :param listeningItem: The name of the item to listen to (optional).
+        :param language: The language for the request (optional).
 
         :return: The response from the server.
         """
+        header = None
+        if language:
+            header = {"Accept-Language": language}
+
         try:
-            response = self.client.post('/voice/listenandanswer', data={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
-                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem})
+            response = self.client.post('/voice/listenandanswer', params={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
+                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

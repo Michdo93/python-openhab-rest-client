@@ -121,7 +121,7 @@ class UI:
         """
         try:
             response = self.client.put(
-                f"/ui/components/{namespace}/{componentUID}", data=json.dumps(componentData))
+                f"/ui/components/{namespace}/{componentUID}", data=json.dumps(componentData), header={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

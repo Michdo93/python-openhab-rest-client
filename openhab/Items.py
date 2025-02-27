@@ -212,7 +212,7 @@ class Items:
         """
         try:
             response = self.client.post(f"/items/{itemName}", header={
-                                        "Content-type": "text/plain; charset=utf-8", "Accept": "text/plain"}, data=command)
+                                        "Content-Type": "text/plain; charset=utf-8", "Accept": "text/plain"}, data=command)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -569,7 +569,7 @@ class Items:
 
         :return: A response object or confirmation that the state was successfully updated.
         """
-        header = {"Content-type": "text/plain; charset=utf-8",
+        header = {"Content-Type": "text/plain; charset=utf-8",
                   "Accept": "text/plain"}
         if language:
             header["Accept-Language"] = language

@@ -82,8 +82,13 @@ class Persistence:
         :return: The response from the API after modification.
         """
         try:
-            response = self.client.put(f"/persistence/{serviceID}", data=json.dumps(
-                {'serviceID': serviceID}), header={"Content-Type": "application/json", "Accept": "application/json"})
+            config["serviceId"] = serviceID  
+
+            response = self.client.put(
+                f"/persistence/{serviceID}",
+                data=json.dumps(config),
+                headers={"Content-Type": "application/json", "Accept": "application/json"}
+            )
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

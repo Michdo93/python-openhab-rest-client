@@ -51,20 +51,20 @@ class VoiceTest:
             print(f"Error retrieving interpreters: {e}")
             return []
 
-    def testInterpretText(self, text: str, language: str, IDs: list = None):
+    def testInterpretText(self, text: str, language: str = None):
         print("\n~~~~ Test #5: interpretText(text, language, IDs) ~~~~\n")
 
         try:
-            result = self.voiceAPI.interpretText(text, language, IDs)
+            result = self.voiceAPI.interpretText(text, language)
             print(f"Interpreted Text: {result}")
         except Exception as e:
             print(f"Error interpreting text: {e}")
 
-    def testInterpretTextBatch(self, text: str, language: str, IDs: list):
+    def testInterpretTextBatch(self, text: str, IDs: list, language: str):
         print("\n~~~~ Test #6: interpretTextBatch(text, language, IDs) ~~~~\n")
 
         try:
-            result = self.voiceAPI.interpretTextBatch(text, language, IDs)
+            result = self.voiceAPI.interpretTextBatch(text, IDs, language)
             print(f"Batch Interpreted Text: {result}")
         except Exception as e:
             print(f"Error batch interpreting text: {e}")
@@ -78,14 +78,19 @@ class VoiceTest:
         except Exception as e:
             print(f"Error retrieving interpreter: {e}")
 
-    def testStartDialog(self, sourceID: str, keyword: str, sttID: str, ttsID: str, voiceID: str, sinkID: str):
+    def testStartDialog(self, sourceID: str, keyword: str = None, sttID: str = None, ttsID: str = None, voiceID: str = None, sinkID: str = None, language: str = None):
         print("\n~~~~ Test #8: startDialog(sourceID, keyword, sttID, ttsID, voiceID, sinkID) ~~~~\n")
 
         try:
-            response = self.voiceAPI.startDialog(sourceID, keyword, sttID, ttsID, voiceID, sinkID)
-            print(f"Dialog started: {json.dumps(response, indent=4)}")
+            response = self.voiceAPI.startDialog(sourceID=sourceID, keyword=keyword, 
+                                                sttID=sttID, ttsID=ttsID, voiceID=voiceID, sinkID=sinkID, language=language)
+            if isinstance(response, dict) and "error" in response:
+                print(f"Error: {response['error']}")
+            else:
+                print(f"Dialog started: {json.dumps(response, indent=4)}")
         except Exception as e:
             print(f"Error starting dialog: {e}")
+
 
     def testStopDialog(self, sourceID: str):
         print("\n~~~~ Test #9: stopDialog(sourceID) ~~~~\n")

@@ -121,7 +121,7 @@ class Services:
         """
         try:
             response = self.client.put(f"/services/{serviceID}/config", data=json.dumps(
-                configData), header={"Content-type": "application/json", "Accept": "application/json"})
+                configData), header={"Content-Type": "application/json", "Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

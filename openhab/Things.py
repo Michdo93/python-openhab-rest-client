@@ -494,9 +494,7 @@ class Things:
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code == 405:
-                return {"error": "Transformation cannot be deleted (Method Not Allowed)."}
-            elif status_code == 404:
+            if status_code == 404:
                 return {"error": "Thing not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
