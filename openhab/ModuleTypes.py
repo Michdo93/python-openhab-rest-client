@@ -21,7 +21,7 @@ class ModuleTypes:
 
         :return: A list of module types.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -62,7 +62,7 @@ class ModuleTypes:
 
         :return: A dictionary with the module type information.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

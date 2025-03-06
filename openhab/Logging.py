@@ -12,14 +12,15 @@ class Logging:
         """
         self.client = client
 
-    def getAllLoggers(self) -> dict:
+    def getLoggers(self) -> dict:
         """
         Get all loggers.
 
         :return: A list of loggers with names and levels.
         """
+        header = {"Accept": "application/json"}
         try:
-            response = self.client.get("/logging")
+            response = self.client.get("/logging", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -39,7 +40,7 @@ class Logging:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSingleLogger(self, loggerName: str) -> dict:
+    def getLogger(self, loggerName: str) -> dict:
         """
         Get a single logger.
 
@@ -47,8 +48,9 @@ class Logging:
 
         :return: The logger with the specified name and level.
         """
+        
         try:
-            response = self.client.get(f"/logging/{loggerName}")
+            response = self.client.get(f"/logging/{loggerName}", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

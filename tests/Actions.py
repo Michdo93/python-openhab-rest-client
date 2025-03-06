@@ -35,5 +35,5 @@ if __name__ == "__main__":
     }
 
     # Execute all tests
-    actionsTest.testGetAllActions(thingUID)                             # Test #1
+    actionsTest.testGetActions(thingUID)                             # Test #1
     actionsTest.testExecuteAction(thingUID, actionUID, actionInputs)    # Test #2

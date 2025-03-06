@@ -16,5 +16,5 @@ if __name__ == "__main__":
     configURI = "channel-type:mqtt:ha-channel"
 
     # Run all tests
-    configDescriptionsTest.testGetAllConfigDescriptions(language)               # Test #1
-    configDescriptionsTest.testGetConfigDescriptionByURI(configURI, language)   # Test #2
+    configDescriptionsTest.testGetConfigDescriptions(language)               # Test #1
+    configDescriptionsTest.testGetConfigDescription(configURI, language)   # Test #2

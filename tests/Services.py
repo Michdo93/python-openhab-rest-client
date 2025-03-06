@@ -22,7 +22,7 @@ if __name__ == "__main__":
     }
 
     # Execute test functions
-    servicesTest.testGetAllServices()                             # Test #1
+    servicesTest.testGetServices()                             # Test #1
     servicesTest.testGetService(serviceID)                      # Test #2
     servicesTest.testGetServiceConfig(serviceID)                # Test #3
     servicesTest.testUpdateServiceConfig(serviceID, newConfig)  # Test #4

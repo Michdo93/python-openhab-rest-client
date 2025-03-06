@@ -10,21 +10,21 @@ class ConfigDescriptionsTest:
         self.configDescriptionsAPI = ConfigDescriptions(client)
 
     # Test fetching all configuration descriptions
-    def testGetAllConfigDescriptions(self, language: str = None, scheme: str = None):
-        print("\n~~~~ Test #1: getAllConfigDescriptions() ~~~~\n")
+    def testGetConfigDescriptions(self, scheme: str = None, language: str = None):
+        print("\n~~~~ Test #1: getConfigDescriptions() ~~~~\n")
 
         try:
-            response = self.configDescriptionsAPI.getAllConfigDescriptions(language=language, scheme=scheme)
+            response = self.configDescriptionsAPI.getConfigDescriptions(language=language, scheme=scheme)
             print("All Configuration Descriptions:", response)
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test fetching a specific configuration description by URI
-    def testGetConfigDescriptionByURI(self, uri: str, language: str = None):
-        print("\n~~~~ Test #2: getConfigDescriptionByURI() ~~~~\n")
+    def testGetConfigDescription(self, uri: str, language: str = None):
+        print("\n~~~~ Test #2: getConfigDescription(uri) ~~~~\n")
 
         try:
-            response = self.configDescriptionsAPI.getConfigDescriptionByURI(uri=uri, language=language)
+            response = self.configDescriptionsAPI.getConfigDescription(uri=uri, language=language)
             print(f"Configuration Description for URI '{uri}':", response)
         except ValueError as e:
             print(f"Error: {e}")

@@ -10,7 +10,7 @@ class UUIDTest:
         self.uuidAPI = UUID(client)
 
     # Retrieve the UUID
-    def testGetUuid(self):
+    def testGetUUID(self):
         """Test retrieving the OpenHAB UUID"""
         print("\n~~~~ Test #1: getUUID() ~~~~\n")
 

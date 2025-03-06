@@ -16,5 +16,5 @@ if __name__ == "__main__":
     moduleTypeUID = "timer.GenericCronTrigger"
 
     # Run tests
-    moduleTypesTest.testGetAllModuleTypes()
-    moduleTypesTest.testGetSingleModuleType(moduleTypeUID)
+    moduleTypesTest.testGetModuleTypes()
+    moduleTypesTest.testGetModuleType(moduleTypeUID)

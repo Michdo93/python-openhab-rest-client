@@ -23,7 +23,7 @@ class UI:
         """
         try:
             response = self.client.get(
-                f"/ui/components/{namespace}", params={'summary': summary} if summary else {})
+                f"/ui/components/{namespace}", params={'summary': summary} if summary else {}, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -54,7 +54,7 @@ class UI:
         """
         try:
             response = self.client.post(f"/ui/components/{namespace}", data=json.dumps(
-                componentData), header={"Content-Type": "application/json"})
+                componentData), header={"Content-Type": "application/json", "Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -85,7 +85,7 @@ class UI:
         """
         try:
             response = self.client.get(
-                f"/ui/components/{namespace}/{componentUID}")
+                f"/ui/components/{namespace}/{componentUID}", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -121,7 +121,7 @@ class UI:
         """
         try:
             response = self.client.put(
-                f"/ui/components/{namespace}/{componentUID}", data=json.dumps(componentData), header={"Content-Type": "application/json"})
+                f"/ui/components/{namespace}/{componentUID}", data=json.dumps(componentData), header={"Content-Type": "application/json", "Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -187,7 +187,7 @@ class UI:
         :return: A list of UI tiles (JSON).
         """
         try:
-            response = self.client.get("/ui/tiles")
+            response = self.client.get("/ui/tiles", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

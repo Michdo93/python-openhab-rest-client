@@ -11,12 +11,12 @@ class UITest:
     def __init__(self, client: OpenHABClient):
         self.uiAPI = UI(client)
 
-    def testGetUIComponents(self, namespace: str):
+    def testGetUIComponents(self, namespace: str, summary: bool = False):
         """Retrieve all UI components for a given namespace"""
         print("\n~~~~ Test #1: getUiComponents(namespace) ~~~~\n")
 
         try:
-            components = self.uiAPI.getUIComponents(namespace)
+            components = self.uiAPI.getUIComponents(namespace, summary)
             print(json.dumps(components, indent=4))
         except Exception as e:
             print(f"Error retrieving UI components for {namespace}: {e}")
@@ -41,12 +41,12 @@ class UITest:
         except Exception as e:
             print(f"Error retrieving UI component {componentUID}: {e}")
 
-    def testUpdateUIComponent(self, namespace: str, componentUID: str, updatedComponentData: dict):
+    def testUpdateUIComponent(self, namespace: str, componentUID: str, componentData: dict):
         """Update a UI component by UID"""
-        print("\n~~~~ Test #4: updateUiComponent(namespace, componentUID) ~~~~\n")
+        print("\n~~~~ Test #4: updateUiComponent(namespace, componentUID, componentData) ~~~~\n")
 
         try:
-            updatedComponent = self.uiAPI.updateUIComponent(namespace, componentUID, updatedComponentData)
+            updatedComponent = self.uiAPI.updateUIComponent(namespace, componentUID, componentData)
             print(f"Updated UI component {componentUID}:\n{json.dumps(updatedComponent, indent=4)}")
         except Exception as e:
             print(f"Error updating UI component {componentUID}: {e}")

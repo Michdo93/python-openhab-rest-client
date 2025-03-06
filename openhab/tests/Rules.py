@@ -11,17 +11,17 @@ class RulesTest:
     def __init__(self, client: OpenHABClient):
         self.rulesAPI = Rules(client)
 
-    def testGetAllRules(self):
+    def testGetRules(self, prefix=None, tags=None, summary=False, staticDataOnly=False):
         """ Retrieve all rules """
         print("\n~~~~ Test #1 getRules() ~~~~\n")
 
         try:
-            rules = self.rulesAPI.getRules()
+            rules = self.rulesAPI.getRules(prefix, tags, summary, staticDataOnly)
             print(json.dumps(rules, indent=4))
         except Exception as e:
             print(f"Error retrieving rules: {e}")
 
-    def testGetRuleDetails(self, ruleID: str):
+    def testGetRule(self, ruleID: str):
         """ Retrieve details of a specific rule """
         print("\n~~~~ Test #2 getRule(ruleID) ~~~~\n")
 
@@ -31,22 +31,22 @@ class RulesTest:
         except Exception as e:
             print(f"Error retrieving rule {ruleID}: {e}")
 
-    def testCreateRule(self, rule_data: dict):
+    def testCreateRule(self, ruleData: dict):
         """ Create a new rule """
-        print("\n~~~~ Test #3 createRule(rule_data) ~~~~\n")
+        print("\n~~~~ Test #3 createRule(ruleData) ~~~~\n")
 
         try:
-            self.rulesAPI.createRule(rule_data)
+            self.rulesAPI.createRule(ruleData)
             print("New Rule created successfully.")
         except Exception as e:
             print(f"Error creating rule: {e}")
 
-    def testUpdateRule(self, ruleID: str, updateData: dict):
+    def testUpdateRule(self, ruleID: str, ruleData: dict):
         """ Update an existing rule """
-        print("\n~~~~ Test #4 updateRule(ruleID, updateData) ~~~~\n")
+        print("\n~~~~ Test #4 updateRule(ruleID, ruleData) ~~~~\n")
 
         try:
-            self.rulesAPI.updateRule(ruleID, updateData)
+            self.rulesAPI.updateRule(ruleID, ruleData)
             print("Rule updated successfully.")
         except Exception as e:
             print(f"Error updating rule {ruleID}: {e}")
@@ -72,12 +72,12 @@ class RulesTest:
         except Exception as e:
             print(f"Error deleting rule {ruleID}: {e}")
 
-    def testExecuteRuleNow(self, ruleID: str):
+    def testRunNow(self, ruleID: str, contextData: dict = None):
         """ Execute a rule immediately """
         print("\n~~~~ Test #7 runNow(ruleID) ~~~~\n")
 
         try:
-            self.rulesAPI.runNow(ruleID)
+            self.rulesAPI.runNow(ruleID, contextData)
             print("Rule executed successfully.")
         except Exception as e:
             print(f"Error executing rule {ruleID}: {e}")

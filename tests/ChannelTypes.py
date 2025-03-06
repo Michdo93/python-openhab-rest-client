@@ -17,7 +17,7 @@ if __name__ == "__main__":
     channelTypeUID = "mqtt:trigger"
 
     # Run all tests
-    channelTypesTest.testGetAllChannelTypes(language)                   # Test #1
-    channelTypesTest.testGetAllChannelTypes(language, prefix)           # Test #1b
-    channelTypesTest.testGetChannelTypeByUID(channelTypeUID, language)  # Test #2
+    channelTypesTest.testGetChannelTypes(language)                   # Test #1
+    channelTypesTest.testGetChannelTypes(language, prefix)           # Test #1b
+    channelTypesTest.testGetChannelType(channelTypeUID, language)  # Test #2
     channelTypesTest.testGetLinkableItemTypes(channelTypeUID)           # Test #3

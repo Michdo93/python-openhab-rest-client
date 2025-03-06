@@ -11,7 +11,7 @@ class ChannelTypes:
         """
         self.client = client
 
-    def getAllChannelTypes(self, language: str = None, prefixes: str = None) -> list:
+    def getChannelTypes(self, prefixes: str = None, language: str = None) -> list:
         """
         Retrieves all available channel types.
 
@@ -50,7 +50,7 @@ class ChannelTypes:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getChannelTypeByUID(self, channelTypeUID: str, language: str = None) -> dict:
+    def getChannelType(self, channelTypeUID: str, language: str = None) -> dict:
         """
         Retrieves the item types the given trigger channel type UID can be linked to.
 

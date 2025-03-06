@@ -11,14 +11,14 @@ class Templates:
         """
         self.client = client
 
-    def getAllTemplates(self, language: str = None) -> list:
+    def getTemplates(self, language: str = None) -> list:
         """
         Get all available templates.
 
         :param language: (Optional) Language setting for the Accept-Language header.
         :return: A list of templates.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -43,7 +43,7 @@ class Templates:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getTemplateByUID(self, templateUID: str, language: str = None) -> dict:
+    def getTemplate(self, templateUID: str, language: str = None) -> dict:
         """
         Gets a template corresponding to the given UID.
 
@@ -52,7 +52,7 @@ class Templates:
 
         :return: A dictionary with the details of the template.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

@@ -10,28 +10,37 @@ class ItemsTest:
         self.itemsAPI = Items(client)
 
     # Test fetching all items
-    def testGetAllItems(self):
-        print("\n~~~~ Test #1: getAllItems() ~~~~\n")
+    def testGetItems(
+        self,
+        type: str = None,
+        tags: str = None,
+        metadata: str = ".*",
+        recursive: bool = False,
+        fields: str = None,
+        staticDataOnly: bool = False,
+        language: str = None
+    ):
+        print("\n~~~~ Test #1: getItems() ~~~~\n")
 
         try:
-            allItems = self.itemsAPI.getAllItems()
+            allItems = self.itemsAPI.getItems(type, tags, metadata, recursive, fields, staticDataOnly, language)
             print("All Items:", allItems)
         except Exception as e:
             print(f"Error fetching all items: {e}")
 
     # Test fetching a specific item
-    def testGetItem(self, itemName: str):
-        print("\n~~~~ Test #2: getItem() ~~~~\n")
+    def testGetItem(self, itemName: str, metadata: str = ".*", recursive: bool = True, language: str = None):
+        print("\n~~~~ Test #2: getItem(itemName) ~~~~\n")
 
         try:
-            item = self.itemsAPI.getItem(itemName)
+            item = self.itemsAPI.getItem(itemName, metadata, recursive, language)
             print(f"Details for {itemName}:", item)
         except Exception as e:
             print(f"Error fetching item '{itemName}': {e}")
 
     # Test adding or updating a single item
     def testAddOrUpdateItem(self, itemName: str, itemData: dict):
-        print("\n~~~~ Test #3: addOrUpdateItem() ~~~~\n")
+        print("\n~~~~ Test #3: addOrUpdateItem(itemName, itemData) ~~~~\n")
 
         try:
             self.itemsAPI.addOrUpdateItem(itemName, itemData)
@@ -41,7 +50,7 @@ class ItemsTest:
 
     # Test adding or updating multiple items
     def testAddOrUpdateItems(self, items: list):
-        print("\n~~~~ Test #4: addOrUpdateItems() ~~~~\n")
+        print("\n~~~~ Test #4: addOrUpdateItems(items) ~~~~\n")
 
         try:
             self.itemsAPI.addOrUpdateItems(items)
@@ -51,7 +60,7 @@ class ItemsTest:
 
     # Test sending a command to an item
     def testSendCommand(self, itemName: str, command: str):
-        print("\n~~~~ Test #5: sendCommand() ~~~~\n")
+        print("\n~~~~ Test #5: sendCommand(itemName, command) ~~~~\n")
 
         try:
             self.itemsAPI.sendCommand(itemName, command)
@@ -60,18 +69,18 @@ class ItemsTest:
             print(f"Error sending command to '{itemName}': {e}")
 
     # Test updating the state of an item
-    def testUpdateItemState(self, itemName: str, state: str):
-        print("\n~~~~ Test #6: updateItemState() ~~~~\n")
+    def testUpdateItemState(self, itemName: str, state: str, language: str = None):
+        print("\n~~~~ Test #6: updateItemState(itemName, stat) ~~~~\n")
 
         try:
-            self.itemsAPI.updateItemState(itemName, state)
+            self.itemsAPI.updateItemState(itemName, state, language)
             print(f"State of '{itemName}' updated to '{state}'.")
         except Exception as e:
             print(f"Error updating state of '{itemName}': {e}")
 
     # Test fetching the state of an item
     def testGetItemState(self, itemName: str):
-        print("\n~~~~ Test #7: getItemState() ~~~~\n")
+        print("\n~~~~ Test #7: getItemState(itemName) ~~~~\n")
 
         try:
             state = self.itemsAPI.getItemState(itemName)
@@ -81,7 +90,7 @@ class ItemsTest:
 
     # Test deleting an item
     def testDeleteItem(self, itemName: str):
-        print("\n~~~~ Test #8: deleteItem() ~~~~\n")
+        print("\n~~~~ Test #8: deleteItem(itemName) ~~~~\n")
 
         try:
             self.itemsAPI.deleteItem(itemName)
@@ -90,28 +99,28 @@ class ItemsTest:
             print(f"Error deleting item '{itemName}': {e}")
 
     # Test adding a group member
-    def testAddGroupMember(self, groupName: str, itemName: str):
+    def testAddGroupMember(self, itemName: str, memberItemName: str):
         print("\n~~~~ Test #9: addGroupMember() ~~~~\n")
 
         try:
-            self.itemsAPI.addGroupMember(groupName, itemName)
-            print(f"Item '{itemName}' added to group '{groupName}'.")
+            self.itemsAPI.addGroupMember(itemName, memberItemName)
+            print(f"Item '{itemName}' added to group '{memberItemName}'.")
         except Exception as e:
-            print(f"Error adding item '{itemName}' to group '{groupName}': {e}")
+            print(f"Error adding item '{itemName}' to group '{memberItemName}': {e}")
 
     # Test removing a group member
-    def testRemoveGroupMember(self, groupName: str, itemName: str):
-        print("\n~~~~ Test #10: removeGroupMember() ~~~~\n")
+    def testRemoveGroupMember(self, itemName: str, memberItemName: str):
+        print("\n~~~~ Test #10: removeGroupMember(itemName, memberItemName) ~~~~\n")
 
         try:
-            self.itemsAPI.removeGroupMember(groupName, itemName)
-            print(f"Item '{itemName}' removed from group '{groupName}'.")
+            self.itemsAPI.removeGroupMember(itemName, memberItemName)
+            print(f"Item '{itemName}' removed from group '{memberItemName}'.")
         except Exception as e:
-            print(f"Error removing item '{itemName}' from group '{groupName}': {e}")
+            print(f"Error removing item '{itemName}' from group '{memberItemName}': {e}")
 
     # Test adding metadata to an item
     def testAddMetadata(self, itemName: str, namespace: str, metadata: dict):
-        print("\n~~~~ Test #11: addMetadata() ~~~~\n")
+        print("\n~~~~ Test #11: addMetadata(itemName, namespace, metadata) ~~~~\n")
 
         try:
             self.itemsAPI.addMetadata(itemName, namespace, metadata)
@@ -121,7 +130,7 @@ class ItemsTest:
 
     # Test removing metadata from an item
     def testRemoveMetadata(self, itemName: str, namespace: str):
-        print("\n~~~~ Test #12: removeMetadata() ~~~~\n")
+        print("\n~~~~ Test #12: removeMetadata(itemName, namespace) ~~~~\n")
 
         try:
             self.itemsAPI.removeMetadata(itemName, namespace)

@@ -11,11 +11,11 @@ class ProfileTypesTest:
     def __init__(self, client: OpenHABClient):
         self.profileTypesAPI = ProfileTypes(client)
 
-    def testGetProfileTypes(self):
+    def testGetProfileTypes(self, channelTypeUID=None, itemType=None, language: str = None):
         """ Retrieve all available profile types """
         print("\n~~~~ Test #1 getProfileTypes() ~~~~\n")
         try:
-            profile_types = self.profileTypesAPI.getProfileTypes()
-            print(json.dumps(profile_types, indent=4))
+            profileTypes = self.profileTypesAPI.getProfileTypes(channelTypeUID, itemType, language)
+            print(json.dumps(profileTypes, indent=4))
         except Exception as e:
             print(f"Error retrieving profile types: {e}")

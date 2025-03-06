@@ -11,7 +11,7 @@ class Iconsets:
         """
         self.client = client
 
-    def getAllIconsets(self, language: str = None) -> list:
+    def getIconsets(self, language: str = None) -> list:
         """
         Gets all icon sets.
 

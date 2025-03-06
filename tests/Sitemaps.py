@@ -17,7 +17,7 @@ if __name__ == "__main__":
     subscriptionId = "013328fd-d3fd-4de4-8f7d-efe01bad7eac"
 
     # Execute test functions
-    sitemapsTest.testGetAllSitemaps()                                     # Test #1
+    sitemapsTest.testGetSitemaps()                                     # Test #1
     sitemapsTest.testGetSitemap(sitemapName)                            # Test #2
     sitemapsTest.testGetSitemapPage("astro", "astro")                   # Test #3
     sitemapsTest.testGetFullSitemap("astro")                            # Test #4

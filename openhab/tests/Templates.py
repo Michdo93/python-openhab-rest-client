@@ -11,23 +11,23 @@ class TemplatesTest:
     def __init__(self, client: OpenHABClient):
         self.templatesAPI = Templates(client)
 
-    def testGetAllTemplates(self):
+    def testGetTemplates(self, language: str = None):
         """Retrieve all templates"""
-        print("\n~~~~ Test #1 getAllTemplates() ~~~~\n")
+        print("\n~~~~ Test #1 getTemplates() ~~~~\n")
 
         try:
-            allTemplates = self.templatesAPI.getAllTemplates()
+            allTemplates = self.templatesAPI.getAllTemplates(language)
             print("All Templates:")
             print(json.dumps(allTemplates, indent=4))
         except Exception as e:
             print(f"Error retrieving templates: {e}")
 
-    def testGetTemplateByUID(self, templateUID: str):
+    def testGetTemplate(self, templateUID: str, language: str = None):
         """Retrieve a specific template by UID"""
-        print("\n~~~~ Test #2 getTemplateByUid(templateUID) ~~~~\n")
+        print("\n~~~~ Test #2 getTemplate(templateUID) ~~~~\n")
 
         try:
-            specificTemplate = self.templatesAPI.getTemplateByUID(templateUID)
+            specificTemplate = self.templatesAPI.getTemplate(templateUID, language)
             print("Template Details:")
             print(json.dumps(specificTemplate, indent=4))
         except Exception as e:

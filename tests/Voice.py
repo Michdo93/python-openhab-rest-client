@@ -40,6 +40,6 @@ if __name__ == "__main__":
     else:
         print("No interpreter, test skipped.")
     voiceTest.testGetInterpreter(interpreterID, language)                                                   # Test #7
-    voiceTest.testStartDialog(sourceID, keyword, sttID, ttsID, voiceID, sinkID)                             # Test #8
+    voiceTest.testStartDialog(sourceID)                             # Test #8
     voiceTest.testStopDialog(sourceID)                                                                      # Test #9
-    voiceTest.testListenAndAnswer(sourceID, sttID, ttsID, voiceID, hliIDs, sinkID, listeningItem)           # Test #10
+    voiceTest.testListenAndAnswer(sourceID)           # Test #10

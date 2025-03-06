@@ -20,9 +20,12 @@ class Services:
 
         :return: A list of services (JSON).
         """
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         try:
-            response = self.client.get(
-                "/services", header={"Accept-Language": language} if language else {})
+            response = self.client.get("/services", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -51,9 +54,13 @@ class Services:
 
         :return: The service object (JSON).
         """
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         try:
             response = self.client.get(
-                f"/services/{serviceID}", header={"Accept-Language": language} if language else {})
+                f"/services/{serviceID}", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -86,7 +93,7 @@ class Services:
         :return: The configuration of the service (JSON).
         """
         try:
-            response = self.client.get(f"/services/{serviceID}/config")
+            response = self.client.get(f"/services/{serviceID}/config", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -110,7 +117,7 @@ class Services:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def updateServiceConfig(self, serviceID: str, configData: dict):
+    def updateServiceConfig(self, serviceID: str, configData: dict, language: str = None):
         """
         Updates a service configuration for the given service ID and returns the old configuration.
 
@@ -119,9 +126,16 @@ class Services:
 
         :return: The old configuration of the service (JSON).
         """
+        header = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+        if language:
+            header["Accept-Language"] = language
+
         try:
             response = self.client.put(f"/services/{serviceID}/config", data=json.dumps(
-                configData), header={"Content-Type": "application/json", "Accept": "application/json"})
+                configData), header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -183,7 +197,7 @@ class Services:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getServiceContexts(self, serviceID: str, language=None):
+    def getServiceContexts(self, serviceID: str, language = None):
         """
         Get existing multiple context service configurations for the given factory PID.
 
@@ -192,7 +206,7 @@ class Services:
 
         :return: A list of contexts (JSON).
         """
-        header = {"Accept": "application/json"}  # Default to application/json
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

@@ -10,20 +10,20 @@ class LoggingTest:
     def __init__(self, client: OpenHABClient):
         self.loggingAPI = Logging(client)
 
-    def testGetAllLoggers(self):
+    def testGetLoggers(self):
         """ Test retrieving all loggers """
-        print("\n~~~~ Test #1: getAllLoggers() ~~~~\n")
+        print("\n~~~~ Test #1: getLoggers() ~~~~\n")
         try:
-            loggers = self.loggingAPI.getAllLoggers()
+            loggers = self.loggingAPI.getLoggers()
             print("All loggers:", loggers)
         except Exception as e:
             print(f"Error retrieving loggers: {e}")
 
-    def testGetSingleLogger(self, loggerName: str):
+    def testGetLogger(self, loggerName: str):
         """ Test retrieving a specific logger """
-        print(f"\n~~~~ Test #2: getSingleLogger({loggerName}) ~~~~\n")
+        print(f"\n~~~~ Test #2: getLogger({loggerName}) ~~~~\n")
         try:
-            logger = self.loggingAPI.getSingleLogger(loggerName)
+            logger = self.loggingAPI.getLogger(loggerName)
             print(f"Logger {loggerName}:", logger)
         except Exception as e:
             print(f"Error retrieving logger {loggerName}: {e}")

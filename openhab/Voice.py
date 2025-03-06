@@ -1,5 +1,4 @@
 from .Client import OpenHABClient
-import json
 import requests
 
 
@@ -63,13 +62,9 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = None
-        if language:
-            header = {"Accept-Language": language}
-
         try:
             response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttId': sttID, 'ttsId': ttsID,
-                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, header=header)
+                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -309,13 +304,9 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = None
-        if language:
-            header = {"Accept-Language": language}
-
         try:
             response = self.client.post('/voice/listenandanswer', params={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
-                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, header=header)
+                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -355,8 +346,7 @@ class Voice:
         :return: The response from the server.
         """
         try:
-            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data={
-                                        'text': text}, header={"Content-Type": "text/plain"})
+            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data=text, header={"Content-Type": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

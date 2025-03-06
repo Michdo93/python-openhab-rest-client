@@ -25,7 +25,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly})
+                "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly}, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -96,7 +96,7 @@ class Rules:
         :return: The rule object (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}")
+            response = self.client.get(f"/rules/{ruleUID}", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -164,8 +164,7 @@ class Rules:
         :return: The API response (status code).
         """
         try:
-            response = self.client.delete(
-                f"/rules/{ruleUID}", header={"Accept": "application/json"})
+            response = self.client.delete(f"/rules/{ruleUID}")
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -237,7 +236,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config")
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -345,7 +344,7 @@ class Rules:
         :return: A list of actions (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/actions")
+            response = self.client.get(f"/rules/{ruleUID}/actions", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -378,7 +377,7 @@ class Rules:
         :return: A list of conditions (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/conditions")
+            response = self.client.get(f"/rules/{ruleUID}/conditions", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -411,7 +410,7 @@ class Rules:
         :return: The configuration of the rule (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/config")
+            response = self.client.get(f"/rules/{ruleUID}/config", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -481,7 +480,7 @@ class Rules:
         """
         try:
             response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", header={
-                                        "Content-Type": "text/plain; charset=utf-8", "Accept": "text/plain"})
+                                        "Content-Type": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -522,7 +521,7 @@ class Rules:
         """
         try:
             response = self.client.post(
-                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {})
+                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {}, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -555,7 +554,7 @@ class Rules:
         :return: A list of triggers (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/triggers")
+            response = self.client.get(f"/rules/{ruleUID}/triggers", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

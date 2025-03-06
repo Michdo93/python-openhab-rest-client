@@ -30,7 +30,7 @@ if __name__ == "__main__":
     }
     
     # Run tests
-    itemsTest.testGetAllItems()                                                   # Test#1
+    itemsTest.testGetItems()                                                   # Test#1
     itemsTest.testGetItem(testItemName)                                         # Test#2
     itemsTest.testAddOrUpdateItem("newSwitch", newItemData)                     # Test#3
     itemsTest.testAddOrUpdateItems([newItemData])                               # Test#4

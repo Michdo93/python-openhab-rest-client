@@ -10,11 +10,11 @@ class InboxTest:
         self.inboxAPI = Inbox(client)
 
     # Test fetching all discovered things
-    def testGetAllDiscoveredThings(self, includeIgnored: bool = True):
-        print("\n~~~~ Test #1: getAllDiscoveredThings() ~~~~\n")
+    def testGetDiscoveredThings(self, includeIgnored: bool = True):
+        print("\n~~~~ Test #1: getDiscoveredThings() ~~~~\n")
 
         try:
-            response = self.inboxAPI.getAllDiscoveredThings(includeIgnored)
+            response = self.inboxAPI.getDiscoveredThings(includeIgnored)
             print("Discovered Things:", response)
         except Exception as e:
             print(f"Error retrieving discovered things: {e}")

@@ -21,7 +21,7 @@ class ProfileTypes:
 
         :return: A list of profile types.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

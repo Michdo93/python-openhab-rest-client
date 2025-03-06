@@ -10,7 +10,7 @@ class ModuleTypesTest:
     def __init__(self, client: OpenHABClient):
         self.moduleTypesAPI = ModuleTypes(client)
 
-    def testGetAllModuleTypes(self, tags=None, typeFilter=None, language: str = None):
+    def testGetModuleTypes(self, tags=None, typeFilter=None, language: str = None):
         """ Test retrieving all module types """
         print("\n~~~~ Test #1: getModuleTypes() ~~~~\n")
         try:
@@ -19,7 +19,7 @@ class ModuleTypesTest:
         except Exception as e:
             print(f"Error retrieving module types: {e}")
 
-    def testGetSingleModuleType(self, moduleTypeUID: str, language: str = None):
+    def testGetModuleType(self, moduleTypeUID: str, language: str = None):
         """ Test retrieving a specific module type """
         print("\n~~~~ Test #2: getModuleType(moduleTypeUID) ~~~~\n")
         try:

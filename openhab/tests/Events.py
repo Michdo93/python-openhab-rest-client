@@ -10,11 +10,11 @@ class EventsTest:
         self.eventsAPI = Events(client)
 
     # Test retrieving all events
-    def testGetAllEvents(self, topics: str = None):
-        print("\n~~~~ Test #1: getAllEvents() ~~~~\n")
+    def testGetEvents(self, topics: str = None):
+        print("\n~~~~ Test #1: getEvents() ~~~~\n")
 
         try:
-            events = self.eventsAPI.getAllEvents(topics)
+            events = self.eventsAPI.getEvents(topics)
             print("(Filtered) Events:", events)
         except ValueError as e:
             print("Error trying to retrieve Events:", e)

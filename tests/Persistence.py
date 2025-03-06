@@ -22,11 +22,11 @@ if __name__ == "__main__":
     testState = "22.5"
 
     # Run tests
-    persistenceTest.testGetAllPersistenceServices()                                           # Test #1
+    persistenceTest.testGetServices()                                           # Test #1
     persistenceTest.testGetServiceConfiguration(serviceID)                                 # Test #2
     persistenceTest.testSetServiceConfiguration(serviceID, testConfig)                    # Test #3
     persistenceTest.testDeleteServiceConfiguration(serviceID)                              # Test #4
-    persistenceTest.testGetItemsForService(serviceID)                                      # Test #5
+    persistenceTest.testGetItemsFromService(serviceID)                                      # Test #5
     persistenceTest.testGetItemPersistenceData(serviceID, itemName, startTime, endTime) # Test #6
     persistenceTest.testStoreItemData(serviceID, itemName, testTime, testState)         # Test #7
     persistenceTest.testDeleteItemData(serviceID, itemName, startTime, endTime)         # Test #8

@@ -11,71 +11,71 @@ class ThingsTest:
     def __init__(self, client: OpenHABClient):
         self.thingsAPI = Things(client)
 
-    def testGetAllThings(self):
+    def testGetThings(self, summary: bool = False, staticDataOnly: bool = False, language: str = None):
         """Retrieve all Things"""
-        print("\n~~~~ Test #1 getAllThings() ~~~~\n")
+        print("\n~~~~ Test #1 getThings() ~~~~\n")
 
         try:
-            allThings = self.thingsAPI.getAllThings()
+            allThings = self.thingsAPI.getThings(summary, staticDataOnly, language)
             print(json.dumps(allThings, indent=4))
         except Exception as e:
             print(f"Error retrieving all Things: {e}")
 
-    def testGetThingByUID(self, thingUID: str):
+    def testGetThing(self, thingUID: str, language: str = None):
         """Retrieve details for a specific Thing"""
-        print("\n~~~~ Test #2 getThingByUID(thingUID) ~~~~\n")
+        print("\n~~~~ Test #2 getThing(thingUID) ~~~~\n")
 
         try:
-            thing = self.thingsAPI.getThingByUID(thingUID)
+            thing = self.thingsAPI.getThing(thingUID, language)
             print(json.dumps(thing, indent=4))
         except Exception as e:
             print(f"Error retrieving Thing {thingUID}: {e}")
 
-    def testCreateThing(self, newThing: dict):
+    def testCreateThing(self, thingData: dict, language: str = None):
         """Create a new Thing"""
-        print("\n~~~~ Test #3 createThing(newThing) ~~~~\n")
+        print("\n~~~~ Test #3 createThing(thingData) ~~~~\n")
 
         try:
-            response = self.thingsAPI.createThing(newThing)
+            response = self.thingsAPI.createThing(thingData, language)
             print("Thing created:", json.dumps(response, indent=4))
         except Exception as e:
             print(f"Error creating Thing: {e}")
 
-    def testUpdateThing(self, thingUID: str, updatedData: dict):
+    def testUpdateThing(self, thingUID: str, thingData: dict, language: str = None):
         """Update a Thing"""
         print("\n~~~~ Test #4 updateThing(thingUID, updatedData) ~~~~\n")
 
         try:
-            self.thingsAPI.updateThing(thingUID, updatedData)
+            self.thingsAPI.updateThing(thingUID, thingData, language)
             print(f"Thing {thingUID} updated successfully.")
         except Exception as e:
             print(f"Error updating Thing {thingUID}: {e}")
 
-    def testDeleteThing(self, thingUID: str):
+    def testDeleteThing(self, thingUID: str, force: bool = False, language: str = None):
         """Delete a Thing"""
         print("\n~~~~ Test #5 deleteThing(thingUID) ~~~~\n")
         try:
-            self.thingsAPI.deleteThing(thingUID, force=True)
+            self.thingsAPI.deleteThing(thingUID, force, language)
             print(f"Thing {thingUID} deleted successfully.")
         except Exception as e:
             print(f"Error deleting Thing {thingUID}: {e}")
 
-    def testGetThingStatus(self, thingUID: str):
+    def testGetThingStatus(self, thingUID: str, language: str = None):
         """Retrieve the status of a Thing"""
         print("\n~~~~ Test #6 getThingStatus(thingUID) ~~~~\n")
 
         try:
-            status = self.thingsAPI.getThingStatus(thingUID)
+            status = self.thingsAPI.getThingStatus(thingUID, language)
             print(f"Status of Thing {thingUID}: {status}")
         except Exception as e:
             print(f"Error fetching status of Thing {thingUID}: {e}")
 
-    def testEnableThing(self, thingUID: str, enabled: bool):
+    def testSetThingStatus(self, thingUID: str, enabled: bool, language: str = None):
         """Enable or disable a Thing"""
-        print("\n~~~~ Test #7 enableThing(thingUID, enabled) ~~~~\n")
+        print("\n~~~~ Test #7 setThingStatus(thingUID, enabled) ~~~~\n")
 
         try:
-            response = self.thingsAPI.enableThing(thingUID, enabled)
+            response = self.thingsAPI.setThingStatus(thingUID, enabled, language)
             print(f"Thing {thingUID} enabled: {response}")
         except Exception as e:
             print(f"Error enabling/disabling Thing {thingUID}: {e}")

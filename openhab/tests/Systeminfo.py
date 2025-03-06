@@ -23,7 +23,7 @@ class SysteminfoTest:
 
     def testGetUoMInfo(self):
         """Retrieve unit of measurement (UoM) information"""
-        print("\n~~~~ Test #2 getUomInfo() ~~~~\n")
+        print("\n~~~~ Test #2 getUoMInfo() ~~~~\n")
 
         try:
             uomInfo = self.systemInfoAPI.getUoMInfo()

@@ -19,7 +19,7 @@ if __name__ == "__main__":
     thingUIDToUnignore = "avmfritz:fritzbox:192_168_2_1"
 
     # Run all tests
-    inboxTest.testGetAllDiscoveredThings()                              # Test #1
+    inboxTest.testGetDiscoveredThings()                              # Test #1
     inboxTest.testRemoveDiscoveryResult(thingUIDToRemove)               # Test #2
     inboxTest.testApproveDiscoveryResult(thingUIDToApprove, thingLabel) # Test #3
     inboxTest.testIgnoreDiscoveryResult(thingUIDToIgnore)               # Test #4

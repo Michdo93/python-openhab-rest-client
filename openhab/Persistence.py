@@ -12,14 +12,18 @@ class Persistence:
         """
         self.client = client
 
-    def getAllServices(self) -> dict:
+    def getServices(self, language: str = None) -> dict:
         """
         Gets a list of persistence services.
 
         :return: A list of persistence services with IDs, labels, and types.
         """
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         try:
-            response = self.client.get("/persistence")
+            response = self.client.get("/persistence", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -48,7 +52,7 @@ class Persistence:
         :return: The configuration of the service.
         """
         try:
-            response = self.client.get(f"/persistence/{serviceID}")
+            response = self.client.get(f"/persistence/{serviceID}", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -155,7 +159,7 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItemsForService(self, serviceID: str) -> dict:
+    def getItemsFromService(self, serviceID: str = None) -> dict:
         """
         Gets a list of items available via a specific persistence service.
 
@@ -164,8 +168,12 @@ class Persistence:
         :return: A list of items with their last and earliest timestamps.
         """
         try:
-            response = self.client.get(
-                f"/persistence/items?serviceID={serviceID}")
+            url = "/persistence/items"
+
+            if serviceID:
+                url += f"?serviceID={serviceID}"
+
+            response = self.client.get(url, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -185,12 +193,12 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItemPersistenceData(self, serviceID: str, itemName: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50) -> dict:
+    def getItemPersistenceData(self, itemName: str, serviceID: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50, boundary: bool = False, itemState: bool = False) -> dict:
         """
         Gets item persistence data from the persistence service.
 
-        :param serviceID: The ID of the persistence service.
         :param itemName: The name of the item.
+        :param serviceID: The ID of the persistence service.
         :param startTime: The start time for the data. Defaults to 1 day before `endTime`.
         :param endTime: The end time for the data. Defaults to the current time.
         :param page: The page of data. Defaults to `1`.
@@ -200,7 +208,7 @@ class Persistence:
         """
         try:
             response = self.client.get(f"/persistence/items/{itemName}", params={
-                                       "serviceID": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength})
+                                       "serviceID": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength, "boundary": boundary, "itemState": itemState}, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -224,7 +232,7 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def storeItemData(self, serviceID: str, itemName: str, time: str, state: str) -> dict:
+    def storeItemData(self, itemName: str, time: str, state: str, serviceID: str = None) -> dict:
         """
         Stores item persistence data into the persistence service.
 
@@ -261,7 +269,7 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def deleteItemData(self, serviceID: str, itemName: str, startTime: str, endTime: str) -> dict:
+    def deleteItemData(self, itemName: str, startTime: str, endTime: str, serviceID: str) -> dict:
         """
         Deletes item persistence data from a specific persistence service in a given time range.
 
@@ -274,7 +282,7 @@ class Persistence:
         """
         try:
             response = self.client.delete(f"/persistence/items/{itemName}", params={
-                                          "serviceID": serviceID, "starttime": startTime, "endtime": endTime})
+                                          "serviceID": serviceID, "starttime": startTime, "endtime": endTime}, header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

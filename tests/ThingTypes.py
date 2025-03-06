@@ -16,5 +16,5 @@ if __name__ == "__main__":
     thingTypeUID = "mqtt:homeassistant"
 
     # Execute test functions
-    thingTypesTest.testGetAllThingTypes()       # Test #1
+    thingTypesTest.testGetThingTypes()       # Test #1
     thingTypesTest.testGetThingType(thingTypeUID)  # Test #2

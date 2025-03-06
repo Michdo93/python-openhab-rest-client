@@ -15,4 +15,4 @@ if __name__ == "__main__":
     language = "de"
 
     # Run all tests
-    iconsetsTest.testGetAllIconsets(language)   # Test #1
+    iconsetsTest.testGetIconsets(language)   # Test #1

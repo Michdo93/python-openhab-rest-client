@@ -12,7 +12,7 @@ class Things:
         """
         self.client = client
 
-    def getAllThings(self, summary: bool = False, staticDataOnly: bool = False, language: str = None):
+    def getThings(self, summary: bool = False, staticDataOnly: bool = False, language: str = None):
         """
         Get all available things.
 
@@ -22,7 +22,7 @@ class Things:
 
         :return: JSON response with the things.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -58,7 +58,7 @@ class Things:
         :return: The API response.
         """
         header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+                  "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -92,7 +92,7 @@ class Things:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getThingByUID(self, thingUID: str, language: str = None):
+    def getThing(self, thingUID: str, language: str = None):
         """
         Gets a thing by UID.
 
@@ -101,7 +101,7 @@ class Things:
 
         :return: JSON response with the thing data.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -141,7 +141,7 @@ class Things:
         :return: The API response.
         """
         header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+                  "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -228,7 +228,7 @@ class Things:
         :return: The API response.
         """
         header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+                  "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -275,7 +275,7 @@ class Things:
 
         :return: JSON response with the thing's configuration status.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -315,7 +315,7 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "text/plain"}
+        header = {"Content-Type": "text/plain", "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -361,14 +361,9 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
-        if language:
-            header["Accept-Language"] = language
-
         try:
             response = self.client.put(
-                f'/things/{thingUID}/firmware/{firmwareVersion}', header=header)
+                f'/things/{thingUID}/firmware/{firmwareVersion}', header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -405,7 +400,7 @@ class Things:
 
         :return: JSON response with the firmware status.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -442,7 +437,7 @@ class Things:
 
         :return: A list of available firmwares.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -479,7 +474,7 @@ class Things:
 
         :return: JSON response with the thing's status.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

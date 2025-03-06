@@ -18,6 +18,7 @@ if __name__ == "__main__":
     code="test-auth-code"           # Replace with a valid authorization code
     redirectURI="http://localhost"  # Replace with the actual redirect URI
     clientID="test-client-id"       # Replace with a valid client ID
+    sessionID="45e8988"
 
     # Run all tests
     authTest.testGetAPITokens()               # Test #1
@@ -29,4 +30,4 @@ if __name__ == "__main__":
         redirectURI=redirectURI,
         clientID=clientID
     )                                       # Test #4
-    authTest.testLogout(tokenResponse)      # Test #5
+    authTest.testLogout(tokenResponse, sessionID)      # Test #5

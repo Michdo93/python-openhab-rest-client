@@ -25,10 +25,10 @@ if __name__ == "__main__":
     updatedData = {"label": "Updated MQTT Thing"}
 
     # Execute test functions
-    thingsTest.testGetAllThings()                         # Test #1
-    thingsTest.testGetThingByUID(thingUID)              # Test #2
+    thingsTest.testGetThings()                         # Test #1
+    thingsTest.testGetThing(thingUID)              # Test #2
     thingsTest.testCreateThing(newThing)                # Test #3
     thingsTest.testUpdateThing(thingUID, updatedData)   # Test #4
     thingsTest.testDeleteThing(thingUID)                # Test #5
     thingsTest.testGetThingStatus(thingUID)             # Test #6
-    thingsTest.testEnableThing(thingUID, enabled=True)  # Test #7
+    thingsTest.testSetThingStatus(thingUID, enabled=True)  # Test #7

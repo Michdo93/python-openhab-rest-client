@@ -12,22 +12,22 @@ class LinksTest:
     def __init__(self, client: OpenHABClient):
         self.linksAPI = Links(client)
 
-    def testGetAllLinks(self):
+    def testGetLinks(self, channelUID: str = None, itemName: str = None):
         """ Test fetching all links """
-        print("\n~~~~ Test #1: getAllLinks() ~~~~\n")
+        print("\n~~~~ Test #1: getLinks() ~~~~\n")
 
         try:
-            allLinks = self.linksAPI.getAllLinks()
+            allLinks = self.linksAPI.getLinks(channelUID, itemName)
             print(json.dumps(allLinks, indent=2))
         except Exception as e:
             print(f"Error retrieving all links: {e}")
 
-    def testGetIndividualLink(self, itemName: str, channelUID: str):
+    def testGetLink(self, itemName: str, channelUID: str):
         """ Test fetching a specific link """
-        print("\n~~~~ Test #2: getIndividualLink(itemName, channelUID) ~~~~\n")
+        print("\n~~~~ Test #2: getLink(itemName, channelUID) ~~~~\n")
 
         try:
-            link = self.linksAPI.getIndividualLink(itemName, channelUID)
+            link = self.linksAPI.getLink(itemName, channelUID)
             print(json.dumps(link, indent=2))
         except Exception as e:
             print(f"Error retrieving link {itemName} -> {channelUID}: {e}")
@@ -43,19 +43,29 @@ class LinksTest:
         except Exception as e:
             print(f"Error unlinking {itemName} -> {channelUID}: {e}")
 
-    def testLinkItemToChannel(self, itemName: str, channelUID: str, config: dict = {}):
+    def testLinkItemToChannel(self, itemName: str, channelUID: str, configuration: dict = {}):
         """ Test linking an item to a channel """
-        print("\n~~~~ Test #4: linkItemToChannel(itemName, channelUID) ~~~~\n")
+        print("\n~~~~ Test #4: linkItemToChannel(itemName, channelUID, configuration) ~~~~\n")
 
         try:
-            response = self.linksAPI.linkItemToChannel(itemName, channelUID, config)
+            response = self.linksAPI.linkItemToChannel(itemName, channelUID, configuration)
             print(f"Link created: {json.dumps(response, indent=2)}")
         except Exception as e:
             print(f"Error linking {itemName} -> {channelUID}: {e}")
 
+    def testDeleteAllLinks(self, object: str):
+        """ Test deleting all links """
+        print("\n~~~~ Test #5: getDeleteAllLinks(object) ~~~~\n")
+
+        try:
+            orphanLinks = self.linksAPI.getDeleteAllLinks(object)
+            print(json.dumps(orphanLinks, indent=2))
+        except Exception as e:
+            print(f"Error retrieving orphan links: {e}")
+
     def testGetOrphanLinks(self):
         """ Test retrieving orphan links """
-        print("\n~~~~ Test #5: getOrphanLinks() ~~~~\n")
+        print("\n~~~~ Test #6: getOrphanLinks() ~~~~\n")
 
         try:
             orphanLinks = self.linksAPI.getOrphanLinks()
@@ -65,7 +75,7 @@ class LinksTest:
 
     def testPurgeUnusedLinks(self):
         """ Test purging unused links """
-        print("\n~~~~ Test #6: purgeUnusedLinks() ~~~~\n")
+        print("\n~~~~ Test #7: purgeUnusedLinks() ~~~~\n")
 
         try:
             response = self.linksAPI.purgeUnusedLinks()

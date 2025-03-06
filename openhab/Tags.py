@@ -12,7 +12,7 @@ class Tags:
         """
         self.client = client
 
-    def getTags(self, language=None):
+    def getTags(self, language: str = None):
         """
         Get all available semantic tags.
 
@@ -20,9 +20,12 @@ class Tags:
 
         :return: A list of semantic tags (JSON).
         """
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         try:
-            response = self.client.get(
-                "/tags", header={"Accept-Language": language} if language else {})
+            response = self.client.get("/tags", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -42,7 +45,7 @@ class Tags:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def createTag(self, tagData, language=None):
+    def createTag(self, tagData, language: str = None):
         """
         Creates a new semantic tag and adds it to the registry.
 
@@ -52,7 +55,7 @@ class Tags:
         :return: The response to the tag creation request (JSON).
         """
         header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+                  "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -86,7 +89,7 @@ class Tags:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getTag(self, tagID: str, language=None):
+    def getTag(self, tagID: str, language: str = None):
         """
         Gets a semantic tag and its sub-tags.
 
@@ -95,8 +98,7 @@ class Tags:
 
         :return: The tag object and its sub-tags (JSON).
         """
-        header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -125,7 +127,7 @@ class Tags:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def updateTag(self, tagID: str, tagData, language=None):
+    def updateTag(self, tagID: str, tagData, language: str = None):
         """
         Updates a semantic tag.
 
@@ -136,7 +138,7 @@ class Tags:
         :return: The response to the tag update request (JSON).
         """
         header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
+                  "Accept": "*/*"}
         if language:
             header["Accept-Language"] = language
 
@@ -170,7 +172,7 @@ class Tags:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def deleteTag(self, tagID: str, language=None):
+    def deleteTag(self, tagID: str, language: str = None):
         """
         Removes a semantic tag and its sub-tags from the registry.
 
@@ -179,13 +181,8 @@ class Tags:
 
         :return: The response to the tag deletion request (JSON).
         """
-        header = {"Content-Type": "application/json",
-                  "Accept": "application/json"}
-        if language:
-            header["Accept-Language"] = language
-
         try:
-            response = self.client.delete(f"/tags/{tagID}", header=header)
+            response = self.client.delete(f"/tags/{tagID}", header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

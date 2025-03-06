@@ -13,4 +13,4 @@ if __name__ == "__main__":
     uuidTest = UUIDTest(client)
     
     # Run all tests
-    uuidTest.testGetUuid()    # Test #1
+    uuidTest.testGetUUID()    # Test #1

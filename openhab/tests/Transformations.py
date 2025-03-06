@@ -9,7 +9,7 @@ from openhab import OpenHABClient, Transformations
 
 class TransformationsTest:
     def __init__(self, client: OpenHABClient):
-        self.discoveryAPI = Transformations(client)
+        self.transformationsAPI = Transformations(client)
 
     def testGetTransformations(self):
         """Retrieve all transformations"""
@@ -31,12 +31,12 @@ class TransformationsTest:
         except Exception as e:
             print(f"Error retrieving transformation {transformationUID}: {e}")
 
-    def testUpdateTransformation(self, transformationUID: str, updatedData: dict):
+    def testUpdateTransformation(self, transformationUID: str, transformationData: dict):
         """Update a specific transformation by transformationUID"""
-        print("\n~~~~ Test #3: updateTransformation(transformationUID, updatedData) ~~~~\n")
+        print("\n~~~~ Test #3: updateTransformation(transformationUID, transformationData) ~~~~\n")
 
         try:
-            response = self.transformationsAPI.updateTransformation(transformationUID, updatedData)
+            response = self.transformationsAPI.updateTransformation(transformationUID, transformationData)
             print(f"Updated transformation {transformationUID}:\n{json.dumps(response, indent=4)}")
         except Exception as e:
             print(f"Error updating transformation {transformationUID}: {e}")

@@ -12,30 +12,30 @@ class Items:
         """
         self.client = client
 
-    def getAllItems(
+    def getItems(
         self,
-        language: str = None,
         type: str = None,
         tags: str = None,
         metadata: str = ".*",
         recursive: bool = False,
         fields: str = None,
         staticDataOnly: bool = False,
+        language: str = None
     ):
         """
         Get all available items.
 
-        :param language: Optional; Language filter for header "Accept-Language".
         :param type: Optional; Item type filter.
         :param tags: Optional; Item tag filter.
         :param metadata: Optional; Metadata selector (default: .*).
         :param recursive: Optional; Whether to fetch group members recursively (default: False).
         :param fields: Optional; Limit to specific fields (comma-separated).
         :param staticDataOnly: Optional; Only returns cached data (default: False).
+        :param language: Optional; Language filter for header "Accept-Language".
 
         :return: A dictionary or list containing the item data as returned by the API.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -83,7 +83,7 @@ class Items:
         """
         try:
             response = self.client.put(
-                "/items", data=json.dumps(items), header={"Content-Type": "application/json"})
+                "/items", data=json.dumps(items), header={"Content-Type": "application/json", "Accept": "*/*"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -107,18 +107,18 @@ class Items:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItem(self, itemName: str, language: str = None, metadata: str = ".*", recursive: bool = True):
+    def getItem(self, itemName: str, metadata: str = ".*", recursive: bool = True, language: str = None):
         """
         Gets a single item.
 
         :param itemName: The name of the item.
-        :param language: Optional; Language filter for header "Accept-Language".
         :param metadata: Optional; Metadata selector (default: .*).
         :param recursive: Optional; Whether to fetch group members recursively (default: True).
+        :param language: Optional; Language filter for header "Accept-Language".
 
         :return: A dictionary containing the requested item data.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -163,7 +163,7 @@ class Items:
 
         :return: A response object or confirmation that the item was successfully added or updated.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Content-Type": "application/json", "Accept": "*/"}
         if language:
             header["Accept-Language"] = language
 
@@ -212,7 +212,7 @@ class Items:
         """
         try:
             response = self.client.post(f"/items/{itemName}", header={
-                                        "Content-Type": "text/plain; charset=utf-8", "Accept": "text/plain"}, data=command)
+                                        "Content-Type": "text/plain"}, data=command)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -496,7 +496,7 @@ class Items:
 
         :return: A dictionary containing the semantic item data.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -534,8 +534,9 @@ class Items:
 
         :return: A dictionary containing the current state of the item.
         """
+        header = {"Accept": "text/plain"}
         try:
-            response = self.client.get(f"/items/{itemName}/state")
+            response = self.client.get(f"/items/{itemName}/state", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -569,8 +570,7 @@ class Items:
 
         :return: A response object or confirmation that the state was successfully updated.
         """
-        header = {"Content-Type": "text/plain; charset=utf-8",
-                  "Accept": "text/plain"}
+        header = {"Content-Type": "text/plain"}
         if language:
             header["Accept-Language"] = language
 

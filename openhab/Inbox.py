@@ -11,7 +11,7 @@ class Inbox:
         """
         self.client = client
 
-    def getAllDiscoveredThings(self, includeIgnored: bool = True) -> list:
+    def getDiscoveredThings(self, includeIgnored: bool = True) -> list:
         """
         Get all discovered things.
 

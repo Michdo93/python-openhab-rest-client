@@ -179,20 +179,17 @@ class Addons:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def installAddon(self, addonID: str, serviceID: str = None, language: str = None) -> dict:
+    def installAddon(self, addonID: str, serviceID: str = None) -> dict:
         """
         Installs an add-on by its ID.
 
         :param addonID: The unique identifier of the add-on.
         :param serviceID: Optional service ID to specify the target service.
-        :param language: Optional language preference for the response.
 
         :return: A dictionary containing the installation status.
         """
         data = {"serviceId": serviceID} if serviceID else {}
         header = {"Content-Type": "application/json"}
-        if language:
-            header["Accept-Language"] = language
 
         try:
             response = self.client.post(
@@ -220,20 +217,17 @@ class Addons:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def uninstallAddon(self, addonID: str, serviceID: str = None, language: str = None) -> dict:
+    def uninstallAddon(self, addonID: str, serviceID: str = None) -> dict:
         """
         Uninstalls an add-on by its ID.
 
         :param addonID: The unique identifier of the add-on.
         :param serviceID: Optional service ID to specify the target service.
-        :param language: Optional language preference for the response.
 
         :return: A dictionary containing the uninstallation status.
         """
         data = {"serviceId": serviceID} if serviceID else {}
         header = {"Content-Type": "application/json"}
-        if language:
-            header["Accept-Language"] = language
 
         try:
             response = self.client.post(
@@ -329,7 +323,7 @@ class Addons:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getAddonTypes(self, language: str = None) -> dict:
+    def getAddonTypes(self, serviceID: str = None, language: str = None) -> dict:
         """
         Retrieves a list of all available add-on types.
 
@@ -337,13 +331,14 @@ class Addons:
 
         :return: A dictionary containing available add-on types.
         """
+        params = {"serviceId": serviceID} if serviceID else {}
         header = {"Content-Type": "application/json"}
         if language:
             header["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                "/addons/types", header=header, params=None)
+                "/addons/types", header=header, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

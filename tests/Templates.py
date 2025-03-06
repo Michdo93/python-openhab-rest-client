@@ -16,5 +16,5 @@ if __name__ == "__main__":
     templateUID = "example_template_uid"
 
     # Execute test functions
-    templatesTest.testGetAllTemplates()       # Test #1
-    templatesTest.testGetTemplateByUID(templateUID)  # Test #2
+    templatesTest.testGetTemplates()       # Test #1
+    templatesTest.testGetTemplate(templateUID)  # Test #2

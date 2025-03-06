@@ -11,51 +11,51 @@ class AddonsTest:
         self.addonsAPI = Addons(client)
 
     # Test the endpoint to retrieve all add-ons
-    def testGetAddons(self, language: str = None):
+    def testGetAddons(self, serviceID: str = None, language: str = None):
         print("\n~~~~ Test #1 getAddons() ~~~~\n")
 
         try:
-            response = self.addonsAPI.getAddons(language)
+            response = self.addonsAPI.getAddons(serviceID, language)
             print("Response from getAddons:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to retrieve a specific add-on
-    def testGetAddon(self, addonID: str, language: str = None):
+    def testGetAddon(self, addonID: str, serviceID: str = None, language: str = None):
         print("\n~~~~ Test #2 getAddon(addonID) ~~~~\n")
 
         try:
-            response = self.addonsAPI.getAddon(addonID, language)
+            response = self.addonsAPI.getAddon(addonID, serviceID, language)
             print(f"Response from getAddon for {addonID}:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to install an add-on
-    def testInstallAddon(self, addonID: str, language: str = None):
+    def testInstallAddon(self, addonID: str, serviceID: str = None):
         print("\n~~~~ Test #3 installAddon(addonID) ~~~~\n")
 
         try:
-            response = self.addonsAPI.installAddon(addonID, language)
+            response = self.addonsAPI.installAddon(addonID, serviceID)
             print(f"Response from installAddon for {addonID}:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to uninstall an add-on
-    def testUninstallAddon(self, addonID: str, language: str = None):
+    def testUninstallAddon(self, addonID: str, serviceID: str = None):
         print("\n~~~~ Test #4 uninstallAddon(addonID) ~~~~\n")
 
         try:
-            response = self.addonsAPI.uninstallAddon(addonID, language)
+            response = self.addonsAPI.uninstallAddon(addonID, serviceID)
             print(f"Response from uninstallAddon for {addonID}:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to retrieve add-on types
-    def testGetAddonTypes(self, language: str = None):
+    def testGetAddonTypes(self, serviceID: str = None, language: str = None):
         print("\n~~~~ Test #5 getAddonTypes() ~~~~\n")
 
         try:
-            response = self.addonsAPI.getAddonTypes(language)
+            response = self.addonsAPI.getAddonTypes(serviceID, language)
             print("Response from getAddonTypes:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
@@ -71,21 +71,21 @@ class AddonsTest:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to retrieve add-on configuration
-    def testGetAddonConfig(self, addonID: str):
+    def testGetAddonConfig(self, addonID: str, serviceID: str = None):
         print("\n~~~~ Test #7 getAddonConfig(addonID) ~~~~\n")
 
         try:
-            response = self.addonsAPI.getAddonConfig(addonID)
+            response = self.addonsAPI.getAddonConfig(addonID, serviceID)
             print(f"Response from getAddonConfig for {addonID}:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")
 
     # Test the endpoint to update the add-on configuration
-    def testUpdateAddonConfig(self, addonID: str, configData: dict):
+    def testUpdateAddonConfig(self, addonID: str, configData: dict, serviceID: str = None):
         print("\n~~~~ Test #8 updateAddonConfig(addonID, configData) ~~~~\n")
 
         try:
-            response = self.addonsAPI.updateAddonConfig(addonID, configData)
+            response = self.addonsAPI.updateAddonConfig(addonID, configData, serviceID)
             print(f"Response from updateAddonConfig for {addonID}:", json.dumps(response, indent=2))
         except Exception as e:
             print(f"Error executing action: {e}")

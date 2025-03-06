@@ -11,7 +11,7 @@ class ConfigDescriptions:
         """
         self.client = client
 
-    def getAllConfigDescriptions(self, language: str = None, scheme: str = None) -> list:
+    def getConfigDescriptions(self, scheme: str = None, language: str = None) -> list:
         """
         Retrieves all available config descriptions.
 
@@ -50,7 +50,7 @@ class ConfigDescriptions:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getConfigDescriptionByURI(self, uri: str, language: str = None) -> dict:
+    def getConfigDescription(self, uri: str, language: str = None) -> dict:
         """
         Retrieves a config description by URI.
 

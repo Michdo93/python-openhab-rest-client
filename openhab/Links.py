@@ -13,7 +13,7 @@ class Links:
         """
         self.client = client
 
-    def getAllLinks(self, channelUID: str = None, itemName: str = None) -> list:
+    def getLinks(self, channelUID: str = None, itemName: str = None) -> list:
         """
         Gets all available links.
 
@@ -50,7 +50,7 @@ class Links:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getIndividualLink(self, itemName: str, channelUID: str) -> dict:
+    def getLink(self, itemName: str, channelUID: str) -> dict:
         """
         Retrieves an individual link.
 

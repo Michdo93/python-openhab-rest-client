@@ -17,8 +17,8 @@ if __name__ == "__main__":
     channelUID = "astro:sun:b54938fe5crise#start"
 
     # Run tests
-    linksTest.testGetAllLinks()                                   # Test#1
-    linksTest.testGetIndividualLink(itemName, channelUID)       # Test#2
+    linksTest.testGetLinks()                                   # Test#1
+    linksTest.testGetLink(itemName, channelUID)       # Test#2
     linksTest.testUnlinkItemFromChannel(itemName, channelUID)   # Test#3
     linksTest.testLinkItemToChannel(itemName, channelUID)       # Test#4
     linksTest.testGetOrphanLinks()                                # Test#5

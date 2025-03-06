@@ -12,7 +12,7 @@ class Actions:
         """
         self.client = client
 
-    def getAllActions(self, thingUID: str, language: str = None) -> list:
+    def getActions(self, thingUID: str, language: str = None) -> list:
         """
         Get all available actions for provided thing UID.
 

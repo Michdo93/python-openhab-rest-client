@@ -16,7 +16,7 @@ if __name__ == "__main__":
     items = ["item1", "item2"]
 
     # Run all tests
-    eventsTest.testGetAllEvents()                                  # Test #1
-    eventsTest.testGetAllEvents(topics)                          # Test #1b
+    eventsTest.testGetEvents()                                  # Test #1
+    eventsTest.testGetEvents(topics)                          # Test #1b
     connectionID = eventsTest.testInitiateStateTracker()           # Test #2
     eventsTest.testUpdateSSEConnectionItems(connectionID, items) # Test #3

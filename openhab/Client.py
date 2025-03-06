@@ -213,7 +213,7 @@ class OpenHABClient:
 
         :return: The response from the PUT request.
         """
-        return self.__executeRequest(header, endpoint, "put", data=data)
+        return self.__executeRequest(header, endpoint, "put", data=data, params=params)
 
     def delete(self, endpoint: str, header: dict = None, data=None, params: dict = None):
         """

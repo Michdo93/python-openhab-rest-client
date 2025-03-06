@@ -10,11 +10,11 @@ class IconsetsTest:
         self.iconsetsAPI = Iconsets(client)
 
     # Test retrieving all Iconsets
-    def testGetAllIconsets(self, language: str = None):
-        print("\n~~~~ Test #1: getAllIconsets() ~~~~\n")
+    def testGetIconsets(self, language: str = None):
+        print("\n~~~~ Test #1: getIconsets() ~~~~\n")
 
         try:
-            iconsets = self.iconsetsAPI.getAllIconsets(language)
+            iconsets = self.iconsetsAPI.getIconsets(language)
             print("Available Iconsets:", iconsets)
         except Exception as e:
             print("Error retrieving Iconsets:", e)

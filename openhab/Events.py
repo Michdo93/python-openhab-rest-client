@@ -12,7 +12,7 @@ class Events:
         """
         self.client = client
 
-    def getAllEvents(self, topics: str = None) -> list:
+    def getEvents(self, topics: str = None) -> list:
         """
         Get all available events, optionally filtered by topic.
 

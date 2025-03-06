@@ -11,22 +11,22 @@ class ServicesTest:
     def __init__(self, client: OpenHABClient):
         self.servicesAPI = Services(client)
 
-    def testGetAllServices(self, language: str = "de"):
+    def testGetServices(self, language: str = None):
         """Retrieve all services"""
         print("\n~~~~ Test #1 getServices() ~~~~\n")
 
         try:
-            services = self.servicesAPI.getServices(language=language)
+            services = self.servicesAPI.getServices(language)
             print(json.dumps(services, indent=4))
         except Exception as e:
             print(f"Error retrieving services: {e}")
 
-    def testGetService(self, serviceID: str):
+    def testGetService(self, serviceID: str, language: str = None):
         """Retrieve a specific service"""
         print("\n~~~~ Test #2 getService(serviceID) ~~~~\n")
 
         try:
-            service = self.servicesAPI.getService(serviceID)
+            service = self.servicesAPI.getService(serviceID, language)
             print(json.dumps(service, indent=4))
         except Exception as e:
             print(f"Error retrieving service {serviceID}: {e}")
@@ -41,12 +41,12 @@ class ServicesTest:
         except Exception as e:
             print(f"Error retrieving configuration for {serviceID}: {e}")
 
-    def testUpdateServiceConfig(self, serviceID: str, newConfig: dict):
+    def testUpdateServiceConfig(self, serviceID: str, configData: dict, language: str = None):
         """Update the configuration of a service"""
-        print("\n~~~~ Test #4 updateServiceConfig(serviceID) ~~~~\n")
+        print("\n~~~~ Test #4 updateServiceConfig(serviceID, configData) ~~~~\n")
 
         try:
-            old_config = self.servicesAPI.updateServiceConfig(serviceID, newConfig)
+            old_config = self.servicesAPI.updateServiceConfig(serviceID, configData, language)
             print("Old Configuration:", json.dumps(old_config, indent=4))
         except Exception as e:
             print(f"Error updating configuration for {serviceID}: {e}")
@@ -61,12 +61,12 @@ class ServicesTest:
         except Exception as e:
             print(f"Error deleting configuration for {serviceID}: {e}")
 
-    def testGetServiceContexts(self, serviceID: str):
+    def testGetServiceContexts(self, serviceID: str, language: str = None):
         """Retrieve all contexts of a service"""
         print("\n~~~~ Test #6 getServiceContexts(serviceID) ~~~~\n")
 
         try:
-            contexts = self.servicesAPI.getServiceContexts(serviceID)
+            contexts = self.servicesAPI.getServiceContexts(serviceID, language)
             print(json.dumps(contexts, indent=4))
         except Exception as e:
             print(f"Error retrieving contexts for {serviceID}: {e}")

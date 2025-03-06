@@ -25,11 +25,11 @@ if __name__ == "__main__":
     updateData = {"name": "Updated Rule"}
 
     # Execute functions
-    rulesTest.testGetAllRules()                       # Test #1
-    rulesTest.testGetRuleDetails(ruleID)            # Test #2
+    rulesTest.testGetRules()                       # Test #1
+    rulesTest.testGetRule(ruleID)            # Test #2
     rulesTest.testCreateRule(newRuleData)           # Test #3
     rulesTest.testUpdateRule("newRule", updateData) # Test #4
     rulesTest.testSetRuleState("newRule", True)     # Test #5
     rulesTest.testSetRuleState("newRule", False)    # Test #5
-    rulesTest.testExecuteRuleNow(ruleID)            # Test #6
+    rulesTest.testRunNow(ruleID)            # Test #6
     rulesTest.testDeleteRule("newRule")             # Test #7

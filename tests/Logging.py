@@ -17,7 +17,7 @@ if __name__ == "__main__":
     loggerLevel = "DEBUG"
 
     # Run tests
-    loggingTest.testGetAllLoggers()                             # Test #1
-    loggingTest.testGetSingleLogger(loggerName)                 # Test #2
+    loggingTest.testGetLoggers()                             # Test #1
+    loggingTest.testGetLogger(loggerName)                 # Test #2
     loggingTest.testModifyOrAddLogger(loggerName, loggerLevel)  # Test #3
     loggingTest.testRemoveLogger(loggerName)                    # Test #4

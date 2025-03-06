@@ -11,18 +11,14 @@ class Systeminfo:
         """
         self.client = client
 
-    def getSystemInfo(self, language: str = None):
+    def getSystemInfo(self):
         """
         Gets information about the system.
 
         :return: A Dictionary with system informations.
         """
-        header = {"Content-Type": "application/json"}
-        if language:
-            header["Accept-Language"] = language
-
         try:
-            response = self.client.get("/systeminfo", header=header)
+            response = self.client.get("/systeminfo", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -42,18 +38,14 @@ class Systeminfo:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getUoMInfo(self, language: str = None):
+    def getUoMInfo(self):
         """
         Get all supported dimensions and their system units.
 
         :return: A Dictionary with UOM informations.
         """
-        header = {"Content-Type": "application/json"}
-        if language:
-            header["Accept-Language"] = language
-
         try:
-            response = self.client.get("/systeminfo/uom", header=header)
+            response = self.client.get("/systeminfo/uom", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

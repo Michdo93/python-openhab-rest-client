@@ -11,7 +11,7 @@ class ThingTypes:
         """
         self.client = client
 
-    def getAllThingTypes(self, bindingID: str = None, language: str = None) -> list:
+    def getThingTypes(self, bindingID: str = None, language: str = None) -> list:
         """
         Gets all available thing types without config description, channels, and properties.
 
@@ -20,16 +20,13 @@ class ThingTypes:
 
         :return: A list of thing types.
         """
-        header = {"Content-Type": "application/json"}
-        params = {}
-        if bindingID:
-            params["bindingId"] = bindingID
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
-
+        
         try:
             response = self.client.get(
-                "/thing-types", header=header, params=params)
+                "/thing-types", header=header, params={"bindingId": bindingID} if bindingID else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -58,7 +55,7 @@ class ThingTypes:
 
         :return: A dictionary with the details of the thing type or an empty response with status 204.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

@@ -18,7 +18,7 @@ class Sitemaps:
         :return: A list of sitemaps (JSON).
         """
         try:
-            response = self.client.get("/sitemaps")
+            response = self.client.get("/sitemaps", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -38,15 +38,15 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSitemap(self, sitemapName: str, language=None, type=None, jsonCallback=None, includeHidden=False):
+    def getSitemap(self, sitemapName: str, type: str = None, jsonCallback: str = None, includeHidden: bool = False, language: str = None):
         """
         Get sitemap by name.
 
         :param sitemapName: The name of the sitemap to retrieve.
-        :param language: Optional language setting (as header).
         :param type: Optional query parameter for type.
         :param jsonCallback: Optional query parameter for JSON callback.
         :param includeHidden: Whether hidden widgets should be included.
+        :param language: Optional language setting (as header).
 
         :return: The sitemap object (JSON).
         """
@@ -56,8 +56,8 @@ class Sitemaps:
             includeHidden = "false"
 
         try:
-            response = self.client.get(f"/sitemaps/{sitemapName}", header={"type": type, "jsoncallback": jsonCallback,
-                                                                           "includeHidden": includeHidden}, params={"Accept-Language": language} if language else {})
+            response = self.client.get(f"/sitemaps/{sitemapName}", params={"type": type, "jsoncallback": jsonCallback,
+                                                                           "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -77,7 +77,7 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSitemapPage(self, sitemapName: str, pageID: str, subscriptionID=None, includeHidden=False):
+    def getSitemapPage(self, sitemapName: str, pageID: str, subscriptionID: str = None, includeHidden: bool = False, language: str = None):
         """
         Polls the data for one page of a sitemap.
 
@@ -95,7 +95,7 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/{pageID}", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden})
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -123,7 +123,7 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getFullSitemap(self, sitemapName: str, subscriptionID=None, includeHidden=False):
+    def getFullSitemap(self, sitemapName: str, subscriptionID: str = None, includeHidden: bool = False, language: str = None):
         """
         Polls the data for a whole sitemap. Not recommended due to potentially high traffic.
 
@@ -140,7 +140,7 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/*", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden})
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -168,7 +168,7 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getSitemapEvents(self, subscriptionID: str, sitemap=None, pageID=None):
+    def getSitemapEvents(self, subscriptionID: str, sitemapName: str = None, pageID: str = None):
         """
         Get sitemap events.
 
@@ -180,7 +180,7 @@ class Sitemaps:
         """
         try:
             response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemap, "pageId": pageID})
+                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemapName, "pageId": pageID})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -208,7 +208,7 @@ class Sitemaps:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getFullSitemapEvents(self, subscriptionID: str, sitemap=None):
+    def getFullSitemapEvents(self, subscriptionID: str, sitemapName: str = None):
         """
         Get sitemap events for a whole sitemap. Not recommended due to potentially high traffic.
 
@@ -219,7 +219,7 @@ class Sitemaps:
         """
         try:
             response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemap})
+                f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemapName})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

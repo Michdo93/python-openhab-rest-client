@@ -15,5 +15,5 @@ if __name__ == "__main__":
     bindingID = "network"
 
     # Run all tests
-    discoveryTest.testGetAllDiscoveryBindings()        # Test #1
+    discoveryTest.testGetDiscoveryBindings()        # Test #1
     discoveryTest.testStartBindingScan(bindingID)      # Test #2

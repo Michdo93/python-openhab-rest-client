@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: python-openhab-rest-client
-Version: 0.1.2
+Version: 0.2.0
 Summary: A Python client for the openHAB REST API. This library enables easy interaction with the openHAB REST API to control smart home devices, retrieve status information, and process events.
 Home-page: https://github.com/Michdo93/python-openhab-rest-client
 Author: Michael Christian Dörflinger

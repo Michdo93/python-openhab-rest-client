@@ -10,11 +10,11 @@ class ActionsTest:
         self.actionsAPI = Actions(client)
 
     # Test the endpoint to retrieve all Actions of a Thing
-    def testGetAllActions(self, thingUID: str, language: str = None):
-        print("\n~~~~ Test #1 getAllActions(thingUID) ~~~~\n")
+    def testGetActions(self, thingUID: str, language: str = None):
+        print("\n~~~~ Test #1 getActions(thingUID) ~~~~\n")
 
         try:
-            actions = self.actionsAPI.getAllActions(thingUID, language)
+            actions = self.actionsAPI.getActions(thingUID, language)
 
             if isinstance(actions, dict) and "error" in actions:
                 print(f"Error retrieving actions: {actions['error']}")

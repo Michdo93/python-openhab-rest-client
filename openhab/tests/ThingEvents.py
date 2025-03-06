@@ -8,14 +8,14 @@ from openhab import OpenHABClient, ThingEvents
 
 class ThingEventsTest:
     def __init__(self, client: OpenHABClient):
-        self.discoveryAPI = ThingEvents(client)
+        self.thingEventsAPI = ThingEvents(client)
 
     def testThingAddedEvent(self, thingUID: str):
         """Test fetching ThingAddedEvent"""
         print("\n~~~~ Test #1: ThingAddedEvent(thingUID) ~~~~\n")
 
         try:
-            event = selfthingEventsAPI.ThingAddedEvent(thingUID)
+            event = self.thingEventsAPI.ThingAddedEvent(thingUID)
             print(event)
         except Exception as e:
             print(f"Error fetching ThingAddedEvent: {e}")

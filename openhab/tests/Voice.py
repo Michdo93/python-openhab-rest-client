@@ -78,19 +78,19 @@ class VoiceTest:
         except Exception as e:
             print(f"Error retrieving interpreter: {e}")
 
-    def testStartDialog(self, sourceID: str, keyword: str = None, sttID: str = None, ttsID: str = None, voiceID: str = None, sinkID: str = None, language: str = None):
-        print("\n~~~~ Test #8: startDialog(sourceID, keyword, sttID, ttsID, voiceID, sinkID) ~~~~\n")
+    def testStartDialog(self, sourceID: str, ksID: str = None, sttID: str = None,
+                    ttsID: str = None, voiceID: str = None, hliIDs: str = None,
+                    sinkID: str = None, keyword: str = None, listeningItem: str = None, language: str = None):
+        print("\n~~~~ Test #8: startDialog(sourceID) ~~~~\n")
 
         try:
-            response = self.voiceAPI.startDialog(sourceID=sourceID, keyword=keyword, 
-                                                sttID=sttID, ttsID=ttsID, voiceID=voiceID, sinkID=sinkID, language=language)
+            response = self.voiceAPI.startDialog(sourceID, ksID, sttID, ttsID, voiceID, hliIDs, sinkID, keyword, listeningItem, language)
             if isinstance(response, dict) and "error" in response:
                 print(f"Error: {response['error']}")
             else:
                 print(f"Dialog started: {json.dumps(response, indent=4)}")
         except Exception as e:
             print(f"Error starting dialog: {e}")
-
 
     def testStopDialog(self, sourceID: str):
         print("\n~~~~ Test #9: stopDialog(sourceID) ~~~~\n")
@@ -101,11 +101,12 @@ class VoiceTest:
         except Exception as e:
             print(f"Error stopping dialog: {e}")
 
-    def testListenAndAnswer(self, sourceID: str, sttID: str, ttsID: str, voiceID: str, hliIDs: list, sinkID: str, listeningItem: str):
+    def testListenAndAnswer(self, sourceID: str, sttID: str, ttsID: str, voiceID: str,
+                        hliIDs: list, sinkID: str, listeningItem: str, language: str = None):
         print("\n~~~~ Test #10: listenAndAnswer(sourceID, sttID, ttsID, voiceID, hliIDs, sinkID, listeningItem) ~~~~\n")
 
         try:
-            response = self.voiceAPI.listenAndAnswer(sourceID, sttID, ttsID, voiceID, hliIDs, sinkID, listeningItem)
+            response = self.voiceAPI.listenAndAnswer(sourceID, sttID, ttsID, voiceID, hliIDs, sinkID, listeningItem, language)
             print(f"Listen and Answer Response: {json.dumps(response, indent=4)}")
         except Exception as e:
             print(f"Error with Listen and Answer: {e}")
