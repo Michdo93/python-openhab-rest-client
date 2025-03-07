@@ -21,7 +21,7 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
 
         try:
             response = self.client.get("/auth/apitokens", header=header)
@@ -61,11 +61,9 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Content-Type": "application/json"}
-
         try:
             response = self.client.delete(
-                f"/auth/apitokens/{tokenName}", header=header)
+                f"/auth/apitokens/{tokenName}")
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -145,7 +143,7 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
 
         try:
             response = self.client.get("/auth/sessions", header=header)
@@ -197,7 +195,7 @@ class Auth:
         }
 
         params = {
-            "useCookie": useCookie
+            "useCookie": str(useCookie).lower()
         }
 
         # Body mit den erforderlichen Parametern

@@ -23,7 +23,7 @@ class Addons:
         :return: A dictionary containing the add-ons data.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -63,7 +63,7 @@ class Addons:
         :return: A dictionary containing details of the specified add-on.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -106,7 +106,7 @@ class Addons:
 
         try:
             response = self.client.get(
-                f"/addons/{addonID}/config", header={"Content-Type": "application/json"}, params=params)
+                f"/addons/{addonID}/config", header={"Accept": "application/json"}, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -151,7 +151,7 @@ class Addons:
 
         try:
             response = self.client.put(
-                f"/addons/{addonID}/config", header={"Content-Type": "application/json"}, data=json.dumps(data))
+                f"/addons/{addonID}/config", header={"Content-Type": "application/json", "Accept": "application/json"}, data=json.dumps(data))
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -189,11 +189,10 @@ class Addons:
         :return: A dictionary containing the installation status.
         """
         data = {"serviceId": serviceID} if serviceID else {}
-        header = {"Content-Type": "application/json"}
 
         try:
             response = self.client.post(
-                f"/addons/{addonID}/install", header=header, data=data)
+                f"/addons/{addonID}/install", data=data)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -227,11 +226,10 @@ class Addons:
         :return: A dictionary containing the uninstallation status.
         """
         data = {"serviceId": serviceID} if serviceID else {}
-        header = {"Content-Type": "application/json"}
 
         try:
             response = self.client.post(
-                f"/addons/{addonID}/uninstall", header=header, data=data)
+                f"/addons/{addonID}/uninstall", data=data)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -263,7 +261,7 @@ class Addons:
 
         :return: A dictionary containing the available add-on services.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -297,7 +295,7 @@ class Addons:
 
         :return: A dictionary containing suggested add-ons.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -332,7 +330,7 @@ class Addons:
         :return: A dictionary containing available add-on types.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -374,8 +372,7 @@ class Addons:
         endpoint = f"/addons/url/{encoded_url}/install"
 
         try:
-            response = self.client.post(
-                endpoint, header={"Content-Type": "text/plain"}, data=None)
+            response = self.client.post(endpoint, data=None)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

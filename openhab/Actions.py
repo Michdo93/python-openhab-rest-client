@@ -21,7 +21,7 @@ class Actions:
 
         :return: A list of actions.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -65,7 +65,7 @@ class Actions:
 
         :return: A response from the server.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

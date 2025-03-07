@@ -85,6 +85,7 @@ class Sitemaps:
         :param pageID: The ID of the page.
         :param subscriptionID: Optional query parameter for the subscription ID.
         :param includeHidden: Whether hidden widgets should be included.
+        :param language: Optional language setting (as header).
 
         :return: The sitemap page (JSON).
         """
@@ -130,6 +131,7 @@ class Sitemaps:
         :param sitemapName: The name of the sitemap.
         :param subscriptionID: Optional query parameter for the subscription ID.
         :param includeHidden: Whether hidden widgets should be included.
+        :param language: Optional language setting (as header).
 
         :return: The complete sitemap (JSON).
         """

@@ -21,7 +21,7 @@ class Inbox:
         """
         try:
             response = self.client.get(
-                "/inbox", params={"includeIgnored": str(includeIgnored).lower()})
+                "/inbox", header={"Accept": "application/json"}, params={"includeIgnored": str(includeIgnored).lower()})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

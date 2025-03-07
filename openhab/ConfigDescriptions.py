@@ -20,7 +20,7 @@ class ConfigDescriptions:
 
         :return: A list of configuration descriptions.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -59,7 +59,7 @@ class ConfigDescriptions:
 
         :return: Details of the specific configuration description.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

@@ -19,7 +19,7 @@ class Audio:
 
         :return: A dictionary containing information about the default sink.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -56,7 +56,7 @@ class Audio:
 
         :return: A dictionary containing information about the default source.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -93,7 +93,7 @@ class Audio:
 
         :return: A list of available sinks.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -126,7 +126,7 @@ class Audio:
 
         :return: A list of available sources.
         """
-        header = {"Content-Type": "application/json"}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 

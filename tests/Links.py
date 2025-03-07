@@ -21,5 +21,6 @@ if __name__ == "__main__":
     linksTest.testGetLink(itemName, channelUID)       # Test#2
     linksTest.testUnlinkItemFromChannel(itemName, channelUID)   # Test#3
     linksTest.testLinkItemToChannel(itemName, channelUID)       # Test#4
+    linksTest.testDeleteAllLinks(itemName)
     linksTest.testGetOrphanLinks()                                # Test#5
     linksTest.testPurgeUnusedLinks()                              # Test#6

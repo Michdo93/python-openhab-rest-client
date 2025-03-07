@@ -18,9 +18,8 @@ class Logging:
 
         :return: A list of loggers with names and levels.
         """
-        header = {"Accept": "application/json"}
         try:
-            response = self.client.get("/logging", header=header)
+            response = self.client.get("/logging", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

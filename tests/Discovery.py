@@ -16,4 +16,5 @@ if __name__ == "__main__":
 
     # Run all tests
     discoveryTest.testGetDiscoveryBindings()        # Test #1
+    discoveryTest.testGetBindingInfo("mqtt")  
     discoveryTest.testStartBindingScan(bindingID)      # Test #2

@@ -55,10 +55,10 @@ class LinksTest:
 
     def testDeleteAllLinks(self, object: str):
         """ Test deleting all links """
-        print("\n~~~~ Test #5: getDeleteAllLinks(object) ~~~~\n")
+        print("\n~~~~ Test #5: deleteAllLinks(object) ~~~~\n")
 
         try:
-            orphanLinks = self.linksAPI.getDeleteAllLinks(object)
+            orphanLinks = self.linksAPI.deleteAllLinks(object)
             print(json.dumps(orphanLinks, indent=2))
         except Exception as e:
             print(f"Error retrieving orphan links: {e}")

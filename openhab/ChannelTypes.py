@@ -20,7 +20,7 @@ class ChannelTypes:
 
         :return: A list of channel types.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -59,7 +59,7 @@ class ChannelTypes:
 
         :return: Details of the specific channel type.
         """
-        header = {}
+        header = {"Accept": "application/json"}
         if language:
             header["Accept-Language"] = language
 
@@ -97,10 +97,9 @@ class ChannelTypes:
 
         :return: A list of item types.
         """
-
         try:
             response = self.client.get(
-                f"/channel-types/{channelTypeUID}/linkableItemTypes")
+                f"/channel-types/{channelTypeUID}/linkableItemTypes", header={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

@@ -19,9 +19,12 @@ class Iconsets:
 
         :return: A list of icon sets with details such as ID, label, description and supported formats.
         """
+        header = {"Accept": "application/json"}
+        if language:
+            header["Accept-Language"] = language
+
         try:
-            response = self.client.get(
-                "/iconsets", header={"Accept-Language": language} if language else {})
+            response = self.client.get("/iconsets", header=header)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
