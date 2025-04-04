@@ -1,6 +1,4 @@
 import requests
-import json
-
 
 class OpenHABClient:
     def __init__(self, url: str, username: str = None, password: str = None, token: str = None):
@@ -158,10 +156,11 @@ class OpenHABClient:
 
         :return: The response object with the SSE stream.
         """
+        self.session.headers.update({})
         if self.username is not None and self.password is not None:
-            return self.session.get(url, auth=self.auth, stream=True)
+            return requests.get(url, auth=self.auth, headers={}, stream=True)
         else:
-            return self.session.get(url, stream=True)
+            return requests.get(url, headers={}, stream=True)
 
     def __executeSSE(self, url: str, header: dict = {}):
         """
@@ -172,10 +171,14 @@ class OpenHABClient:
 
         :return: The response object with the SSE stream.
         """
+        if header is None:
+            header = {}
+
+        self.session.headers.update(header)
         if self.username is not None and self.password is not None:
-            return self.session.get(url, auth=self.auth, headers=header, stream=True)
+            return requests.get(url, auth=self.auth, headers=header, stream=True)
         else:
-            return self.session.get(url, headers=header, stream=True)
+            return requests.get(url, headers=header, stream=True)
 
     def get(self, endpoint: str, header: dict = None, params: dict = None):
         """

@@ -106,6 +106,7 @@ class ItemEventsTest:
 
         try:
             response = self.itemEventsAPI.ItemStateChangedEvent()
+            print("Response ItemStateChangedEvent():", response)
             with response as events:
                 for line in events.iter_lines():
                     line = line.decode()
