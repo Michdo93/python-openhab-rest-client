@@ -56,13 +56,11 @@ class Rules:
         try:
             response = self.client.post(
                 "/rules", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
-
-            if isinstance(response, dict) and "status" in response:
-                status_code = response["status"]
-            else:
-                return response
+            
+            status_code = response.status_code
 
         except requests.exceptions.HTTPError as err:
+            # Fehlerbehandlung
             status_code = err.response.status_code
             if status_code == 400:
                 return {"error": "Creation refused: Missing required parameter."}
@@ -73,18 +71,19 @@ class Rules:
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
-
+        
         if status_code == 201:
             location = response.headers.get("Location")
             return {
                 "message": "Rule successfully created.",
                 "location": location if location else "No Location header provided."
-            }
+            }    
         elif status_code == 400:
             return {"error": "Creation refused: Missing required parameter."}
         elif status_code == 409:
             return {"error": "Creation refused: Rule with the same UID already exists."}
 
+        # Falls der Statuscode nicht erkannt wird, gib eine generische Fehlermeldung zurück
         return {"error": f"Unexpected response: {status_code}"}
 
     def getRule(self, ruleUID: str):

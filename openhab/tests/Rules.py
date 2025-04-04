@@ -36,8 +36,8 @@ class RulesTest:
         print("\n~~~~ Test #3 createRule(ruleData) ~~~~\n")
 
         try:
-            self.rulesAPI.createRule(ruleData)
-            print("New Rule created successfully.")
+            rule = self.rulesAPI.createRule(ruleData)
+            print(json.dumps(rule, indent=4))
         except Exception as e:
             print(f"Error creating rule: {e}")
 

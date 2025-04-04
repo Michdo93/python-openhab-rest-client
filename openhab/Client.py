@@ -134,18 +134,23 @@ class OpenHABClient:
             response = self.session.delete(url, data=data, params=params, headers=header, timeout=5)
         else:
             raise ValueError("Invalid HTTP method provided!")
+        
+        location = response.headers.get("Location")
 
-        # Pass on mistakes directly instead of catching them here!
+        if location:
+            return response
+        
+        # Pass on mistakes directly instead of catching them here!        
         response.raise_for_status()
 
         # If the response is empty, but there was still no error, we return the status code
         if not response.text.strip():
             return {"status": response.status_code}
-
+                
         # Return JSON response, if available
         if "application/json" in response.headers.get("Content-Type", ""):
             return response.json()
-        
+                
         return response.text  # Fallback: Return text response
 
     def __executeSSE(self, url: str):

@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 
 # Add the project root path (one level up) to the Python search path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -12,10 +13,12 @@ if __name__ == "__main__":
     client = OpenHABClient(url="http://127.0.0.1:8080", username="openhab", password="habopen")
     rulesTest = RulesTest(client)
 
+    random_number = random.randint(0, 100)
+
     # Example rule data
-    ruleID = "test_color-1"
+    ruleID = "test_color-4"
     newRuleData = {
-        "uid": "newRule",
+        "uid": "newRule" + random_number,
         "name": "New Rule",
         "description": "This is a new rule",
         "triggers": [],
