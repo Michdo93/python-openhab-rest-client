@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # Example rule data
     ruleID = "test_color-4"
     newRuleData = {
-        "uid": "newRule" + random_number,
+        "uid": "newRule" + str(random_number),
         "name": "New Rule",
         "description": "This is a new rule",
         "triggers": [],

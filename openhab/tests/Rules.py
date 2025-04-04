@@ -46,8 +46,8 @@ class RulesTest:
         print("\n~~~~ Test #4 updateRule(ruleID, ruleData) ~~~~\n")
 
         try:
-            self.rulesAPI.updateRule(ruleID, ruleData)
-            print("Rule updated successfully.")
+            rule = self.rulesAPI.updateRule(ruleID, ruleData)
+            print(json.dumps(rule, indent=4))
         except Exception as e:
             print(f"Error updating rule {ruleID}: {e}")
 
@@ -57,8 +57,8 @@ class RulesTest:
         print("\n~~~~ Test #5 setRuleState(ruleID, state) ~~~~\n")
 
         try:
-            self.rulesAPI.setRuleState(ruleID, state)
-            print(f"Rule {ruleID} {action}.")
+            rule = self.rulesAPI.setRuleState(ruleID, state)
+            print(json.dumps(rule, indent=4))
         except Exception as e:
             print(f"Error setting rule state for {ruleID}: {e}")
 
@@ -67,8 +67,8 @@ class RulesTest:
         print("\n~~~~ Test #6 deleteRule(ruleID) ~~~~\n")
 
         try:
-            self.rulesAPI.deleteRule(ruleID)
-            print("Rule deleted successfully.")
+            rule = self.rulesAPI.deleteRule(ruleID)
+            print(json.dumps(rule, indent=4))
         except Exception as e:
             print(f"Error deleting rule {ruleID}: {e}")
 
@@ -77,7 +77,7 @@ class RulesTest:
         print("\n~~~~ Test #7 runNow(ruleID) ~~~~\n")
 
         try:
-            self.rulesAPI.runNow(ruleID, contextData)
-            print("Rule executed successfully.")
+            rule = self.rulesAPI.runNow(ruleID, contextData)
+            print(json.dumps(rule, indent=4))
         except Exception as e:
             print(f"Error executing rule {ruleID}: {e}")

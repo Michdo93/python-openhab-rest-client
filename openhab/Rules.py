@@ -503,10 +503,10 @@ class Rules:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def enableRule(self, ruleUID: str):
+    def enable(self, ruleUID: str):
         return self.setRuleState(ruleUID, True)
 
-    def disableRule(self, ruleUID: str):
+    def disable(self, ruleUID: str):
         return self.setRuleState(ruleUID, False)
 
     def runNow(self, ruleUID: str, contextData: dict = None):
