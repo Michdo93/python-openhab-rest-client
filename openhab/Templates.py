@@ -18,12 +18,12 @@ class Templates:
         :param language: (Optional) Language setting for the Accept-Language header.
         :return: A list of templates.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/templates", header=header)
+            response = self.client.get("/templates", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -52,13 +52,13 @@ class Templates:
 
         :return: A dictionary with the details of the template.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/templates/{templateUID}", header=header)
+                f"/templates/{templateUID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

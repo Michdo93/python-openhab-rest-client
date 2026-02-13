@@ -17,16 +17,16 @@ class Actions:
         Get all available actions for provided thing UID.
 
         :param thingUID: The UID of the thing for which actions are to be retrieved.
-        :param language: (Optional) Language setting for the Accept-Language header.
+        :param language: (Optional) Language setting for the Accept-Language headers.
 
         :return: A list of actions.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get(f"/actions/{thingUID}", header=header)
+            response = self.client.get(f"/actions/{thingUID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -61,17 +61,17 @@ class Actions:
         :param thingUID: The UID of the thing on which the action is to be executed.
         :param actionUID: The UID of the action to be executed.
         :param actionInputs: The inputs for the action as a dictionary.
-        :param language: (Optional) Language setting for the Accept-Language header.
+        :param language: (Optional) Language setting for the Accept-Language headers.
 
         :return: A response from the server.
         """
-        header = {"Content-Type": "application/json", "Accept": "application/json"}
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.post(
-                f"/actions/{thingUID}/{actionUID}", header=header, data=json.dumps(actionInputs))
+                f"/actions/{thingUID}/{actionUID}", headers=headers, data=json.dumps(actionInputs))
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

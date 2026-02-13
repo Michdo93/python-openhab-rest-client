@@ -54,7 +54,7 @@ class Events:
         """
         try:
             response = self.client._OpenHABClient__executeSSE(
-                self.client.url + "/rest/events/states", header={"Accept": "*/*"})
+                self.client.url + "/rest/events/states", headers={"Accept": "*/*"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -85,7 +85,7 @@ class Events:
         """
         try:
             response = self.client.post(f"/rest/events/states/{connectionID}", data=json.dumps(
-                items), header={"Content-Type": "application/json"})
+                items), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

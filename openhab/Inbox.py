@@ -21,7 +21,7 @@ class Inbox:
         """
         try:
             response = self.client.get(
-                "/inbox", header={"Accept": "application/json"}, params={"includeIgnored": str(includeIgnored).lower()})
+                "/inbox", headers={"Accept": "application/json"}, params={"includeIgnored": str(includeIgnored).lower()})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -86,7 +86,7 @@ class Inbox:
         :return: The API response to the approval request.
         """
         try:
-            response = self.client.post(f"/inbox/{thingUID}/approve", header={"Accept-Language": language, "Content-Type": "text/plain"} if language else {
+            response = self.client.post(f"/inbox/{thingUID}/approve", headers={"Accept-Language": language, "Content-Type": "text/plain"} if language else {
                                         "Content-Type": "text/plain"}, params={"newThingID": newThingID} if newThingID else {}, data=thingLabel)
 
             if isinstance(response, dict) and "status" in response:

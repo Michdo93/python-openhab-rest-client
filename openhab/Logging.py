@@ -19,7 +19,7 @@ class Logging:
         :return: A list of loggers with names and levels.
         """
         try:
-            response = self.client.get("/logging", header={"Accept": "application/json"})
+            response = self.client.get("/logging", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -49,7 +49,7 @@ class Logging:
         """
         
         try:
-            response = self.client.get(f"/logging/{loggerName}", header={"Accept": "application/json"})
+            response = self.client.get(f"/logging/{loggerName}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -85,7 +85,7 @@ class Logging:
 
         try:
             response = self.client.put(
-                f"/logging/{loggerName}", data=json.dumps(data), header={"Content-Type": "application/json"})
+                f"/logging/{loggerName}", data=json.dumps(data), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

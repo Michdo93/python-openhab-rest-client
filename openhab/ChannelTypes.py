@@ -15,14 +15,14 @@ class ChannelTypes:
         """
         Retrieves all available channel types.
 
-        :param language: Optional header 'Accept-Language' to specify the preferred language.
+        :param language: Optional headers 'Accept-Language' to specify the preferred language.
         :param prefixes: Optional query parameter to filter channel types by prefix.
 
         :return: A list of channel types.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {}
         if prefixes:
@@ -30,7 +30,7 @@ class ChannelTypes:
 
         try:
             response = self.client.get(
-                "/channel-types", header=header, params=params)
+                "/channel-types", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -55,17 +55,17 @@ class ChannelTypes:
         Retrieves the item types the given trigger channel type UID can be linked to.
 
         :param channelTypeUID: The unique UID of the channel type.
-        :param language: Optional header 'Accept-Language' to specify the preferred language.
+        :param language: Optional headers 'Accept-Language' to specify the preferred language.
 
         :return: Details of the specific channel type.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/channel-types/{channelTypeUID}", header=header)
+                f"/channel-types/{channelTypeUID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -99,7 +99,7 @@ class ChannelTypes:
         """
         try:
             response = self.client.get(
-                f"/channel-types/{channelTypeUID}/linkableItemTypes", header={"Accept": "application/json"})
+                f"/channel-types/{channelTypeUID}/linkableItemTypes", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

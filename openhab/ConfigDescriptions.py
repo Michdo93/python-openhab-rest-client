@@ -15,14 +15,14 @@ class ConfigDescriptions:
         """
         Retrieves all available config descriptions.
 
-        :param language: Optional header 'Accept-Language' to specify the preferred language.
+        :param language: Optional headers 'Accept-Language' to specify the preferred language.
         :param scheme: Optional query parameter to filter results by a specific scheme.
 
         :return: A list of configuration descriptions.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {}
         if scheme:
@@ -30,7 +30,7 @@ class ConfigDescriptions:
 
         try:
             response = self.client.get(
-                "/config-descriptions", header=header, params=params)
+                "/config-descriptions", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -55,17 +55,17 @@ class ConfigDescriptions:
         Retrieves a config description by URI.
 
         :param uri: The URI of the requested configuration description.
-        :param language: Optional header 'Accept-Language' to specify the preferred language.
+        :param language: Optional headers 'Accept-Language' to specify the preferred language.
 
         :return: Details of the specific configuration description.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/config-descriptions/{uri}", header=header)
+                f"/config-descriptions/{uri}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

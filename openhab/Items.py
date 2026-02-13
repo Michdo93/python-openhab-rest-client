@@ -31,13 +31,13 @@ class Items:
         :param recursive: Optional; Whether to fetch group members recursively (default: False).
         :param fields: Optional; Limit to specific fields (comma-separated).
         :param staticDataOnly: Optional; Only returns cached data (default: False).
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A dictionary or list containing the item data as returned by the API.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {
             "type": type,
@@ -53,7 +53,7 @@ class Items:
                   value in params.items() if value is not None}
 
         try:
-            response = self.client.get("/items", header=header, params=params)
+            response = self.client.get("/items", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -83,7 +83,7 @@ class Items:
         """
         try:
             response = self.client.put(
-                "/items", data=json.dumps(items), header={"Content-Type": "application/json", "Accept": "*/*"})
+                "/items", data=json.dumps(items), headers={"Content-Type": "application/json", "Accept": "*/*"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -114,13 +114,13 @@ class Items:
         :param itemName: The name of the item.
         :param metadata: Optional; Metadata selector (default: .*).
         :param recursive: Optional; Whether to fetch group members recursively (default: True).
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A dictionary containing the requested item data.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {
             "metadata": metadata,
@@ -129,7 +129,7 @@ class Items:
 
         try:
             response = self.client.get(
-                f"/items/{itemName}", header=header, params=params)
+                f"/items/{itemName}", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -159,17 +159,17 @@ class Items:
 
         :param itemName: The name of the item.
         :param itemData: The data of the item (Dictionary).
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A response object or confirmation that the item was successfully added or updated.
         """
-        header = {"Content-Type": "application/json", "Accept": "*/"}
+        headers = {"Content-Type": "application/json", "Accept": "*/"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f"/items/{itemName}", header=header, data=json.dumps(itemData))
+                f"/items/{itemName}", headers=headers, data=json.dumps(itemData))
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -211,7 +211,7 @@ class Items:
         :return: A response object or confirmation that the command was successfully sent.
         """
         try:
-            response = self.client.post(f"/items/{itemName}", header={
+            response = self.client.post(f"/items/{itemName}", headers={
                                         "Content-Type": "text/plain"}, data=command)
 
             if isinstance(response, dict) and "status" in response:
@@ -373,7 +373,7 @@ class Items:
         :return: A response object or confirmation that the metadata was successfully added.
         """
         try:
-            response = self.client.put(f"/items/{itemName}/metadata/{namespace}", header={
+            response = self.client.put(f"/items/{itemName}/metadata/{namespace}", headers={
                                        "Content-Type": "application/json"}, data=json.dumps(metadata))
 
             if isinstance(response, dict) and "status" in response:
@@ -452,17 +452,17 @@ class Items:
         Gets the namespaces of an item.
 
         :param itemName: The name of the item.
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A list of namespaces associated with the item.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/items/{itemName}/metadata/namespaces", header=header)
+                f"/items/{itemName}/metadata/namespaces", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -492,17 +492,17 @@ class Items:
 
         :param itemName: The name of the item.
         :param semanticClass: The requested semantic class.
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A dictionary containing the semantic item data.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/items/{itemName}/semantic/{semanticClass}", header=header)
+                f"/items/{itemName}/semantic/{semanticClass}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -534,9 +534,9 @@ class Items:
 
         :return: A dictionary containing the current state of the item.
         """
-        header = {"Accept": "text/plain"}
+        headers = {"Accept": "text/plain"}
         try:
-            response = self.client.get(f"/items/{itemName}/state", header=header)
+            response = self.client.get(f"/items/{itemName}/state", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -566,17 +566,17 @@ class Items:
 
         :param itemName: The name of the item.
         :param state: The new state of the item.
-        :param language: Optional; Language filter for header "Accept-Language".
+        :param language: Optional; Language filter for headers "Accept-Language".
 
         :return: A response object or confirmation that the state was successfully updated.
         """
-        header = {"Content-Type": "text/plain"}
+        headers = {"Content-Type": "text/plain"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f"/items/{itemName}/state", header=header, data=state)
+                f"/items/{itemName}/state", headers=headers, data=state)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

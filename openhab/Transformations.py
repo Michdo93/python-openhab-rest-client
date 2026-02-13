@@ -19,7 +19,7 @@ class Transformations:
         :return: A list of transformations (JSON).
         """
         try:
-            response = self.client.get("/transformations", header={"Accept": "application/json"})
+            response = self.client.get("/transformations", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -48,7 +48,7 @@ class Transformations:
         :return: The transformation (JSON).
         """
         try:
-            response = self.client.get(f"/transformations/{transformationUID}", header={"Accept": "application/json"})
+            response = self.client.get(f"/transformations/{transformationUID}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -83,7 +83,7 @@ class Transformations:
         """
         try:
             response = self.client.put(f"/transformations/{transformationUID}", data=json.dumps(
-                transformationData), header={"Content-Type": "application/json"})
+                transformationData), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -156,7 +156,7 @@ class Transformations:
         :return: A list of transformation services (JSON).
         """
         try:
-            response = self.client.get("/transformations/services", header={"Accept": "application/json"})
+            response = self.client.get("/transformations/services", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

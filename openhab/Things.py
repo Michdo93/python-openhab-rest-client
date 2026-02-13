@@ -22,13 +22,13 @@ class Things:
 
         :return: JSON response with the things.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                '/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, header=header)
+                '/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -57,14 +57,14 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json",
+        headers = {"Content-Type": "application/json",
                   "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.post(
-                '/things', data=json.dumps(thingData), header=header)
+                '/things', data=json.dumps(thingData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -101,12 +101,12 @@ class Things:
 
         :return: JSON response with the thing data.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get(f'/things/{thingUID}', header=header)
+            response = self.client.get(f'/things/{thingUID}', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -140,14 +140,14 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json",
+        headers = {"Content-Type": "application/json",
                   "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f'/things/{thingUID}', data=json.dumps(thingData), header=header)
+                f'/things/{thingUID}', data=json.dumps(thingData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -186,7 +186,7 @@ class Things:
         :return: The API response.
         """
         try:
-            response = self.client.delete(f'/things/{thingUID}', params={'force': force}, header={
+            response = self.client.delete(f'/things/{thingUID}', params={'force': force}, headers={
                                           'Accept-Language': language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
@@ -227,14 +227,14 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "application/json",
+        headers = {"Content-Type": "application/json",
                   "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f'/things/{thingUID}/config', data=json.dumps(configurationData), header=header)
+                f'/things/{thingUID}/config', data=json.dumps(configurationData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -275,13 +275,13 @@ class Things:
 
         :return: JSON response with the thing's configuration status.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f'/things/{thingUID}/config/status', header=header)
+                f'/things/{thingUID}/config/status', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -315,13 +315,13 @@ class Things:
 
         :return: The API response.
         """
-        header = {"Content-Type": "text/plain", "Accept": "*/*"}
+        headers = {"Content-Type": "text/plain", "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f'/things/{thingUID}/enable', data="true" if enabled else "false", header=header)
+                f'/things/{thingUID}/enable', data="true" if enabled else "false", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -363,7 +363,7 @@ class Things:
         """
         try:
             response = self.client.put(
-                f'/things/{thingUID}/firmware/{firmwareVersion}', header={"Accept-Language": language} if language else {})
+                f'/things/{thingUID}/firmware/{firmwareVersion}', headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -400,13 +400,13 @@ class Things:
 
         :return: JSON response with the firmware status.
         """
-        header = {"Accept": "*/*"}
+        headers = {"Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f'/things/{thingUID}/firmware/status', header=header)
+                f'/things/{thingUID}/firmware/status', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -437,13 +437,13 @@ class Things:
 
         :return: A list of available firmwares.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f'/things/{thingUID}/firmwares', header=header)
+                f'/things/{thingUID}/firmwares', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -474,13 +474,13 @@ class Things:
 
         :return: JSON response with the thing's status.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f'/things/{thingUID}/status', header=header)
+                f'/things/{thingUID}/status', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

@@ -20,13 +20,13 @@ class ThingTypes:
 
         :return: A list of thing types.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
         
         try:
             response = self.client.get(
-                "/thing-types", header=header, params={"bindingId": bindingID} if bindingID else {})
+                "/thing-types", headers=headers, params={"bindingId": bindingID} if bindingID else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -55,13 +55,13 @@ class ThingTypes:
 
         :return: A dictionary with the details of the thing type or an empty response with status 204.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/thing-types/{thingTypeUID}", header=header)
+                f"/thing-types/{thingTypeUID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

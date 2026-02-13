@@ -30,7 +30,7 @@ class Links:
 
         try:
             response = self.client.get(
-                "/links", params=params, header={"Content-Type": "application/json"})
+                "/links", params=params, headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -64,7 +64,7 @@ class Links:
 
         try:
             response = self.client.get(
-                f"/links/{itemName}/{channelUID}", header={"Accept": "application/json"})
+                f"/links/{itemName}/{channelUID}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -103,7 +103,7 @@ class Links:
 
         try:
             response = self.client.put(f"/links/{itemName}/{channelUID}", data=json.dumps(
-                {"itemName": itemName, "channelUID": channelUID, "configuration": configuration}), header={"Content-Type": "application/json"})
+                {"itemName": itemName, "channelUID": channelUID, "configuration": configuration}), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -145,7 +145,7 @@ class Links:
 
         try:
             response = self.client.delete(
-                f"/links/{itemName}/{channelUID}", header={"Content-Type": "application/json"})
+                f"/links/{itemName}/{channelUID}", headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -210,7 +210,7 @@ class Links:
         """
         try:
             response = self.client.get(
-                "/links/orphans", header={"Accept": "application/json"})
+                "/links/orphans", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

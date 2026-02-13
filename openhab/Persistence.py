@@ -18,12 +18,12 @@ class Persistence:
 
         :return: A list of persistence services with IDs, labels, and types.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/persistence", header=header)
+            response = self.client.get("/persistence", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -52,7 +52,7 @@ class Persistence:
         :return: The configuration of the service.
         """
         try:
-            response = self.client.get(f"/persistence/{serviceID}", header={"Accept": "application/json"})
+            response = self.client.get(f"/persistence/{serviceID}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -173,7 +173,7 @@ class Persistence:
             if serviceID:
                 url += f"?serviceID={serviceID}"
 
-            response = self.client.get(url, header={"Accept": "application/json"})
+            response = self.client.get(url, headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -208,7 +208,7 @@ class Persistence:
         """
         try:
             response = self.client.get(f"/persistence/items/{itemName}", params={
-                                       "serviceID": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength, "boundary": boundary, "itemState": itemState}, header={"Accept": "application/json"})
+                                       "serviceID": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength, "boundary": boundary, "itemState": itemState}, headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -282,7 +282,7 @@ class Persistence:
         """
         try:
             response = self.client.delete(f"/persistence/items/{itemName}", params={
-                                          "serviceID": serviceID, "starttime": startTime, "endtime": endTime}, header={"Accept": "application/json"})
+                                          "serviceID": serviceID, "starttime": startTime, "endtime": endTime}, headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

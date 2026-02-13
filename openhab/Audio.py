@@ -19,12 +19,12 @@ class Audio:
 
         :return: A dictionary containing information about the default sink.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/audio/defaultsink", header=header)
+            response = self.client.get("/audio/defaultsink", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -56,12 +56,12 @@ class Audio:
 
         :return: A dictionary containing information about the default source.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/audio/defaultsource", header=header)
+            response = self.client.get("/audio/defaultsource", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -93,12 +93,12 @@ class Audio:
 
         :return: A list of available sinks.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/audio/sinks", header=header)
+            response = self.client.get("/audio/sinks", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -126,12 +126,12 @@ class Audio:
 
         :return: A list of available sources.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/audio/sources", header=header)
+            response = self.client.get("/audio/sources", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

@@ -23,12 +23,12 @@ class Addons:
         :return: A dictionary containing the add-ons data.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/addons", header=header, params=params)
+            response = self.client.get("/addons", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -63,13 +63,13 @@ class Addons:
         :return: A dictionary containing details of the specified add-on.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/addons/{addonID}", header=header, params=params)
+                f"/addons/{addonID}", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -106,7 +106,7 @@ class Addons:
 
         try:
             response = self.client.get(
-                f"/addons/{addonID}/config", header={"Accept": "application/json"}, params=params)
+                f"/addons/{addonID}/config", headers={"Accept": "application/json"}, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -151,7 +151,7 @@ class Addons:
 
         try:
             response = self.client.put(
-                f"/addons/{addonID}/config", header={"Content-Type": "application/json", "Accept": "application/json"}, data=json.dumps(data))
+                f"/addons/{addonID}/config", headers={"Content-Type": "application/json", "Accept": "application/json"}, data=json.dumps(data))
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -261,13 +261,13 @@ class Addons:
 
         :return: A dictionary containing the available add-on services.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                "/addons/services", header=header, params=None)
+                "/addons/services", headers=headers, params=None)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -295,13 +295,13 @@ class Addons:
 
         :return: A dictionary containing suggested add-ons.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                "/addons/suggestions", header=header, params=None)
+                "/addons/suggestions", headers=headers, params=None)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -330,13 +330,13 @@ class Addons:
         :return: A dictionary containing available add-on types.
         """
         params = {"serviceId": serviceID} if serviceID else {}
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                "/addons/types", header=header, params=params)
+                "/addons/types", headers=headers, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

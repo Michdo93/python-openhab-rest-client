@@ -18,7 +18,7 @@ class UUID:
         :return: The UUID as String.
         """
         try:
-            response = self.client.get("/uuid", header={"Accept": "text/plain"})
+            response = self.client.get("/uuid", headers={"Accept": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

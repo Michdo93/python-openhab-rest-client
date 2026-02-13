@@ -18,7 +18,7 @@ class Discovery:
         :return: Eine Liste der Bindings als Strings.
         """
         try:
-            response = self.client.get("/discovery", header={"Accept": "application/json"})
+            response = self.client.get("/discovery", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -47,13 +47,13 @@ class Discovery:
 
         :return: Information about the discovery service for the specified binding.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/discovery/bindings/{bindingID}/info", header=header)
+                f"/discovery/bindings/{bindingID}/info", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -90,7 +90,7 @@ class Discovery:
 
         try:
             response = self.client.post(
-                f"/discovery/bindings/{bindingID}/scan", header={"Accept": "text/plain"}, params=params)
+                f"/discovery/bindings/{bindingID}/scan", headers={"Accept": "text/plain"}, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

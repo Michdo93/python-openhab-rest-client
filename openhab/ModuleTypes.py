@@ -21,9 +21,9 @@ class ModuleTypes:
 
         :return: A list of module types.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {}
         if tags:
@@ -33,7 +33,7 @@ class ModuleTypes:
 
         try:
             response = self.client.get(
-                "/module-types", params=params, header=header)
+                "/module-types", params=params, headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -62,13 +62,13 @@ class ModuleTypes:
 
         :return: A dictionary with the module type information.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/module-types/{moduleTypeUID}", header=header)
+                f"/module-types/{moduleTypeUID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

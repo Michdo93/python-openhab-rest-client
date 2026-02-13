@@ -18,7 +18,7 @@ class Sitemaps:
         :return: A list of sitemaps (JSON).
         """
         try:
-            response = self.client.get("/sitemaps", header={"Accept": "application/json"})
+            response = self.client.get("/sitemaps", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -57,7 +57,7 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}", params={"type": type, "jsoncallback": jsonCallback,
-                                                                           "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
+                                                                           "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -96,7 +96,7 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/{pageID}", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -142,7 +142,7 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/*", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, header={"Accept-Language": language} if language else {})
+                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

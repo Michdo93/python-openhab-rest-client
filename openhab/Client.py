@@ -62,11 +62,11 @@ class OpenHABClient:
         except requests.exceptions.RequestException as err:
             print(f"Request exception occurred: {err}")
 
-    def __executeRequest(self, header: dict = None, resourcePath: str = None, method: str = None, data=None, params=None):
+    def __executeRequest(self, headers: dict = None, resourcePath: str = None, method: str = None, data=None, params=None):
         """
         Executes an HTTP request to the openHAB server.
 
-        :param header: Optional; A dictionary of headers to be sent with the request.
+        :param headers: Optional; A dictionary of headers to be sent with the request.
         :param resourcePath: The path of the resource to interact with.
         :param method: The HTTP method (GET, POST, PUT, DELETE).
         :param data: Optional; The data to send in the request (for POST and PUT requests).
@@ -79,7 +79,7 @@ class OpenHABClient:
                 'You must specify a valid resource path and HTTP method!')
 
         method = method.lower()
-        header = header or {}
+        headers = headers or {}
 
         if resourcePath[0] != "/":
             resourcePath = "/" + resourcePath
@@ -91,7 +91,7 @@ class OpenHABClient:
         url = f"{self.url}{resourcePath}"
 
         # Update session headers
-        self.session.headers.update(header)
+        self.session.headers.update(headers)
         """
         try:
             url = f"{self.url}{resourcePath}"
@@ -125,13 +125,13 @@ class OpenHABClient:
             raise
         """
         if method == "get":
-            response = self.session.get(url, params=params, headers=header, timeout=5)
+            response = self.session.get(url, params=params, headers=headers, timeout=5)
         elif method == "post":
-            response = self.session.post(url, data=data, params=params, headers=header, timeout=5)
+            response = self.session.post(url, data=data, params=params, headers=headers, timeout=5)
         elif method == "put":
-            response = self.session.put(url, data=data, params=params, headers=header, timeout=5)
+            response = self.session.put(url, data=data, params=params, headers=headers, timeout=5)
         elif method == "delete":
-            response = self.session.delete(url, data=data, params=params, headers=header, timeout=5)
+            response = self.session.delete(url, data=data, params=params, headers=headers, timeout=5)
         else:
             raise ValueError("Invalid HTTP method provided!")
         
@@ -167,71 +167,71 @@ class OpenHABClient:
         else:
             return requests.get(url, headers={}, stream=True)
 
-    def __executeSSE(self, url: str, header: dict = {}):
+    def __executeSSE(self, url: str, headers: dict = {}):
         """
         Executes a Server-Sent Events (SSE) request with custom headers.
 
         :param url: The URL to connect to for the SSE stream.
-        :param header: A dictionary of headers to include in the request.
+        :param headers: A dictionary of headers to include in the request.
 
         :return: The response object with the SSE stream.
         """
-        if header is None:
-            header = {}
+        if headers is None:
+            headers = {}
 
-        self.session.headers.update(header)
+        self.session.headers.update(headers)
         if self.username is not None and self.password is not None:
-            return requests.get(url, auth=self.auth, headers=header, stream=True)
+            return requests.get(url, auth=self.auth, headers=headers, stream=True)
         else:
-            return requests.get(url, headers=header, stream=True)
+            return requests.get(url, headers=headers, stream=True)
 
-    def get(self, endpoint: str, header: dict = None, params: dict = None):
+    def get(self, endpoint: str, headers: dict = None, params: dict = None):
         """
         Sends a GET request to the openHAB server.
 
         :param endpoint: The endpoint for the GET request (e.g., "/items").
-        :param header: Optional; Headers to be sent with the request.
+        :param headers: Optional; Headers to be sent with the request.
         :param params: Optional; Query parameters for the GET request.
 
         :return: The response from the GET request, either as JSON or plain text.
         """
-        return self.__executeRequest(header, endpoint, "get", params=params)
+        return self.__executeRequest(headers, endpoint, "get", params=params)
 
-    def post(self, endpoint: str, header: dict = None, data=None, params: dict = None):
+    def post(self, endpoint: str, headers: dict = None, data=None, params: dict = None):
         """
         Sends a POST request to the openHAB server.
 
         :param endpoint: The endpoint for the POST request (e.g., "/items").
-        :param header: Optional; Headers to be sent with the request.
+        :param headers: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the POST request.
         :param params: Optional; Query parameters for the request.
 
         :return: The response from the POST request.
         """
-        return self.__executeRequest(header, endpoint, "post", data=data, params=params)
+        return self.__executeRequest(headers, endpoint, "post", data=data, params=params)
 
-    def put(self, endpoint: str, header: dict = None, data=None, params: dict = None):
+    def put(self, endpoint: str, headers: dict = None, data=None, params: dict = None):
         """
         Sends a PUT request to the openHAB server.
 
         :param endpoint: The endpoint for the PUT request (e.g., "/items").
-        :param header: Optional; Headers to be sent with the request.
+        :param headers: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the PUT request.
         :param params: Optional; Query parameters for the request.
 
         :return: The response from the PUT request.
         """
-        return self.__executeRequest(header, endpoint, "put", data=data, params=params)
+        return self.__executeRequest(headers, endpoint, "put", data=data, params=params)
 
-    def delete(self, endpoint: str, header: dict = None, data=None, params: dict = None):
+    def delete(self, endpoint: str, headers: dict = None, data=None, params: dict = None):
         """
         Sends a DELETE request to the openHAB server.
 
         :param endpoint: The endpoint for the DELETE request (e.g., "/items").
-        :param header: Optional; Headers to be sent with the request.
+        :param headers: Optional; Headers to be sent with the request.
         :param data: Optional; The data to send in the DELETE request.
         :param params: Optional; Query parameters for the request.
 
         :return: The response from the DELETE request.
         """
-        return self.__executeRequest(header, endpoint, "delete", data=data, params=params)
+        return self.__executeRequest(headers, endpoint, "delete", data=data, params=params)

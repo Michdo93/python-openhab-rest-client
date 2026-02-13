@@ -18,7 +18,7 @@ class Systeminfo:
         :return: A Dictionary with system informations.
         """
         try:
-            response = self.client.get("/systeminfo", header={"Accept": "application/json"})
+            response = self.client.get("/systeminfo", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -45,7 +45,7 @@ class Systeminfo:
         :return: A Dictionary with UOM informations.
         """
         try:
-            response = self.client.get("/systeminfo/uom", header={"Accept": "application/json"})
+            response = self.client.get("/systeminfo/uom", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

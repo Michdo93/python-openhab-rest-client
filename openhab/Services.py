@@ -20,12 +20,12 @@ class Services:
 
         :return: A list of services (JSON).
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/services", header=header)
+            response = self.client.get("/services", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -54,13 +54,13 @@ class Services:
 
         :return: The service object (JSON).
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/services/{serviceID}", header=header)
+                f"/services/{serviceID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -93,7 +93,7 @@ class Services:
         :return: The configuration of the service (JSON).
         """
         try:
-            response = self.client.get(f"/services/{serviceID}/config", header={"Accept": "application/json"})
+            response = self.client.get(f"/services/{serviceID}/config", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -126,16 +126,16 @@ class Services:
 
         :return: The old configuration of the service (JSON).
         """
-        header = {
+        headers = {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(f"/services/{serviceID}/config", data=json.dumps(
-                configData), header=header)
+                configData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -171,7 +171,7 @@ class Services:
         """
         try:
             response = self.client.delete(
-                f"/services/{serviceID}/config", header={"Accept": "application/json"})
+                f"/services/{serviceID}/config", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -206,13 +206,13 @@ class Services:
 
         :return: A list of contexts (JSON).
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f"/services/{serviceID}/contexts", header=header)
+                f"/services/{serviceID}/contexts", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

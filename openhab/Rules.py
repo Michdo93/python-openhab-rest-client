@@ -25,7 +25,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly}, header={"Accept": "application/json"})
+                "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly}, headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -55,7 +55,7 @@ class Rules:
         """
         try:
             response = self.client.post(
-                "/rules", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+                "/rules", data=json.dumps(ruleData), headers={"Content-Type": "application/json"})
             
             status_code = response.status_code
 
@@ -76,7 +76,7 @@ class Rules:
             location = response.headers.get("Location")
             return {
                 "message": "Rule successfully created.",
-                "location": location if location else "No Location header provided."
+                "location": location if location else "No Location headers provided."
             }    
         elif status_code == 400:
             return {"error": "Creation refused: Missing required parameter."}
@@ -95,7 +95,7 @@ class Rules:
         :return: The rule object (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}", header={"Accept": "application/json"})
+            response = self.client.get(f"/rules/{ruleUID}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -130,7 +130,7 @@ class Rules:
         """
         try:
             response = self.client.put(
-                f"/rules/{ruleUID}", data=json.dumps(ruleData), header={"Content-Type": "application/json"})
+                f"/rules/{ruleUID}", data=json.dumps(ruleData), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -199,7 +199,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}", header={"Accept": "application/json"})
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -235,7 +235,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config", header={"Accept": "application/json"})
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -272,7 +272,7 @@ class Rules:
         """
         try:
             response = self.client.get(
-                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}", header={'Accept': 'text/plain'})
+                f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}", headers={'Accept': 'text/plain'})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -310,7 +310,7 @@ class Rules:
         """
         try:
             response = self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}",
-                                       data=json.dumps(value), header={'Content-Type': 'text/plain'})
+                                       data=json.dumps(value), headers={'Content-Type': 'text/plain'})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -343,7 +343,7 @@ class Rules:
         :return: A list of actions (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/actions", header={"Accept": "application/json"})
+            response = self.client.get(f"/rules/{ruleUID}/actions", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -376,7 +376,7 @@ class Rules:
         :return: A list of conditions (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/conditions", header={"Accept": "application/json"})
+            response = self.client.get(f"/rules/{ruleUID}/conditions", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -409,7 +409,7 @@ class Rules:
         :return: The configuration of the rule (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/config", header={"Accept": "application/json"})
+            response = self.client.get(f"/rules/{ruleUID}/config", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -444,7 +444,7 @@ class Rules:
         """
         try:
             response = self.client.put(f"/rules/{ruleUID}/config", data=json.dumps(
-                configData), header={"Content-Type": "application/json"})
+                configData), headers={"Content-Type": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -478,7 +478,7 @@ class Rules:
         :return: The API response (status code).
         """
         try:
-            response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", header={
+            response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", headers={
                                         "Content-Type": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
@@ -520,7 +520,7 @@ class Rules:
         """
         try:
             response = self.client.post(
-                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {}, header={"Accept": "application/json"})
+                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {}, headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -553,7 +553,7 @@ class Rules:
         :return: A list of triggers (JSON).
         """
         try:
-            response = self.client.get(f"/rules/{ruleUID}/triggers", header={"Accept": "application/json"})
+            response = self.client.get(f"/rules/{ruleUID}/triggers", headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -588,7 +588,7 @@ class Rules:
         """
         try:
             response = self.client.get("/rules/schedule/simulations", params={
-                                       "from": fromTime, "until": untilTime}, header={'Accept': 'application/json'})
+                                       "from": fromTime, "until": untilTime}, headers={'Accept': 'application/json'})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

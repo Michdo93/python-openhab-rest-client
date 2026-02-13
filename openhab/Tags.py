@@ -16,16 +16,16 @@ class Tags:
         """
         Get all available semantic tags.
 
-        :param language: Optional header for language setting.
+        :param language: Optional headers for language setting.
 
         :return: A list of semantic tags (JSON).
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get("/tags", header=header)
+            response = self.client.get("/tags", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -50,18 +50,18 @@ class Tags:
         Creates a new semantic tag and adds it to the registry.
 
         :param tagData: The data object for the tag to be created.
-        :param language: Optional header for language setting.
+        :param language: Optional headers for language setting.
 
         :return: The response to the tag creation request (JSON).
         """
-        header = {"Content-Type": "application/json",
+        headers = {"Content-Type": "application/json",
                   "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.post(
-                "/tags", data=json.dumps(tagData), header=header)
+                "/tags", data=json.dumps(tagData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -94,16 +94,16 @@ class Tags:
         Gets a semantic tag and its sub-tags.
 
         :param tagID: The ID of the tag to retrieve.
-        :param language: Optional header for language setting.
+        :param language: Optional headers for language setting.
 
         :return: The tag object and its sub-tags (JSON).
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get(f"/tags/{tagID}", header=header)
+            response = self.client.get(f"/tags/{tagID}", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -133,18 +133,18 @@ class Tags:
 
         :param tagID: The ID of the tag to be updated.
         :param tagData: The new tag data.
-        :param language: Optional header for language setting.
+        :param language: Optional headers for language setting.
 
         :return: The response to the tag update request (JSON).
         """
-        header = {"Content-Type": "application/json",
+        headers = {"Content-Type": "application/json",
                   "Accept": "*/*"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.put(
-                f"/tags/{tagID}", data=json.dumps(tagData), header=header)
+                f"/tags/{tagID}", data=json.dumps(tagData), headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -177,12 +177,12 @@ class Tags:
         Removes a semantic tag and its sub-tags from the registry.
 
         :param tagID: The ID of the tag to be removed.
-        :param language: Optional header for language setting.
+        :param language: Optional headers for language setting.
 
         :return: The response to the tag deletion request (JSON).
         """
         try:
-            response = self.client.delete(f"/tags/{tagID}", header={"Accept-Language": language} if language else {})
+            response = self.client.delete(f"/tags/{tagID}", headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

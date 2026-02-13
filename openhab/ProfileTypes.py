@@ -21,9 +21,9 @@ class ProfileTypes:
 
         :return: A list of profile types.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         params = {}
         if channelTypeUID:
@@ -33,7 +33,7 @@ class ProfileTypes:
 
         try:
             response = self.client.get(
-                "/profile-types", params=params, header=header)
+                "/profile-types", params=params, headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

@@ -19,7 +19,7 @@ class Voice:
         """
         try:
             response = self.client.get(
-                '/voice/defaultvoice', header={"Accept": "application/json"})
+                '/voice/defaultvoice', headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -64,7 +64,7 @@ class Voice:
         """
         try:
             response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttId': sttID, 'ttsId': ttsID,
-                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, header={"Accept-Language": language} if language else {})
+                                                                       'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -137,12 +137,12 @@ class Voice:
 
         :return: A list of interpreters if successful.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.get('/voice/interpreters', header=header)
+            response = self.client.get('/voice/interpreters', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -172,12 +172,12 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = {"Content-Type": "text/plain", "Accept": "text/plain"}
+        headers = {"Content-Type": "text/plain", "Accept": "text/plain"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.post('/voice/interpreters', header=header, data=text)
+            response = self.client.post('/voice/interpreters', headers=headers, data=text)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -214,13 +214,13 @@ class Voice:
 
         :return: The details of the interpreter.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
             response = self.client.get(
-                f'/voice/interpreters/{interpreterID}', header=header)
+                f'/voice/interpreters/{interpreterID}', headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -254,12 +254,12 @@ class Voice:
 
         :return: The response from the server.
         """
-        header = {"Content-Type": "text/plain", "Accept": "text/plain"}
+        headers = {"Content-Type": "text/plain", "Accept": "text/plain"}
         if language:
-            header["Accept-Language"] = language
+            headers["Accept-Language"] = language
 
         try:
-            response = self.client.post('/voice/interpreters', header=header, params={
+            response = self.client.post('/voice/interpreters', headers=headers, params={
                                         'ids': ','.join(IDs)}, data=text)
 
             if isinstance(response, dict) and "status" in response:
@@ -306,7 +306,7 @@ class Voice:
         """
         try:
             response = self.client.post('/voice/listenandanswer', params={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
-                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, header={"Accept-Language": language} if language else {})
+                hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, headers={"Accept-Language": language} if language else {})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -346,7 +346,7 @@ class Voice:
         :return: The response from the server.
         """
         try:
-            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data=text, header={"Content-Type": "text/plain"})
+            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data=text, headers={"Content-Type": "text/plain"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -374,7 +374,7 @@ class Voice:
         """
         try:
             response = self.client.get(
-                '/voice/voices', header={"Accept": "application/json"})
+                '/voice/voices', headers={"Accept": "application/json"})
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]

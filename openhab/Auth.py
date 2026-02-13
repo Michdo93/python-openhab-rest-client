@@ -21,10 +21,10 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
 
         try:
-            response = self.client.get("/auth/apitokens", header=header)
+            response = self.client.get("/auth/apitokens", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -100,7 +100,7 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Content-Type": "application/x-www-form-urlencoded"}
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
         
         data = {
             "refresh_token": refreshToken,
@@ -109,7 +109,7 @@ class Auth:
 
         try:
             response = self.client.post(
-                "/auth/logout", header=header, data=data)
+                "/auth/logout", headers=headers, data=data)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -143,10 +143,10 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {"Accept": "application/json"}
+        headers = {"Accept": "application/json"}
 
         try:
-            response = self.client.get("/auth/sessions", header=header)
+            response = self.client.get("/auth/sessions", headers=headers)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
@@ -189,7 +189,7 @@ class Auth:
 
         :return: JSON response from the server.
         """
-        header = {
+        headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Accept": "application/json"
         }
@@ -217,7 +217,7 @@ class Auth:
         try:
             # Request mit den encoded Daten senden
             response = self.client.post(
-                "/auth/token", header=header, data=encodedBody, params=params)
+                "/auth/token", headers=headers, data=encodedBody, params=params)
 
             if isinstance(response, dict) and "status" in response:
                 status_code = response["status"]
