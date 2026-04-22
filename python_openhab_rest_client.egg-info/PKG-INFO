@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: python-openhab-rest-client
-Version: 1.0.0
+Version: 21.3.93
 Summary: A Python client for the openHAB REST API. This library enables easy interaction with the openHAB REST API to control smart home devices, retrieve status information, and process events.
 Home-page: https://github.com/Michdo93/python-openhab-rest-client
 Author: Michael Christian Dörflinger
@@ -11,7 +11,18 @@ Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: requests
+Requires-Dist: requests>=2.33.1
+Requires-Dist: aiohttp>=3.13.5
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # python-openhab-rest-client
 
@@ -1380,7 +1391,7 @@ Adds metadata to an item.
 **Example:**
 
 ```python
-metadata = {"value": "20", "config": {"unit": "°C"}}
+metadata = {"value": "20", "config": {"unit": "Â°C"}}
 response = items.addMetadata("Thermostat", "temperature", metadata)
 print(response)
 ```
@@ -1482,8 +1493,8 @@ The `Links` class provides methods to manage links between items and channels in
 
 Retrieves all available links.
 
-- `channelUID` *(optional, str)* – Filters by the Channel UID.  
-- `itemName` *(optional, str)* – Filters by the Item Name.  
+- `channelUID` *(optional, str)* â€“ Filters by the Channel UID.  
+- `itemName` *(optional, str)* â€“ Filters by the Item Name.  
 
 **Returns:** A list of links containing details such as `itemName`, `channelUID`, and configuration.  
 
@@ -1491,8 +1502,8 @@ Retrieves all available links.
 
 Retrieves a specific link between an item and a channel.
 
-- `itemName` *(str)* – The name of the item.  
-- `channelUID` *(str)* – The UID of the channel.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `channelUID` *(str)* â€“ The UID of the channel.  
 
 **Returns:** A dictionary containing details of the link, including the item, channel UID, and configuration.  
 
@@ -1500,9 +1511,9 @@ Retrieves a specific link between an item and a channel.
 
 Creates a link between an item and a channel.
 
-- `itemName` *(str)* – The name of the item.  
-- `channelUID` *(str)* – The UID of the channel.  
-- `configuration` *(dict)* – The configuration parameters for the link.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `channelUID` *(str)* â€“ The UID of the channel.  
+- `configuration` *(dict)* â€“ The configuration parameters for the link.  
 
 **Returns:** The API response confirming the link creation.  
 
@@ -1510,8 +1521,8 @@ Creates a link between an item and a channel.
 
 Removes a link between an item and a channel.
 
-- `itemName` *(str)* – The name of the item.  
-- `channelUID` *(str)* – The UID of the channel.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `channelUID` *(str)* â€“ The UID of the channel.  
 
 **Returns:** The API response confirming the link removal.  
 
@@ -1519,7 +1530,7 @@ Removes a link between an item and a channel.
 
 Deletes all links that refer to a specific item or thing.
 
-- `object` *(str)* – The name of the item or the UID of the thing.  
+- `object` *(str)* â€“ The name of the item or the UID of the thing.  
 
 **Returns:** The API response confirming the deletion.  
 
@@ -1551,7 +1562,7 @@ Retrieves all available loggers.
 
 Retrieves a specific logger.
 
-- `loggerName` *(str)* – The name of the logger.  
+- `loggerName` *(str)* â€“ The name of the logger.  
 
 **Returns:** A dictionary containing the logger name and its current logging level.  
 
@@ -1559,8 +1570,8 @@ Retrieves a specific logger.
 
 Modifies an existing logger or creates a new one with a specified logging level.
 
-- `loggerName` *(str)* – The name of the logger.  
-- `level` *(str)* – The logging level (e.g., `DEBUG`, `INFO`, `WARN`, `ERROR`).  
+- `loggerName` *(str)* â€“ The name of the logger.  
+- `level` *(str)* â€“ The logging level (e.g., `DEBUG`, `INFO`, `WARN`, `ERROR`).  
 
 **Returns:** The API response confirming the modification or addition.  
 
@@ -1568,7 +1579,7 @@ Modifies an existing logger or creates a new one with a specified logging level.
 
 Removes a specific logger.
 
-- `loggerName` *(str)* – The name of the logger.  
+- `loggerName` *(str)* â€“ The name of the logger.  
 
 **Returns:** The API response confirming the removal.  
 
@@ -1582,9 +1593,9 @@ The `ModuleTypes` class provides methods to retrieve module types in OpenHAB via
 
 Retrieves all available module types.
 
-- `tags` *(Optional, str)* – Filter for specific tags.  
-- `typeFilter` *(Optional, str)* – Filter by module type (`action`, `condition`, `trigger`).  
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
+- `tags` *(Optional, str)* â€“ Filter for specific tags.  
+- `typeFilter` *(Optional, str)* â€“ Filter by module type (`action`, `condition`, `trigger`).  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
 
 **Returns:** A list of available module types.
 
@@ -1592,8 +1603,8 @@ Retrieves all available module types.
 
 Retrieves a specific module type based on its UID.
 
-- `moduleTypeUID` *(str)* – The UID of the module type.  
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
+- `moduleTypeUID` *(str)* â€“ The UID of the module type.  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
 
 **Returns:** A dictionary containing the module type information.  
 
@@ -1613,7 +1624,7 @@ Retrieves a list of available persistence services.
 
 Retrieves the configuration of a specific persistence service.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
 
 **Returns:** A dictionary containing the service configuration.  
 
@@ -1621,8 +1632,8 @@ Retrieves the configuration of a specific persistence service.
 
 Sets the configuration of a persistence service.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
-- `config` *(dict)* – The configuration data for the service.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
+- `config` *(dict)* â€“ The configuration data for the service.  
 
 **Returns:** The API response after modifying the configuration.  
 
@@ -1630,7 +1641,7 @@ Sets the configuration of a persistence service.
 
 Deletes the configuration of a persistence service.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
 
 **Returns:** The API response after deleting the configuration.  
 
@@ -1638,7 +1649,7 @@ Deletes the configuration of a persistence service.
 
 Retrieves a list of items available in a specific persistence service.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
 
 **Returns:** A list of items with their last and earliest timestamps.  
 
@@ -1646,12 +1657,12 @@ Retrieves a list of items available in a specific persistence service.
 
 Retrieves persistence data for a specific item from a persistence service.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
-- `itemName` *(str)* – The name of the item.  
-- `startTime` *(Optional, str)* – The start time for the data. Defaults to one day before `endTime`.  
-- `endTime` *(Optional, str)* – The end time for the data. Defaults to the current time.  
-- `page` *(Optional, int)* – The page number for paginated results. Defaults to `1`.  
-- `pageLength` *(Optional, int)* – The number of data points per page. Defaults to `50`.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `startTime` *(Optional, str)* â€“ The start time for the data. Defaults to one day before `endTime`.  
+- `endTime` *(Optional, str)* â€“ The end time for the data. Defaults to the current time.  
+- `page` *(Optional, int)* â€“ The page number for paginated results. Defaults to `1`.  
+- `pageLength` *(Optional, int)* â€“ The number of data points per page. Defaults to `50`.  
 
 **Returns:** The retrieved data points of the item.  
 
@@ -1659,10 +1670,10 @@ Retrieves persistence data for a specific item from a persistence service.
 
 Stores persistence data for a specific item.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
-- `itemName` *(str)* – The name of the item.  
-- `time` *(str)* – The timestamp for the stored data.  
-- `state` *(str)* – The state value to be stored.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `time` *(str)* â€“ The timestamp for the stored data.  
+- `state` *(str)* â€“ The state value to be stored.  
 
 **Returns:** The API response after storing the data.  
 
@@ -1670,10 +1681,10 @@ Stores persistence data for a specific item.
 
 Deletes persistence data for a specific item within a given time range.
 
-- `serviceID` *(str)* – The ID of the persistence service.  
-- `itemName` *(str)* – The name of the item.  
-- `startTime` *(str)* – The start time of the data to be deleted.  
-- `endTime` *(str)* – The end time of the data to be deleted.  
+- `serviceID` *(str)* â€“ The ID of the persistence service.  
+- `itemName` *(str)* â€“ The name of the item.  
+- `startTime` *(str)* â€“ The start time of the data to be deleted.  
+- `endTime` *(str)* â€“ The end time of the data to be deleted.  
 
 **Returns:** The API response after deleting the data.  
 
@@ -1687,9 +1698,9 @@ The `ProfileTypes` class provides methods to interact with OpenHAB's profile typ
 
 Retrieves all available profile types.
 
-- `channelTypeUID` *(Optional, str)* – Filters the results by channel type UID.  
-- `itemType` *(Optional, str)* – Filters the results by item type.  
-- `language` *(Optional, str)* – Specifies the language for the `Accept-Language` header.  
+- `channelTypeUID` *(Optional, str)* â€“ Filters the results by channel type UID.  
+- `itemType` *(Optional, str)* â€“ Filters the results by item type.  
+- `language` *(Optional, str)* â€“ Specifies the language for the `Accept-Language` header.  
 
 **Returns:** A list of profile types.  
 
@@ -1703,10 +1714,10 @@ The `Rules` class provides methods to interact with OpenHAB's rules via the REST
 
 Retrieves available rules, optionally filtered by tags and/or prefix.
 
-- `prefix` *(Optional, str)* – Filters results by prefix.  
-- `tags` *(Optional, list)* – Filters results by tag array.  
-- `summary` *(Optional, bool)* – If `True`, only summary fields are returned.  
-- `staticDataOnly` *(Optional, bool)* – If `True`, only static data is returned.  
+- `prefix` *(Optional, str)* â€“ Filters results by prefix.  
+- `tags` *(Optional, list)* â€“ Filters results by tag array.  
+- `summary` *(Optional, bool)* â€“ If `True`, only summary fields are returned.  
+- `staticDataOnly` *(Optional, bool)* â€“ If `True`, only static data is returned.  
 
 **Returns:** A list of rules (JSON objects).  
 
@@ -1714,7 +1725,7 @@ Retrieves available rules, optionally filtered by tags and/or prefix.
 
 Creates a new rule.
 
-- `ruleData` *(dict)* – The rule data to be created.  
+- `ruleData` *(dict)* â€“ The rule data to be created.  
 
 **Returns:** The created rule (JSON).  
 
@@ -1722,7 +1733,7 @@ Creates a new rule.
 
 Retrieves a rule by its UID.
 
-- `ruleUID` *(str)* – The UID of the rule.  
+- `ruleUID` *(str)* â€“ The UID of the rule.  
 
 **Returns:** The rule object (JSON).  
 
@@ -1730,8 +1741,8 @@ Retrieves a rule by its UID.
 
 Updates an existing rule.
 
-- `ruleUID` *(str)* – The UID of the rule.  
-- `ruleData` *(dict)* – The new rule data.  
+- `ruleUID` *(str)* â€“ The UID of the rule.  
+- `ruleData` *(dict)* â€“ The new rule data.  
 
 **Returns:** The updated rule (JSON).  
 
@@ -1739,7 +1750,7 @@ Updates an existing rule.
 
 Removes a rule.
 
-- `ruleUID` *(str)* – The UID of the rule.  
+- `ruleUID` *(str)* â€“ The UID of the rule.  
 
 **Returns:** API response (status code).  
 
@@ -1747,8 +1758,8 @@ Removes a rule.
 
 Activates or deactivates a rule.
 
-- `ruleUID` *(str)* – The UID of the rule.  
-- `enable` *(bool)* – `True` to enable, `False` to disable.  
+- `ruleUID` *(str)* â€“ The UID of the rule.  
+- `enable` *(bool)* â€“ `True` to enable, `False` to disable.  
 
 **Returns:** API response (status code).  
 
@@ -1764,8 +1775,8 @@ Disables a rule.
 
 Executes the rule's actions immediately.
 
-- `ruleUID` *(str)* – The UID of the rule.  
-- `contextData` *(Optional, dict)* – Context data for execution.  
+- `ruleUID` *(str)* â€“ The UID of the rule.  
+- `contextData` *(Optional, dict)* â€“ Context data for execution.  
 
 **Returns:** API response (status code).  
 
@@ -1773,8 +1784,8 @@ Executes the rule's actions immediately.
 
 Simulates rule executions filtered by the `Schedule` tag within a given timeframe.
 
-- `fromTime` *(str)* – Start time of the simulation.  
-- `untilTime` *(str)* – End time of the simulation.  
+- `fromTime` *(str)* â€“ Start time of the simulation.  
+- `untilTime` *(str)* â€“ End time of the simulation.  
 
 **Returns:** Simulation results (JSON).  
 
@@ -1787,7 +1798,7 @@ The `Services` class provides methods to interact with OpenHAB's configurable se
 ##### `getServices(language: str = None) -> dict`
 Retrieves all configurable services.
 
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
 
 **Returns:** A list of services (JSON).  
 
@@ -1795,8 +1806,8 @@ Retrieves all configurable services.
 
 Retrieves a specific configurable service by its ID.
 
-- `serviceID` *(str)* – The ID of the service.  
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
+- `serviceID` *(str)* â€“ The ID of the service.  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
 
 **Returns:** The service object (JSON).  
 
@@ -1804,7 +1815,7 @@ Retrieves a specific configurable service by its ID.
 
 Retrieves the configuration of a given service.
 
-- `serviceID` *(str)* – The ID of the service.  
+- `serviceID` *(str)* â€“ The ID of the service.  
 
 **Returns:** The configuration of the service (JSON).  
 
@@ -1812,8 +1823,8 @@ Retrieves the configuration of a given service.
 
 Updates the configuration of a service and returns the old configuration.
 
-- `serviceID` *(str)* – The ID of the service.  
-- `configData` *(dict)* – The new configuration data.  
+- `serviceID` *(str)* â€“ The ID of the service.  
+- `configData` *(dict)* â€“ The new configuration data.  
 
 **Returns:** The old configuration of the service (JSON).  
 
@@ -1821,7 +1832,7 @@ Updates the configuration of a service and returns the old configuration.
 
 Deletes the configuration of a given service and returns the old configuration.
 
-- `serviceID` *(str)* – The ID of the service.  
+- `serviceID` *(str)* â€“ The ID of the service.  
 
 **Returns:** The old configuration of the service (JSON).  
 
@@ -1829,8 +1840,8 @@ Deletes the configuration of a given service and returns the old configuration.
 
 Retrieves multiple context service configurations for a given factory PID.
 
-- `serviceID` *(str)* – The ID of the service.  
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
+- `serviceID` *(str)* â€“ The ID of the service.  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
 
 **Returns:** A list of contexts (JSON).  
 
@@ -1850,11 +1861,11 @@ Retrieves all available sitemaps.
 
 Retrieves a specific sitemap by name.
 
-- `sitemapName` *(str)* – The name of the sitemap.  
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.  
-- `type` *(Optional, str)* – Query parameter for type.  
-- `jsonCallback` *(Optional, str)* – Query parameter for JSON callback.  
-- `includeHidden` *(Optional, bool, default=False)* – Whether hidden widgets should be included.  
+- `sitemapName` *(str)* â€“ The name of the sitemap.  
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.  
+- `type` *(Optional, str)* â€“ Query parameter for type.  
+- `jsonCallback` *(Optional, str)* â€“ Query parameter for JSON callback.  
+- `includeHidden` *(Optional, bool, default=False)* â€“ Whether hidden widgets should be included.  
 
 **Returns:** The sitemap object (JSON).
 
@@ -1862,21 +1873,21 @@ Retrieves a specific sitemap by name.
 
 Retrieves the data for a specific page within a sitemap.
 
-- `sitemapName` *(str)* – The name of the sitemap.  
-- `pageID` *(str)* – The ID of the page.  
-- `subscriptionID` *(Optional, str)* – Query parameter for the subscription ID.  
-- `includeHidden` *(Optional, bool, default=False)* – Whether hidden widgets should be included.  
+- `sitemapName` *(str)* â€“ The name of the sitemap.  
+- `pageID` *(str)* â€“ The ID of the page.  
+- `subscriptionID` *(Optional, str)* â€“ Query parameter for the subscription ID.  
+- `includeHidden` *(Optional, bool, default=False)* â€“ Whether hidden widgets should be included.  
 
 **Returns:** The sitemap page (JSON).  
 
 ##### `getFullSitemap(sitemapName: str, subscriptionID: str = None, includeHidden: bool = False) -> dict`
 
 Retrieves data for an entire sitemap.  
-⚠ **Not recommended due to potentially high traffic.**
+âš  **Not recommended due to potentially high traffic.**
 
-- `sitemapName` *(str)* – The name of the sitemap.  
-- `subscriptionID` *(Optional, str)* – Query parameter for the subscription ID.  
-- `includeHidden` *(Optional, bool, default=False)* – Whether hidden widgets should be included.  
+- `sitemapName` *(str)* â€“ The name of the sitemap.  
+- `subscriptionID` *(Optional, str)* â€“ Query parameter for the subscription ID.  
+- `includeHidden` *(Optional, bool, default=False)* â€“ Whether hidden widgets should be included.  
 
 **Returns:** The complete sitemap (JSON).  
 
@@ -1884,19 +1895,19 @@ Retrieves data for an entire sitemap.
 
 Retrieves events for a specific sitemap or page.
 
-- `subscriptionID` *(str)* – The ID of the subscription.  
-- `sitemap` *(Optional, str)* – The name of the sitemap.  
-- `pageID` *(Optional, str)* – The ID of the page.  
+- `subscriptionID` *(str)* â€“ The ID of the subscription.  
+- `sitemap` *(Optional, str)* â€“ The name of the sitemap.  
+- `pageID` *(Optional, str)* â€“ The ID of the page.  
 
 **Returns:** The events (JSON).  
 
 ##### `getFullSitemapEvents(subscriptionID: str, sitemap: str = None) -> dict`
 
 Retrieves events for an entire sitemap.  
-⚠ **Not recommended due to potentially high traffic.**
+âš  **Not recommended due to potentially high traffic.**
 
-- `subscriptionID` *(str)* – The ID of the subscription.  
-- `sitemap` *(Optional, str)* – The name of the sitemap.  
+- `subscriptionID` *(str)* â€“ The ID of the subscription.  
+- `sitemap` *(Optional, str)* â€“ The name of the sitemap.  
 
 **Returns:** The events for the entire sitemap (JSON).  
 
@@ -1916,7 +1927,7 @@ The `Systeminfo` class provides methods to retrieve system information via the O
 
 Retrieves general system information.
 
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A dictionary containing system information (JSON).
 
@@ -1924,7 +1935,7 @@ Retrieves general system information.
 
 Retrieves all supported units of measurement (UoM) and their system units.
 
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A dictionary containing UoM information (JSON).
 
@@ -1938,7 +1949,7 @@ The `Tags` class provides methods to manage semantic tags via the OpenHAB REST A
 
 Retrieves all available semantic tags.
 
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A list of semantic tags (JSON).
 
@@ -1946,8 +1957,8 @@ Retrieves all available semantic tags.
 
 Creates a new semantic tag and adds it to the registry.
 
-- `tagData` *(dict)* – The data object for the tag to be created.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `tagData` *(dict)* â€“ The data object for the tag to be created.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** The response to the tag creation request (JSON).
 
@@ -1955,8 +1966,8 @@ Creates a new semantic tag and adds it to the registry.
 
 Retrieves a semantic tag and its sub-tags.
 
-- `tagID` *(str)* – The ID of the tag to retrieve.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `tagID` *(str)* â€“ The ID of the tag to retrieve.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** The tag object and its sub-tags (JSON).
 
@@ -1964,17 +1975,17 @@ Retrieves a semantic tag and its sub-tags.
 
 Updates a semantic tag.
 
-- `tagID` *(str)* – The ID of the tag to be updated.
-- `tagData` *(dict)* – The new tag data.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `tagID` *(str)* â€“ The ID of the tag to be updated.
+- `tagData` *(dict)* â€“ The new tag data.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** The response to the tag update request (JSON).
 
 ##### `deleteTag(tagID: str, language: str = None) -> dict`
 Removes a semantic tag and its sub-tags from the registry.
 
-- `tagID` *(str)* – The ID of the tag to be removed.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `tagID` *(str)* â€“ The ID of the tag to be removed.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** The response to the tag deletion request (JSON).
 
@@ -1988,7 +1999,7 @@ The `Templates` class provides methods to manage templates via the OpenHAB REST 
 
 Retrieves all available templates.
 
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A list of templates (JSON).
 
@@ -1996,8 +2007,8 @@ Retrieves all available templates.
 
 Retrieves a template corresponding to the given UID.
 
-- `templateUID` *(str)* – The UID of the template.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `templateUID` *(str)* â€“ The UID of the template.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A dictionary with the details of the template (JSON).
 
@@ -2011,8 +2022,8 @@ The `ThingTypes` class provides methods to retrieve available thing types via th
 
 Retrieves all available thing types without configuration descriptions, channels, and properties.
 
-- `bindingID` *(Optional, str)* – Filter the results by a specific binding ID.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `bindingID` *(Optional, str)* â€“ Filter the results by a specific binding ID.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:** A list of thing types (JSON).
 
@@ -2020,8 +2031,8 @@ Retrieves all available thing types without configuration descriptions, channels
 
 Retrieves a thing type by its UID.
 
-- `thingTypeUID` *(str)* – The UID of the thing type.
-- `language` *(Optional, str)* – Language setting for the `Accept-Language` header.
+- `thingTypeUID` *(str)* â€“ The UID of the thing type.
+- `language` *(Optional, str)* â€“ Language setting for the `Accept-Language` header.
 
 **Returns:**  
 A dictionary with the details of the thing type (JSON).  
@@ -2037,9 +2048,9 @@ The `Things` class provides methods to interact with available things in the Ope
 
 Retrieves all available things.
 
-- `summary` *(Optional, bool)* – If `True`, returns only the summary fields.
-- `staticDataOnly` *(Optional, bool)* – If `True`, returns a cacheable list.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `summary` *(Optional, bool)* â€“ If `True`, returns only the summary fields.
+- `staticDataOnly` *(Optional, bool)* â€“ If `True`, returns a cacheable list.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** JSON response with the things.
 
@@ -2047,8 +2058,8 @@ Retrieves all available things.
 
 Creates a new thing and adds it to the registry.
 
-- `thingData` *(dict)* – The JSON object containing the thing data.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingData` *(dict)* â€“ The JSON object containing the thing data.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2056,8 +2067,8 @@ Creates a new thing and adds it to the registry.
 
 Gets a thing by UID.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** JSON response with the thing data.
 
@@ -2065,9 +2076,9 @@ Gets a thing by UID.
 
 Updates a thing.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `thingData` *(dict)* – The JSON object containing the updated thing data.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `thingData` *(dict)* â€“ The JSON object containing the updated thing data.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2075,9 +2086,9 @@ Updates a thing.
 
 Removes a thing from the registry. Set 'force' to `true` if you want the thing to be removed immediately.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `force` *(Optional, bool)* – If `True`, the thing will be immediately removed.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `force` *(Optional, bool)* â€“ If `True`, the thing will be immediately removed.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2085,9 +2096,9 @@ Removes a thing from the registry. Set 'force' to `true` if you want the thing t
 
 Updates a thing's configuration.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `configurationData` *(dict)* – The configuration data of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `configurationData` *(dict)* â€“ The configuration data of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2095,8 +2106,8 @@ Updates a thing's configuration.
 
 Gets the thing's configuration status.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** JSON response with the thing's configuration status.
 
@@ -2104,9 +2115,9 @@ Gets the thing's configuration status.
 
 Sets the thing's enabled status.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `enabled` *(bool)* – If `True`, the thing will be enabled.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `enabled` *(bool)* â€“ If `True`, the thing will be enabled.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2114,7 +2125,7 @@ Sets the thing's enabled status.
 
 Enables the thing.
 
-- `thingUID` *(str)* – The UID of the thing.
+- `thingUID` *(str)* â€“ The UID of the thing.
 
 **Returns:** The API response.
 
@@ -2122,7 +2133,7 @@ Enables the thing.
 
 Disables the thing.
 
-- `thingUID` *(str)* – The UID of the thing.
+- `thingUID` *(str)* â€“ The UID of the thing.
 
 **Returns:** The API response.
 
@@ -2130,9 +2141,9 @@ Disables the thing.
 
 Updates the firmware of a thing.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `firmwareVersion` *(str)* – The firmware version.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `firmwareVersion` *(str)* â€“ The firmware version.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** The API response.
 
@@ -2140,8 +2151,8 @@ Updates the firmware of a thing.
 
 Gets the thing's firmware status.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** JSON response with the firmware status.
 
@@ -2149,8 +2160,8 @@ Gets the thing's firmware status.
 
 Gets all available firmwares for the provided thing UID.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** A list of available firmwares.
 
@@ -2158,8 +2169,8 @@ Gets all available firmwares for the provided thing UID.
 
 Gets the thing's status.
 
-- `thingUID` *(str)* – The UID of the thing.
-- `language` *(Optional, str)* – The preferred language for the response.
+- `thingUID` *(str)* â€“ The UID of the thing.
+- `language` *(Optional, str)* â€“ The preferred language for the response.
 
 **Returns:** JSON response with the thing's status.
 
@@ -2179,7 +2190,7 @@ Retrieves a list of all transformations.
 
 Gets a single transformation by its UID.
 
-- `transformationUID` *(str)* – The UID of the transformation to retrieve.
+- `transformationUID` *(str)* â€“ The UID of the transformation to retrieve.
 
 **Returns:** The transformation (JSON).
 
@@ -2187,8 +2198,8 @@ Gets a single transformation by its UID.
 
 Updates a single transformation.
 
-- `transformationUID` *(str)* – The UID of the transformation to update.
-- `transformationData` *(dict)* – The new data for the transformation.
+- `transformationUID` *(str)* â€“ The UID of the transformation to update.
+- `transformationData` *(dict)* â€“ The new data for the transformation.
 
 **Returns:** The response to the transformation update request (JSON).
 
@@ -2196,7 +2207,7 @@ Updates a single transformation.
 
 Deletes a single transformation by its UID.
 
-- `transformationUID` *(str)* – The UID of the transformation to delete.
+- `transformationUID` *(str)* â€“ The UID of the transformation to delete.
 
 **Returns:** The response to the transformation delete request (JSON).
 
@@ -2216,8 +2227,8 @@ The `UI` class provides methods to interact with UI components and tiles in the 
 
 Retrieves all registered UI components within the specified namespace.
 
-- `namespace` *(str)* – The namespace for which UI components should be retrieved.
-- `summary` *(bool, optional)* – If True, only summary fields will be returned. Default is False.
+- `namespace` *(str)* â€“ The namespace for which UI components should be retrieved.
+- `summary` *(bool, optional)* â€“ If True, only summary fields will be returned. Default is False.
 
 **Returns:** A list of UI components (JSON).
 
@@ -2225,8 +2236,8 @@ Retrieves all registered UI components within the specified namespace.
 
 Adds a UI component to the specified namespace.
 
-- `namespace` *(str)* – The namespace where the UI component should be added.
-- `componentData` *(dict)* – The data of the UI component to be added (JSON).
+- `namespace` *(str)* â€“ The namespace where the UI component should be added.
+- `componentData` *(dict)* â€“ The data of the UI component to be added (JSON).
 
 **Returns:** The response to the request (JSON).
 
@@ -2234,8 +2245,8 @@ Adds a UI component to the specified namespace.
 
 Retrieves a specific UI component in the specified namespace.
 
-- `namespace` *(str)* – The namespace where the UI component is located.
-- `componentUID` *(str)* – The UID of the UI component to retrieve.
+- `namespace` *(str)* â€“ The namespace where the UI component is located.
+- `componentUID` *(str)* â€“ The UID of the UI component to retrieve.
 
 **Returns:** The UI component (JSON).
 
@@ -2243,9 +2254,9 @@ Retrieves a specific UI component in the specified namespace.
 
 Updates a specific UI component in the specified namespace.
 
-- `namespace` *(str)* – The namespace where the UI component should be updated.
-- `componentUID` *(str)* – The UID of the UI component to update.
-- `componentData` *(dict)* – The new data for the UI component (JSON).
+- `namespace` *(str)* â€“ The namespace where the UI component should be updated.
+- `componentUID` *(str)* â€“ The UID of the UI component to update.
+- `componentData` *(dict)* â€“ The new data for the UI component (JSON).
 
 **Returns:** The response to the request (JSON).
 
@@ -2253,8 +2264,8 @@ Updates a specific UI component in the specified namespace.
 
 Removes a specific UI component from the specified namespace.
 
-- `namespace` *(str)* – The namespace where the UI component should be removed.
-- `componentUID` *(str)* – The UID of the UI component to delete.
+- `namespace` *(str)* â€“ The namespace where the UI component should be removed.
+- `componentUID` *(str)* â€“ The UID of the UI component to delete.
 
 **Returns:** The response to the request (JSON).
 

@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-openhab-rest-client",
-    version="1.0.0",
+    version="21.3.93",
     packages=find_packages(),
     install_requires=[
-        "requests"
+        "requests>=2.33.1",
+        "aiohttp>=3.13.5",
     ],
     author="Michael Christian Dörflinger",
     author_email="michaeldoerflinger93@gmail.com",
