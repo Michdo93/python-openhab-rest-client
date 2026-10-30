@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -20,7 +20,7 @@ class Discovery:
         try:
             response = self.client.get("/discovery", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -55,7 +55,7 @@ class Discovery:
             response = self.client.get(
                 f"/discovery/bindings/{bindingID}/info", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -92,7 +92,7 @@ class Discovery:
             response = self.client.post(
                 f"/discovery/bindings/{bindingID}/scan", headers={"Accept": "text/plain"}, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

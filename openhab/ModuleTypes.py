@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -35,7 +35,7 @@ class ModuleTypes:
             response = self.client.get(
                 "/module-types", params=params, headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -70,7 +70,7 @@ class ModuleTypes:
             response = self.client.get(
                 f"/module-types/{moduleTypeUID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -78,7 +78,7 @@ class ModuleTypes:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Module Type corresponding to the given UID does not found."}
+                return {"error": "Module Type corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -88,6 +88,6 @@ class ModuleTypes:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Module Type corresponding to the given UID does not found."}
+            return {"error": "Module Type corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}

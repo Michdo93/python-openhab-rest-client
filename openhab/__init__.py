@@ -1,9 +1,12 @@
+__version__ = "21.4.0"
+
 from .Actions import Actions
 from .Addons import Addons
 from .Audio import Audio
 from .Auth import Auth
 from .ChannelTypes import ChannelTypes
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
+from .SSE import iterSSELines, iterSSEEvents, aiterSSELines, aiterSSEEvents, parseSSEData
 from .ConfigDescriptions import ConfigDescriptions
 from .Discovery import Discovery
 from .Events import Events, ItemEvents, ThingEvents, InboxEvents, LinkEvents, ChannelEvents
@@ -73,6 +76,12 @@ __all__ = [
     "Logging",
     "ModuleTypes",
     "OpenHABClient",
+    "StatusResponse",
+    "iterSSELines",
+    "iterSSEEvents",
+    "aiterSSELines",
+    "aiterSSEEvents",
+    "parseSSEData",
     "Persistence",
     "ProfileTypes",
     "Rules",

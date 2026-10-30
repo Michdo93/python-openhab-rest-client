@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -20,7 +20,7 @@ class Systeminfo:
         try:
             response = self.client.get("/systeminfo", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -47,7 +47,7 @@ class Systeminfo:
         try:
             response = self.client.get("/systeminfo/uom", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

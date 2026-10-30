@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -25,7 +25,7 @@ class UI:
             response = self.client.get(
                 f"/ui/components/{namespace}", params={'summary': summary} if summary else {}, headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -56,7 +56,7 @@ class UI:
             response = self.client.post(f"/ui/components/{namespace}", data=json.dumps(
                 componentData), headers={"Content-Type": "application/json", "Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -87,7 +87,7 @@ class UI:
             response = self.client.get(
                 f"/ui/components/{namespace}/{componentUID}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -123,7 +123,7 @@ class UI:
             response = self.client.put(
                 f"/ui/components/{namespace}/{componentUID}", data=json.dumps(componentData), headers={"Content-Type": "application/json", "Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -158,7 +158,7 @@ class UI:
             response = self.client.delete(
                 f"/ui/components/{namespace}/{componentUID}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -189,7 +189,7 @@ class UI:
         try:
             response = self.client.get("/ui/tiles", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

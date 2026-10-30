@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -27,7 +27,7 @@ class Rules:
             response = self.client.get(
                 "/rules", params={"prefix": prefix, "tags": tags, "summary": summary, "staticDataOnly": staticDataOnly}, headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -56,11 +56,14 @@ class Rules:
         try:
             response = self.client.post(
                 "/rules", data=json.dumps(ruleData), headers={"Content-Type": "application/json"})
-            
-            status_code = response.status_code
+
+            if isinstance(response, StatusResponse):
+                status_code = response["status"]
+                location = response.get("location")
+            else:
+                return response
 
         except requests.exceptions.HTTPError as err:
-            # Fehlerbehandlung
             status_code = err.response.status_code
             if status_code == 400:
                 return {"error": "Creation refused: Missing required parameter."}
@@ -71,13 +74,12 @@ class Rules:
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
-        
+
         if status_code == 201:
-            location = response.headers.get("Location")
             return {
                 "message": "Rule successfully created.",
                 "location": location if location else "No Location headers provided."
-            }    
+            }
         elif status_code == 400:
             return {"error": "Creation refused: Missing required parameter."}
         elif status_code == 409:
@@ -97,7 +99,7 @@ class Rules:
         try:
             response = self.client.get(f"/rules/{ruleUID}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -132,7 +134,7 @@ class Rules:
             response = self.client.put(
                 f"/rules/{ruleUID}", data=json.dumps(ruleData), headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -140,7 +142,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -150,7 +152,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -165,7 +167,7 @@ class Rules:
         try:
             response = self.client.delete(f"/rules/{ruleUID}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -173,7 +175,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -183,7 +185,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -201,7 +203,7 @@ class Rules:
             response = self.client.get(
                 f"/rules/{ruleUID}/{moduleCategory}/{moduleID}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -209,7 +211,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+                return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -219,7 +221,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+            return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -237,7 +239,7 @@ class Rules:
             response = self.client.get(
                 f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -245,7 +247,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+                return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -255,7 +257,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+            return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -274,7 +276,7 @@ class Rules:
             response = self.client.get(
                 f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}", headers={'Accept': 'text/plain'})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -282,7 +284,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+                return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -292,7 +294,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+            return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -312,7 +314,7 @@ class Rules:
             response = self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}",
                                        data=json.dumps(value), headers={'Content-Type': 'text/plain'})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -320,7 +322,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+                return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -330,7 +332,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found or does not have a module with such Category and ID."}
+            return {"error": "Rule corresponding to the given UID was not found or does not have a module with such Category and ID."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -345,7 +347,7 @@ class Rules:
         try:
             response = self.client.get(f"/rules/{ruleUID}/actions", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -353,7 +355,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -363,7 +365,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -378,7 +380,7 @@ class Rules:
         try:
             response = self.client.get(f"/rules/{ruleUID}/conditions", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -386,7 +388,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -396,7 +398,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -411,7 +413,7 @@ class Rules:
         try:
             response = self.client.get(f"/rules/{ruleUID}/config", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -419,7 +421,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -429,7 +431,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -446,7 +448,7 @@ class Rules:
             response = self.client.put(f"/rules/{ruleUID}/config", data=json.dumps(
                 configData), headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -454,7 +456,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -464,7 +466,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -481,7 +483,7 @@ class Rules:
             response = self.client.post(f"/rules/{ruleUID}/enable", data="true" if enable else "false", headers={
                                         "Content-Type": "text/plain"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -489,7 +491,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -499,7 +501,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -520,9 +522,10 @@ class Rules:
         """
         try:
             response = self.client.post(
-                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData) or {}, headers={"Accept": "application/json"})
+                f"/rules/{ruleUID}/runnow", data=json.dumps(contextData or {}),
+                headers={"Content-Type": "application/json", "Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -530,7 +533,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -540,7 +543,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -555,7 +558,7 @@ class Rules:
         try:
             response = self.client.get(f"/rules/{ruleUID}/triggers", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -563,7 +566,7 @@ class Rules:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Rule corresponding to the given UID does not found."}
+                return {"error": "Rule corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -573,7 +576,7 @@ class Rules:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Rule corresponding to the given UID does not found."}
+            return {"error": "Rule corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -590,7 +593,7 @@ class Rules:
             response = self.client.get("/rules/schedule/simulations", params={
                                        "from": fromTime, "until": untilTime}, headers={'Accept': 'application/json'})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

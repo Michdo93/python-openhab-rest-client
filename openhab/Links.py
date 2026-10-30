@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 from urllib.parse import quote
 import requests
@@ -30,9 +30,9 @@ class Links:
 
         try:
             response = self.client.get(
-                "/links", params=params, headers={"Content-Type": "application/json"})
+                "/links", params=params, headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -59,14 +59,14 @@ class Links:
 
         :return: The link with details of the item, channel UID, and configuration.
         """
-        itemName = quote(itemName, safe="")
-        channelUID = quote(channelUID, safe="")
+        itemPath = quote(itemName, safe="")
+        channelPath = quote(channelUID, safe="")
 
         try:
             response = self.client.get(
-                f"/links/{itemName}/{channelUID}", headers={"Accept": "application/json"})
+                f"/links/{itemPath}/{channelPath}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -74,7 +74,7 @@ class Links:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Content does not match the path."}
+                return {"error": "Link not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -84,7 +84,7 @@ class Links:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Content does not match the path."}
+            return {"error": "Link not found."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -98,14 +98,14 @@ class Links:
 
         :return: The API response when the link is successfully created.
         """
-        itemName = quote(itemName, safe="")
-        channelUID = quote(channelUID, safe="")
+        itemPath = quote(itemName, safe="")
+        channelPath = quote(channelUID, safe="")
 
         try:
-            response = self.client.put(f"/links/{itemName}/{channelUID}", data=json.dumps(
+            response = self.client.put(f"/links/{itemPath}/{channelPath}", data=json.dumps(
                 {"itemName": itemName, "channelUID": channelUID, "configuration": configuration}), headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -140,14 +140,14 @@ class Links:
 
         :return: The API response when the link is successfully removed.
         """
-        itemName = quote(itemName, safe="")
-        channelUID = quote(channelUID, safe="")
+        itemPath = quote(itemName, safe="")
+        channelPath = quote(channelUID, safe="")
 
         try:
             response = self.client.delete(
-                f"/links/{itemName}/{channelUID}", headers={"Content-Type": "application/json"})
+                f"/links/{itemPath}/{channelPath}", headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -184,7 +184,7 @@ class Links:
         try:
             response = self.client.delete(f"/links/{object}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -212,7 +212,7 @@ class Links:
             response = self.client.get(
                 "/links/orphans", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -239,7 +239,7 @@ class Links:
         try:
             response = self.client.post("/links/purge")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -25,7 +25,7 @@ class Persistence:
         try:
             response = self.client.get("/persistence", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -54,7 +54,7 @@ class Persistence:
         try:
             response = self.client.get(f"/persistence/{serviceID}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -94,7 +94,7 @@ class Persistence:
                 headers={"Content-Type": "application/json", "Accept": "application/json"}
             )
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -133,7 +133,7 @@ class Persistence:
         try:
             response = self.client.delete(f"/persistence/{serviceID}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -159,31 +159,31 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItemsFromService(self, serviceID: str = None) -> dict:
+    def getItemsFromService(self, serviceID: str = None, itemName: str = None) -> dict:
         """
         Gets a list of items available via a specific persistence service.
 
-        :param serviceID: The ID of the persistence service.
+        :param serviceID: Optional; The ID of the persistence service (default service if omitted).
+        :param itemName: Optional; Only return information for this item.
 
         :return: A list of items with their last and earliest timestamps.
         """
         try:
-            url = "/persistence/items"
+            response = self.client.get("/persistence/items", headers={"Accept": "application/json"},
+                                       params={"serviceId": serviceID, "itemName": itemName})
 
-            if serviceID:
-                url += f"?serviceID={serviceID}"
-
-            response = self.client.get(url, headers={"Accept": "application/json"})
-
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
 
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
-            if status_code != 200:
-                return {"error": f"HTTP error {status_code}: {str(err)}"}
+            if status_code == 404:
+                return {"error": "Unknown persistence service."}
+            if status_code == 405:
+                return {"error": "The persistence service does not provide item information."}
+            return {"error": f"HTTP error {status_code}: {str(err)}"}
 
         except requests.exceptions.RequestException as err:
             return {"error": f"Request error: {str(err)}"}
@@ -193,24 +193,37 @@ class Persistence:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItemPersistenceData(self, itemName: str, serviceID: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50, boundary: bool = False, itemState: bool = False) -> dict:
+    def getItemPersistenceData(self, itemName: str, serviceID: str = None, startTime: str = None, endTime: str = None,
+                               page: int = None, pageLength: int = None, boundary: bool = False,
+                               itemState: bool = False, displayState: bool = None, language: str = None) -> dict:
         """
         Gets item persistence data from the persistence service.
 
         :param itemName: The name of the item.
-        :param serviceID: The ID of the persistence service.
-        :param startTime: The start time for the data. Defaults to 1 day before `endTime`.
-        :param endTime: The end time for the data. Defaults to the current time.
-        :param page: The page of data. Defaults to `1`.
-        :param pageLength: The number of data points per page. Defaults to `50`.
+        :param serviceID: Optional; The ID of the persistence service. If omitted, the default service is used.
+        :param startTime: Optional; Start time (ISO 8601, e.g. "2026-10-30T00:00:00.000Z"). Defaults to 1 day before `endTime`.
+        :param endTime: Optional; End time (ISO 8601). Defaults to the current time.
+        :param page: Optional; Page number, starting at 0. Paging is only active if `pageLength` is set as well.
+        :param pageLength: Optional; Number of data points per page. Without it, all data points are returned.
+        :param boundary: Optional; Also return the values just before and after the time range (default: False).
+        :param itemState: Optional; Add the current item state at the end of the series (default: False).
+        :param displayState: Optional; Add a formatted display state to every data point (openHAB 5.0+).
+        :param language: Optional; Value for the "Accept-Language" header.
 
         :return: The retrieved data points of the item.
         """
+        if pageLength is not None and page is None:
+            page = 0
+        headers = {"Accept": "application/json"}
+        if language:
+            headers["Accept-Language"] = language
+
         try:
             response = self.client.get(f"/persistence/items/{itemName}", params={
-                                       "serviceID": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength, "boundary": boundary, "itemState": itemState}, headers={"Accept": "application/json"})
+                                       "serviceId": serviceID, "starttime": startTime, "endtime": endTime, "page": page, "pagelength": pageLength, "boundary": boundary, "itemState": itemState,
+                                       "displayState": displayState}, headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -245,9 +258,9 @@ class Persistence:
         """
         try:
             response = self.client.put(f"/persistence/items/{itemName}", params={
-                                       "serviceID": serviceID, "time": time, "state": state})
+                                       "serviceId": serviceID, "time": time, "state": state})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -282,9 +295,9 @@ class Persistence:
         """
         try:
             response = self.client.delete(f"/persistence/items/{itemName}", params={
-                                          "serviceID": serviceID, "starttime": startTime, "endtime": endTime}, headers={"Accept": "application/json"})
+                                          "serviceId": serviceID, "starttime": startTime, "endtime": endTime}, headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

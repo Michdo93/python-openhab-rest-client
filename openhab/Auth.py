@@ -1,5 +1,5 @@
 from urllib.parse import urlencode
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -26,7 +26,7 @@ class Auth:
         try:
             response = self.client.get("/auth/apitokens", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -65,7 +65,7 @@ class Auth:
             response = self.client.delete(
                 f"/auth/apitokens/{tokenName}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -111,7 +111,7 @@ class Auth:
             response = self.client.post(
                 "/auth/logout", headers=headers, data=data)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -148,7 +148,7 @@ class Auth:
         try:
             response = self.client.get("/auth/sessions", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -219,7 +219,7 @@ class Auth:
             response = self.client.post(
                 "/auth/token", headers=headers, data=encodedBody, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

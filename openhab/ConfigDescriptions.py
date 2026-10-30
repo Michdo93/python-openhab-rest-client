@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -32,7 +32,7 @@ class ConfigDescriptions:
             response = self.client.get(
                 "/config-descriptions", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -67,7 +67,7 @@ class ConfigDescriptions:
             response = self.client.get(
                 f"/config-descriptions/{uri}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

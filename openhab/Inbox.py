@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -23,7 +23,7 @@ class Inbox:
             response = self.client.get(
                 "/inbox", headers={"Accept": "application/json"}, params={"includeIgnored": str(includeIgnored).lower()})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -52,7 +52,7 @@ class Inbox:
         try:
             response = self.client.delete(f"/inbox/{thingUID}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -87,9 +87,9 @@ class Inbox:
         """
         try:
             response = self.client.post(f"/inbox/{thingUID}/approve", headers={"Accept-Language": language, "Content-Type": "text/plain"} if language else {
-                                        "Content-Type": "text/plain"}, params={"newThingID": newThingID} if newThingID else {}, data=thingLabel)
+                                        "Content-Type": "text/plain"}, params={"newThingId": newThingID} if newThingID else {}, data=thingLabel)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -130,7 +130,7 @@ class Inbox:
         try:
             response = self.client.post(f"/inbox/{thingUID}/ignore")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -159,7 +159,7 @@ class Inbox:
         try:
             response = self.client.post(f"/inbox/{thingUID}/unignore")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

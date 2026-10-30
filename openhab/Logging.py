@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -21,7 +21,7 @@ class Logging:
         try:
             response = self.client.get("/logging", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -51,7 +51,7 @@ class Logging:
         try:
             response = self.client.get(f"/logging/{loggerName}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -87,7 +87,7 @@ class Logging:
             response = self.client.put(
                 f"/logging/{loggerName}", data=json.dumps(data), headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -120,7 +120,7 @@ class Logging:
         try:
             response = self.client.delete(f"/logging/{loggerName}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

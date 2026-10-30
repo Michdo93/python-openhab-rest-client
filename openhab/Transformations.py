@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -21,7 +21,7 @@ class Transformations:
         try:
             response = self.client.get("/transformations", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -50,7 +50,7 @@ class Transformations:
         try:
             response = self.client.get(f"/transformations/{transformationUID}", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -85,7 +85,7 @@ class Transformations:
             response = self.client.put(f"/transformations/{transformationUID}", data=json.dumps(
                 transformationData), headers={"Content-Type": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -123,7 +123,7 @@ class Transformations:
             response = self.client.delete(
                 f"/transformations/{transformationUID}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -158,7 +158,7 @@ class Transformations:
         try:
             response = self.client.get("/transformations/services", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

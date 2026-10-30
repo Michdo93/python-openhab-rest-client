@@ -1,7 +1,28 @@
 import requests
 
+
+class StatusResponse(dict):
+    """
+    Marker for responses without a body (e.g. ``200 OK`` with an empty body,
+    ``201 Created``, ``202 Accepted``).
+
+    It is a plain ``dict`` with the keys ``status`` (HTTP status code) and,
+    if the server sent one, ``location``. Because it is its own type, it can
+    never be confused with a JSON response that happens to contain a
+    ``status`` field (e.g. a thing status or a rule).
+    """
+
+    @property
+    def status(self) -> int:
+        return self["status"]
+
+
 class OpenHABClient:
-    def __init__(self, url: str, username: str = None, password: str = None, token: str = None):
+    DEFAULT_TIMEOUT = 10
+    SSE_CONNECT_TIMEOUT = 10
+
+    def __init__(self, url: str, username: str = None, password: str = None, token: str = None,
+                 timeout: float = DEFAULT_TIMEOUT, verify=True):
         """
         Initializes the OpenHABClient instance.
 
@@ -9,50 +30,43 @@ class OpenHABClient:
         :param username: Optional; The username for Basic Authentication (default is None).
         :param password: Optional; The password for Basic Authentication (default is None).
         :param token: Optional; The Bearer Token for Token-based Authentication (default is None).
+        :param timeout: Optional; Timeout in seconds for normal requests (default is 10).
+        :param verify: Optional; TLS verification, passed on to requests (default is True).
         """
         self.url = url.rstrip("/")  # Remove trailing slash if present
         self.username = username
         self.password = password
         self.token = token
+        self.timeout = timeout
         self.isCloud = False
         self.isLoggedIn = False
+        self.auth = None
 
         self.session = requests.Session()
+        self.session.verify = verify
 
         if self.token:
             # Use Token-based authentication
-            self.session.headers.update({
-                "Authorization": f"Bearer {self.token}",
-                "Content-Type": "application/json"
-            })
+            self.session.headers.update({"Authorization": f"Bearer {self.token}"})
         elif self.username and self.password:
-            # Use Basic Authentication
+            # Use Basic Authentication (also used by myopenHAB)
             self.auth = (self.username, self.password)
             self.session.auth = self.auth
-        else:
-            self.auth = None
 
         self.__login()
 
     def __login(self):
         """
-        Attempts to log in to the openHAB server.
+        Checks whether the openHAB server is reachable and the credentials are accepted.
 
         If the server is "myopenhab.org", it sets the connection to the cloud service.
-        Otherwise, it prepares a local connection and verifies login credentials.
         """
-        if self.url == "https://myopenhab.org":
-            self.isCloud = True
-        else:
-            self.isCloud = False
+        self.isCloud = self.url.rstrip("/") in ("https://myopenhab.org", "https://home.myopenhab.org")
 
-        # Check connection and authentication
         try:
-            loginResponse = self.session.get(self.url + "/rest", timeout=8)
+            loginResponse = self.session.get(self.url + "/rest/", timeout=self.timeout)
             loginResponse.raise_for_status()
-
-            if loginResponse.ok or loginResponse.status_code == 200:
-                self.isLoggedIn = True
+            self.isLoggedIn = loginResponse.ok
         except requests.exceptions.HTTPError as errh:
             print(f"HTTP error occurred: {errh}")
         except requests.exceptions.ConnectionError as errc:
@@ -62,128 +76,136 @@ class OpenHABClient:
         except requests.exceptions.RequestException as err:
             print(f"Request exception occurred: {err}")
 
-    def __executeRequest(self, headers: dict = None, resourcePath: str = None, method: str = None, data=None, params=None):
+    def _buildUrl(self, resourcePath: str) -> str:
+        """Builds the absolute URL for a resource path (with or without the /rest prefix)."""
+        if resourcePath.startswith("http://") or resourcePath.startswith("https://"):
+            return resourcePath
+        if not resourcePath.startswith("/"):
+            resourcePath = "/" + resourcePath
+        if not (resourcePath == "/rest" or resourcePath.startswith("/rest/") or resourcePath.startswith("/rest?")):
+            resourcePath = f"/rest{resourcePath}"
+        # "#" is valid inside openHAB UIDs (channel and action UIDs), but would start a URL fragment.
+        path, sep, query = resourcePath.partition("?")
+        resourcePath = path.replace("#", "%23") + sep + query
+        return f"{self.url}{resourcePath}"
+
+    @staticmethod
+    def _cleanParams(params):
+        """Removes parameters whose value is None and converts booleans to 'true'/'false'."""
+        if not params:
+            return None
+        clean = {}
+        for key, value in params.items():
+            if value is None:
+                continue
+            if isinstance(value, bool):
+                value = str(value).lower()
+            clean[key] = value
+        return clean
+
+    @staticmethod
+    def _raiseForStatus(response):
+        """
+        Like response.raise_for_status(), but adds the error message that openHAB
+        sends in the body ({"error": {"message": ..., "http-code": ...}}).
+        """
+        if response.status_code < 400:
+            return
+        message = ""
+        try:
+            body = response.json()
+            if isinstance(body, dict):
+                error = body.get("error")
+                message = error.get("message", "") if isinstance(error, dict) else str(error or "")
+        except ValueError:
+            message = (response.text or "").strip()[:200]
+        kind = "Client Error" if response.status_code < 500 else "Server Error"
+        text = f"{response.status_code} {kind}: {response.reason} for url: {response.url}"
+        if message:
+            text += f" ({message})"
+        raise requests.exceptions.HTTPError(text, response=response)
+
+    def __executeRequest(self, headers: dict = None, resourcePath: str = None, method: str = None, data=None,
+                         params=None):
         """
         Executes an HTTP request to the openHAB server.
 
-        :param headers: Optional; A dictionary of headers to be sent with the request.
+        :param headers: Optional; A dictionary of headers to be sent with this request only.
         :param resourcePath: The path of the resource to interact with.
         :param method: The HTTP method (GET, POST, PUT, DELETE).
         :param data: Optional; The data to send in the request (for POST and PUT requests).
-        :return: The response of the request, either as JSON or plain text.
+        :param params: Optional; Query parameters. None values are dropped.
+        :return: The decoded JSON, the response text, or a StatusResponse for empty bodies.
 
         :raises ValueError: If the method is invalid or if the resource path is not provided.
+        :raises requests.exceptions.HTTPError: For 4xx/5xx responses.
         """
         if not resourcePath or not method:
-            raise ValueError(
-                'You must specify a valid resource path and HTTP method!')
+            raise ValueError('You must specify a valid resource path and HTTP method!')
 
         method = method.lower()
-        headers = headers or {}
-
-        if resourcePath[0] != "/":
-            resourcePath = "/" + resourcePath
-
-        # Ensure resource path starts with "/rest"
-        if not resourcePath.startswith("/rest"):
-            resourcePath = f"/rest{resourcePath}"
-        
-        url = f"{self.url}{resourcePath}"
-
-        # Update session headers
-        self.session.headers.update(headers)
-        """
-        try:
-            url = f"{self.url}{resourcePath}"
-            if method == "get":
-                response = self.session.get(url, params=params, timeout=5)
-            elif method == "post":
-                response = self.session.post(
-                    url, data=data, params=params, timeout=5)
-            elif method == "put":
-                response = self.session.put(
-                    url, data=data, params=params, timeout=5)
-            elif method == "delete":
-                response = self.session.delete(
-                    url, data=data, params=params, timeout=5)
-            else:
-                raise ValueError("Invalid HTTP method provided!")
-
-            response.raise_for_status()
-
-            # Prüfen, ob die Antwort JSON enthält
-            if response.text.strip():  # Wenn die Antwort nicht leer ist
-                if "application/json" in response.headers.get("Content-Type", ""):
-                    return response.json()  # JSON dekodieren
-                else:
-                    return response.text  # Anderen Text zurückgeben
-
-            # Nur Status zurückgeben, wenn keine Antwort vorhanden ist
-            return {"status": response.status_code}
-        except requests.exceptions.RequestException as err:
-            print(f"Request error occurred: {err}")
-            raise
-        """
-        if method == "get":
-            response = self.session.get(url, params=params, headers=headers, timeout=5)
-        elif method == "post":
-            response = self.session.post(url, data=data, params=params, headers=headers, timeout=5)
-        elif method == "put":
-            response = self.session.put(url, data=data, params=params, headers=headers, timeout=5)
-        elif method == "delete":
-            response = self.session.delete(url, data=data, params=params, headers=headers, timeout=5)
-        else:
+        if method not in ("get", "post", "put", "delete"):
             raise ValueError("Invalid HTTP method provided!")
-        
-        location = response.headers.get("Location")
 
-        if location:
-            return response
-        
-        # Pass on mistakes directly instead of catching them here!        
-        response.raise_for_status()
+        url = self._buildUrl(resourcePath)
+        # Headers are only used for this request – the session headers stay untouched.
+        headers = {k: v for k, v in (headers or {}).items() if v is not None}
+        if isinstance(data, str):
+            if data and not any(k.lower() == "content-type" for k in headers):
+                # openHAB rejects bodies without a matching media type (415)
+                isJson = data.lstrip()[:1] in ("{", "[")
+                headers["Content-Type"] = "application/json" if isJson else "text/plain"
+            data = data.encode("utf-8")
 
-        # If the response is empty, but there was still no error, we return the status code
-        if not response.text.strip():
-            return {"status": response.status_code}
-                
-        # Return JSON response, if available
-        if "application/json" in response.headers.get("Content-Type", ""):
-            return response.json()
-                
+        response = self.session.request(method, url, data=data, params=self._cleanParams(params),
+                                        headers=headers, timeout=self.timeout)
+
+        # Pass on errors directly – the calling classes translate them.
+        self._raiseForStatus(response)
+
+        if "charset" not in response.headers.get("Content-Type", "").lower():
+            response.encoding = "utf-8"  # openHAB sends UTF-8 (e.g. "21.5 °C") without declaring it
+
+        if not response.content or not response.text.strip():
+            result = StatusResponse(status=response.status_code)
+            if response.headers.get("Location"):
+                result["location"] = response.headers["Location"]
+            return result
+
+        if "json" in response.headers.get("Content-Type", ""):
+            try:
+                return response.json()
+            except ValueError:
+                return response.text
+
         return response.text  # Fallback: Return text response
 
-    def __executeSSE(self, url: str):
+    def executeSSE(self, url: str, headers: dict = None, params: dict = None):
         """
-        Executes a Server-Sent Events (SSE) request.
+        Opens a Server-Sent Events (SSE) stream.
 
-        :param url: The URL to connect to for the SSE stream.
+        The stream uses the session of this client, so token and Basic
+        Authentication are sent as well. There is no read timeout, because an
+        event stream may stay silent for a long time (openHAB sends an ALIVE
+        message every few seconds).
 
-        :return: The response object with the SSE stream.
+        :param url: Absolute URL or resource path (e.g. "/rest/events?topics=openhab/items/*/statechanged").
+        :param headers: Optional; additional headers.
+        :param params: Optional; query parameters.
+
+        :return: The streaming requests.Response object (iterate with iter_lines()).
+        :raises requests.exceptions.HTTPError: If the server rejects the request.
         """
-        self.session.headers.update({})
-        if self.username is not None and self.password is not None:
-            return requests.get(url, auth=self.auth, headers={}, stream=True)
-        else:
-            return requests.get(url, headers={}, stream=True)
+        # identity: a compressed stream would be flushed late, events would arrive delayed
+        requestHeaders = {"Accept": "text/event-stream", "Accept-Encoding": "identity", "Cache-Control": "no-cache"}
+        requestHeaders.update({k: v for k, v in (headers or {}).items() if v is not None})
+        response = self.session.get(self._buildUrl(url), headers=requestHeaders, params=self._cleanParams(params),
+                                    stream=True, timeout=(self.SSE_CONNECT_TIMEOUT, None))
+        self._raiseForStatus(response)
+        return response
 
-    def __executeSSE(self, url: str, headers: dict = {}):
-        """
-        Executes a Server-Sent Events (SSE) request with custom headers.
-
-        :param url: The URL to connect to for the SSE stream.
-        :param headers: A dictionary of headers to include in the request.
-
-        :return: The response object with the SSE stream.
-        """
-        if headers is None:
-            headers = {}
-
-        self.session.headers.update(headers)
-        if self.username is not None and self.password is not None:
-            return requests.get(url, auth=self.auth, headers=headers, stream=True)
-        else:
-            return requests.get(url, headers=headers, stream=True)
+    # Backwards compatibility: older versions called the name-mangled private method.
+    _OpenHABClient__executeSSE = executeSSE
 
     def get(self, endpoint: str, headers: dict = None, params: dict = None):
         """
@@ -235,3 +257,13 @@ class OpenHABClient:
         :return: The response from the DELETE request.
         """
         return self.__executeRequest(headers, endpoint, "delete", data=data, params=params)
+
+    def close(self):
+        """Closes the underlying HTTP session."""
+        self.session.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()

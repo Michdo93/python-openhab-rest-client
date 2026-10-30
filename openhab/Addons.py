@@ -1,5 +1,5 @@
 import json
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import urllib.parse
 import requests
 
@@ -30,7 +30,7 @@ class Addons:
         try:
             response = self.client.get("/addons", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -71,7 +71,7 @@ class Addons:
             response = self.client.get(
                 f"/addons/{addonID}", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -108,7 +108,7 @@ class Addons:
             response = self.client.get(
                 f"/addons/{addonID}/config", headers={"Accept": "application/json"}, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -144,16 +144,14 @@ class Addons:
 
         :return: A dictionary containing the updated configuration.
         """
-        data = {
-            **configData}  # Create a copy to avoid modifying the original dictionary
-        if serviceID:
-            data["serviceId"] = serviceID
+        data = dict(configData)
 
         try:
             response = self.client.put(
-                f"/addons/{addonID}/config", headers={"Content-Type": "application/json", "Accept": "application/json"}, data=json.dumps(data))
+                f"/addons/{addonID}/config", headers={"Content-Type": "application/json", "Accept": "application/json"},
+                data=json.dumps(data), params={"serviceId": serviceID})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -192,9 +190,9 @@ class Addons:
 
         try:
             response = self.client.post(
-                f"/addons/{addonID}/install", data=data)
+                f"/addons/{addonID}/install", params=data)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -229,9 +227,9 @@ class Addons:
 
         try:
             response = self.client.post(
-                f"/addons/{addonID}/uninstall", data=data)
+                f"/addons/{addonID}/uninstall", params=data)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -269,7 +267,7 @@ class Addons:
             response = self.client.get(
                 "/addons/services", headers=headers, params=None)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -303,7 +301,7 @@ class Addons:
             response = self.client.get(
                 "/addons/suggestions", headers=headers, params=None)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -338,7 +336,7 @@ class Addons:
             response = self.client.get(
                 "/addons/types", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -374,7 +372,7 @@ class Addons:
         try:
             response = self.client.post(endpoint, data=None)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -26,7 +26,7 @@ class Audio:
         try:
             response = self.client.get("/audio/defaultsink", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -63,7 +63,7 @@ class Audio:
         try:
             response = self.client.get("/audio/defaultsource", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -100,7 +100,7 @@ class Audio:
         try:
             response = self.client.get("/audio/sinks", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -133,7 +133,7 @@ class Audio:
         try:
             response = self.client.get("/audio/sources", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

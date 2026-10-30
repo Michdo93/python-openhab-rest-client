@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -30,7 +30,7 @@ class Things:
             response = self.client.get(
                 '/things', params={'summary': summary, 'staticDataOnly': staticDataOnly}, headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -66,7 +66,7 @@ class Things:
             response = self.client.post(
                 '/things', data=json.dumps(thingData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -108,7 +108,7 @@ class Things:
         try:
             response = self.client.get(f'/things/{thingUID}', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -149,7 +149,7 @@ class Things:
             response = self.client.put(
                 f'/things/{thingUID}', data=json.dumps(thingData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -189,7 +189,7 @@ class Things:
             response = self.client.delete(f'/things/{thingUID}', params={'force': force}, headers={
                                           'Accept-Language': language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -236,7 +236,7 @@ class Things:
             response = self.client.put(
                 f'/things/{thingUID}/config', data=json.dumps(configurationData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -283,7 +283,7 @@ class Things:
             response = self.client.get(
                 f'/things/{thingUID}/config/status', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -323,7 +323,7 @@ class Things:
             response = self.client.put(
                 f'/things/{thingUID}/enable', data="true" if enabled else "false", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -365,7 +365,7 @@ class Things:
             response = self.client.put(
                 f'/things/{thingUID}/firmware/{firmwareVersion}', headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -408,7 +408,7 @@ class Things:
             response = self.client.get(
                 f'/things/{thingUID}/firmware/status', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -445,7 +445,7 @@ class Things:
             response = self.client.get(
                 f'/things/{thingUID}/firmwares', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -482,7 +482,7 @@ class Things:
             response = self.client.get(
                 f'/things/{thingUID}/status', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -27,7 +27,7 @@ class Tags:
         try:
             response = self.client.get("/tags", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -63,7 +63,7 @@ class Tags:
             response = self.client.post(
                 "/tags", data=json.dumps(tagData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -105,7 +105,7 @@ class Tags:
         try:
             response = self.client.get(f"/tags/{tagID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -146,7 +146,7 @@ class Tags:
             response = self.client.put(
                 f"/tags/{tagID}", data=json.dumps(tagData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -184,7 +184,7 @@ class Tags:
         try:
             response = self.client.delete(f"/tags/{tagID}", headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

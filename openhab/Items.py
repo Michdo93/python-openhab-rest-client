@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -20,7 +20,8 @@ class Items:
         recursive: bool = False,
         fields: str = None,
         staticDataOnly: bool = False,
-        language: str = None
+        language: str = None,
+        parents: bool = None
     ):
         """
         Get all available items.
@@ -32,8 +33,9 @@ class Items:
         :param fields: Optional; Limit to specific fields (comma-separated).
         :param staticDataOnly: Optional; Only returns cached data (default: False).
         :param language: Optional; Language filter for headers "Accept-Language".
+        :param parents: Optional; Include the parent groups of each item (openHAB 4.1+).
 
-        :return: A dictionary or list containing the item data as returned by the API.
+        :return: A list containing the item data as returned by the API.
         """
         headers = {"Accept": "application/json"}
         if language:
@@ -46,6 +48,7 @@ class Items:
             "recursive": str(recursive).lower(),
             "fields": fields,
             "staticDataOnly": str(staticDataOnly).lower(),
+            "parents": parents,
         }
 
         # Remove None values from parameters
@@ -55,7 +58,7 @@ class Items:
         try:
             response = self.client.get("/items", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -85,7 +88,7 @@ class Items:
             response = self.client.put(
                 "/items", data=json.dumps(items), headers={"Content-Type": "application/json", "Accept": "*/*"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -107,7 +110,8 @@ class Items:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getItem(self, itemName: str, metadata: str = ".*", recursive: bool = True, language: str = None):
+    def getItem(self, itemName: str, metadata: str = ".*", recursive: bool = True, language: str = None,
+                parents: bool = None):
         """
         Gets a single item.
 
@@ -125,13 +129,14 @@ class Items:
         params = {
             "metadata": metadata,
             "recursive": str(recursive).lower(),
+            "parents": parents,
         }
 
         try:
             response = self.client.get(
                 f"/items/{itemName}", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -163,7 +168,7 @@ class Items:
 
         :return: A response object or confirmation that the item was successfully added or updated.
         """
-        headers = {"Content-Type": "application/json", "Accept": "*/"}
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
         if language:
             headers["Accept-Language"] = language
 
@@ -171,7 +176,7 @@ class Items:
             response = self.client.put(
                 f"/items/{itemName}", headers=headers, data=json.dumps(itemData))
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -201,20 +206,21 @@ class Items:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def sendCommand(self, itemName: str, command: str):
+    def sendCommand(self, itemName: str, command: str, source: str = None):
         """
         Sends a command to an item.
 
         :param itemName: The name of the item.
         :param command: The command to be sent (e.g., ON, OFF).
+        :param source: Optional; Source of the command, shown in the event (openHAB 4.1+).
 
         :return: A response object or confirmation that the command was successfully sent.
         """
         try:
-            response = self.client.post(f"/items/{itemName}", headers={
-                                        "Content-Type": "text/plain"}, data=command)
+            response = self.client.post(f"/items/{itemName}", headers={"Content-Type": "text/plain"},
+                                        data=str(command), params={"source": source})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -222,7 +228,7 @@ class Items:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 400:
-                return {"error": "Item command null."}
+                return {"error": "Invalid command for this item."}
             elif status_code == 404:
                 return {"error": "Item not found."}
             else:
@@ -236,11 +242,11 @@ class Items:
         elif status_code == 404:
             return {"error": "Item not found."}
         elif status_code == 400:
-            return {"error": "Item command null."}
+            return {"error": "Invalid command for this item."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def postUpdate(self, itemName: str, state: str):
+    def postUpdate(self, itemName: str, state: str, source: str = None):
         """
         Updates the state of an item.
 
@@ -249,7 +255,7 @@ class Items:
 
         :return: A response object or confirmation that the state was successfully updated.
         """
-        return self.updateItemState(itemName, state)
+        return self.updateItemState(itemName, state, source=source)
 
     def deleteItem(self, itemName: str):
         """
@@ -262,7 +268,7 @@ class Items:
         try:
             response = self.client.delete(f"/items/{itemName}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -297,7 +303,7 @@ class Items:
             response = self.client.put(
                 f"/items/{itemName}/members/{memberItemName}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -336,7 +342,7 @@ class Items:
             response = self.client.delete(
                 f"/items/{itemName}/members/{memberItemName}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -376,7 +382,7 @@ class Items:
             response = self.client.put(f"/items/{itemName}/metadata/{namespace}", headers={
                                        "Content-Type": "application/json"}, data=json.dumps(metadata))
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -421,7 +427,7 @@ class Items:
             response = self.client.delete(
                 f"/items/{itemName}/metadata/{namespace}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -464,7 +470,7 @@ class Items:
             response = self.client.get(
                 f"/items/{itemName}/metadata/namespaces", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -504,7 +510,7 @@ class Items:
             response = self.client.get(
                 f"/items/{itemName}/semantic/{semanticClass}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -538,7 +544,7 @@ class Items:
         try:
             response = self.client.get(f"/items/{itemName}/state", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -560,7 +566,7 @@ class Items:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def updateItemState(self, itemName: str, state: str, language: str = None):
+    def updateItemState(self, itemName: str, state: str, language: str = None, source: str = None):
         """
         Updates the state of an item.
 
@@ -576,9 +582,9 @@ class Items:
 
         try:
             response = self.client.put(
-                f"/items/{itemName}/state", headers=headers, data=state)
+                f"/items/{itemName}/state", headers=headers, data=str(state), params={"source": source})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -586,7 +592,7 @@ class Items:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 400:
-                return {"error": "Item state null."}
+                return {"error": "Invalid state for this item."}
             elif status_code == 404:
                 return {"error": "Item not found."}
             else:
@@ -600,7 +606,7 @@ class Items:
         elif status_code == 404:
             return {"error": "Item not found."}
         elif status_code == 400:
-            return {"error": "Item state null."}
+            return {"error": "Invalid state for this item."}
 
         return {"error": f"Unexpected response: {status_code}"}
 
@@ -616,7 +622,7 @@ class Items:
         try:
             response = self.client.put(f"/items/{itemName}/tags/{tag}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -654,7 +660,7 @@ class Items:
         try:
             response = self.client.delete(f"/items/{itemName}/tags/{tag}")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -689,7 +695,7 @@ class Items:
         try:
             response = self.client.post("/items/metadata/purge")
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

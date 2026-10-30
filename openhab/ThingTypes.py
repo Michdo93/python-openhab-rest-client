@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -28,7 +28,7 @@ class ThingTypes:
             response = self.client.get(
                 "/thing-types", headers=headers, params={"bindingId": bindingID} if bindingID else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -63,7 +63,7 @@ class ThingTypes:
             response = self.client.get(
                 f"/thing-types/{thingTypeUID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

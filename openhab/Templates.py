@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -25,7 +25,7 @@ class Templates:
         try:
             response = self.client.get("/templates", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -60,7 +60,7 @@ class Templates:
             response = self.client.get(
                 f"/templates/{templateUID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -68,7 +68,7 @@ class Templates:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 404:
-                return {"error": "Template corresponding to the given UID does not found."}
+                return {"error": "Template corresponding to the given UID was not found."}
             else:
                 return {"error": f"HTTP error {status_code}: {str(err)}"}
 
@@ -78,6 +78,6 @@ class Templates:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 404:
-            return {"error": "Template corresponding to the given UID does not found."}
+            return {"error": "Template corresponding to the given UID was not found."}
 
         return {"error": f"Unexpected response: {status_code}"}

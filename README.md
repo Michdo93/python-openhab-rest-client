@@ -41,10 +41,13 @@ Supports both Server-Sent Events (SSE) and regular REST requests. SSE is used fo
 
 ## Requirements
 
-- Python 3.x
+- Python 3.8 or newer
 - `requests`
 - `aiohttp`
-- `json`
+
+Tested against openHAB 5.2.3 (Java 21). The library also works with openHAB 4.x;
+parameters that were added in later openHAB versions (e.g. `source`, `parents`,
+`displayState`) are only sent if you pass them.
 
 ## Installation
 
@@ -117,6 +120,32 @@ async def main():
 asyncio.run(main())
 ```
 
+#### Return values and errors
+
+All methods follow the same conventions – in the synchronous and in the asynchronous classes:
+
+| Situation | Return value |
+|---|---|
+| openHAB answers with JSON | the decoded JSON (`dict` or `list`) |
+| openHAB answers with plain text (e.g. `getItemState`) | `str` |
+| openHAB answers without a body (e.g. `sendCommand`) | `{"message": "..."}` |
+| openHAB rejects the request (4xx/5xx) | `{"error": "..."}` – including openHAB's own error message if it sent one |
+| network error, timeout | `{"error": "Request error: ..."}` |
+
+So you can always check for errors like this:
+
+```python
+result = itemsAPI.sendCommand("Livingroom_Light", "ON")
+if isinstance(result, dict) and "error" in result:
+    print("openHAB rejected the command:", result["error"])
+```
+
+The low-level methods `client.get/post/put/delete` return the JSON, the text or – for
+responses without a body – a `StatusResponse` (a `dict` like `{"status": 202}`, with
+`"location"` if openHAB sent a `Location` header). They raise
+`requests.exceptions.HTTPError` (sync) or `aiohttp.ClientResponseError` (async) for
+4xx/5xx responses.
+
 #### Server-sent Events (SSE) requests
 
 All normal REST requests are static. This means that they do not react to status changes. You would therefore have to send several REST requests in succession (polling). Or you can use the various events from openHAB. This can be done using server-sent events (SSE) without polling. The server sends a message to the client exactly when it can make something available. With polling, on the other hand, you would have to constantly send requests to the server, which would significantly increase the network and server load.
@@ -145,6 +174,50 @@ with response as events:
                 print(data)
             except json.decoder.JSONDecodeError:
                 print("Event could not be converted to JSON")
+```
+
+**Tip:** use the helpers `iterSSEEvents(response)` / `iterSSELines(response)` (and
+`aiterSSEEvents` / `aiterSSELines` for the async client). `response.iter_lines()` with its
+default arguments may hand out an event only when the *next* data arrives, i.e. seconds
+late. `iterSSEEvents` also decodes the payload:
+
+```python
+from openhab import OpenHABClient, ItemEvents, iterSSEEvents
+
+client = OpenHABClient(url="http://127.0.0.1:8080", token="oh.openhab...")
+with ItemEvents(client).ItemStateChangedEvent() as stream:
+    for event in iterSSEEvents(stream):
+        print(event["topic"], event["payload"]["value"])
+```
+
+Remember that the `payload` of every event is itself a JSON string and has to be
+decoded a second time. openHAB also sends `{"type": "ALIVE", ...}` messages every few
+seconds – they have no `topic` and can be used as a heartbeat. The wildcard `*` in a
+topic also matches slashes, so `openhab/items/*/statechanged` includes the state
+changes of group items (`openhab/items/<group>/<member>/statechanged`).
+
+The SSE stream uses the session of the client, i.e. token and Basic Authentication
+are sent as well. If openHAB rejects the stream (e.g. `401`), the event methods return
+`{"error": ...}` instead of a stream.
+
+Asynchronous variant:
+
+```python
+import asyncio, json
+from openhab import AsyncOpenHABClient, AsyncItemEvents
+
+async def main():
+    async with AsyncOpenHABClient(url="http://127.0.0.1:8080", token="oh.openhab...") as client:
+        response = await AsyncItemEvents(client).ItemStateChangedEvent("Livingroom_Light")
+        async for line in response.content:
+            line = line.decode().strip()
+            if line.startswith("data:"):
+                event = json.loads(line[5:])
+                if "topic" in event:
+                    print(event["topic"], json.loads(event["payload"]))
+        response.close()
+
+asyncio.run(main())
 ```
 
 ### Tests
@@ -179,6 +252,33 @@ itemsTest.testSendCommand("testSwitch", "ON")
 
 However, both would also really execute a sendCommand in openHAB. The test classes test whether a function can be executed. In the end, it can only not be executed if the endpoint does not exist or has been implemented incorrectly. However, a non-existent endpoint can also occur, for example, if the name of the item is incorrect.
 
+### Automated tests (pytest)
+
+`tests_pytest/` contains automated tests:
+
+- `test_offline.py` runs without openHAB (URL building, `StatusResponse`, parity between
+  the synchronous and the generated asynchronous classes).
+- `test_integration.py` runs against a real openHAB instance. It is skipped unless
+  `OPENHAB_TEST_URL` and `OPENHAB_TEST_TOKEN` (an API token of an administrator) are set.
+  The tests create and delete their own items, rules, tags and things (all prefixed with
+  `PyTest`) and only send commands to these test items.
+
+```sh
+pip install -e . pytest
+pytest tests_pytest                        # offline tests only
+OPENHAB_TEST_URL=http://127.0.0.1:8080 OPENHAB_TEST_TOKEN=oh.xxx pytest tests_pytest -v
+```
+
+### Development: synchronous and asynchronous classes
+
+The synchronous classes in `openhab/*.py` are the single source of truth. The
+asynchronous classes `openhab/Async*.py` are generated from them, so both always have
+the same methods, parameters, return values and error messages:
+
+```sh
+python tools/generate_async.py
+```
+
 ## Full list of Methods
 
 ---
@@ -194,7 +294,7 @@ However, both would also really execute a sendCommand in openHAB. The test class
 ```python
 from openhab import OpenHABClient
 
-OpenHABClient(url: str, username: str = None, password: str = None, token: str = None)
+OpenHABClient(url: str, username: str = None, password: str = None, token: str = None, timeout: float = 10, verify=True)
 ```
 
 ###### Parameters:
@@ -310,7 +410,7 @@ Errors during requests are caught and logged, with appropriate exception handlin
 ```python
 from openhab import AsyncOpenHABClient
 
-AsyncOpenHABClient(url: str, username: str = None, password: str = None, token: str = None)
+AsyncOpenHABClient(url: str, username: str = None, password: str = None, token: str = None, timeout: float = 10, verify: bool = True)
 ```
 
 ###### Parameters:
@@ -961,7 +1061,7 @@ with response as events:
                 data = json.loads(line)
                 print(data)
             except json.decoder.JSONDecodeError:
-                print("Event could not be converted to JSON")
+                print("Event could not be decoded as JSON")
 ```
 
 ##### `GroupItemStateChangedEvent(itemName: str, memberName: str)`
@@ -1281,17 +1381,18 @@ Adds a new item to the registry or updates the existing item.
 
 **Returns:** Confirmation that the item was successfully added or updated.
 
-##### `sendCommand(itemName: str, command: str)`
+##### `sendCommand(itemName: str, command: str, source: str = None)`
 
 Sends a command to an item.
 
 **Parameters:**
 - `itemName` (str): The name of the item.
 - `command` (str): The command to send (e.g., `ON`, `OFF`).
+- `source` (str, optional): Source of the command, shown in the event (openHAB 4.1+).
 
 **Returns:** Confirmation that the command was successfully sent.
 
-##### `postUpdate(itemName: str, state: str)`
+##### `postUpdate(itemName: str, state: str, source: str = None)`
 
 Updates the state of an item. This is an alias for `updateItemState`.
 
@@ -1426,8 +1527,9 @@ The `AsyncItems` class is the asynchronous counterpart to `Items`. It provides t
 - `async addOrUpdateItems(items)`
 - `async getItem(itemName, metadata, recursive, language)`
 - `async addOrUpdateItem(itemName, itemData, language)`
-- `async sendCommand(itemName, command)`
-- `async updateItemState(itemName, state, language)`
+- `async sendCommand(itemName, command, source)`
+- `async postUpdate(itemName, state, source)`
+- `async updateItemState(itemName, state, language, source)`
 - `async deleteItem(itemName)`
 - `async addGroupMember(itemName, memberItemName)`
 - `async removeGroupMember(itemName, memberItemName)`
@@ -1688,28 +1790,32 @@ Deletes the configuration of a persistence service.
 
 **Returns:** The response from the API after deleting the configuration.
 
-##### `getItemsFromService(serviceID: str = None) -> dict`
+##### `getItemsFromService(serviceID: str = None, itemName: str = None) -> list`
 
-Gets a list of items available via a specific persistence service.
+Gets a list of items available via a specific persistence service. Not every
+service provides this information (rrd4j does not, inmemory and JDBC do).
 
 **Parameters:**
 - `serviceID` (str, optional): The ID of the persistence service.
+- `itemName` (str, optional): Only return information for this item.
 
 **Returns:** A list of items with their last and earliest timestamps.
 
-##### `getItemPersistenceData(itemName: str, serviceID: str, startTime: str = None, endTime: str = None, page: int = 1, pageLength: int = 50, boundary: bool = False, itemState: bool = False) -> dict`
+##### `getItemPersistenceData(itemName: str, serviceID: str = None, startTime: str = None, endTime: str = None, page: int = None, pageLength: int = None, boundary: bool = False, itemState: bool = False, displayState: bool = None, language: str = None) -> dict`
 
 Gets item persistence data from a persistence service.
 
 **Parameters:**
 - `itemName` (str): The name of the item.
-- `serviceID` (str): The ID of the persistence service.
-- `startTime` (str, optional): The start time for the data.
-- `endTime` (str, optional): The end time for the data.
-- `page` (int, optional): The page of data (default `1`).
-- `pageLength` (int, optional): The number of data points per page (default `50`).
-- `boundary` (bool, optional): Whether to include boundary values (default `False`).
-- `itemState` (bool, optional): Whether to return item state instead of raw value (default `False`).
+- `serviceID` (str, optional): The ID of the persistence service (default service if omitted).
+- `startTime` (str, optional): Start time in ISO 8601, e.g. `2026-10-30T00:00:00.000Z` (default: one day before `endTime`).
+- `endTime` (str, optional): End time in ISO 8601 (default: now).
+- `page` (int, optional): Page number, **starting at 0**. Only used together with `pageLength`.
+- `pageLength` (int, optional): Data points per page. Without it, all data points of the time range are returned.
+- `boundary` (bool, optional): Also return the values just outside the time range (default `False`).
+- `itemState` (bool, optional): Append the current item state (default `False`).
+- `displayState` (bool, optional): Add a formatted display state to every data point (openHAB 5.0+).
+- `language` (str, optional): `Accept-Language` header.
 
 **Returns:** The retrieved data points of the item.
 
@@ -1747,8 +1853,8 @@ The `AsyncPersistence` class is the asynchronous counterpart to `Persistence`:
 - `async getServiceConfiguration(serviceID)`
 - `async setServiceConfiguration(serviceID, config)`
 - `async deleteServiceConfiguration(serviceID)`
-- `async getItemsFromService(serviceID)`
-- `async getItemPersistenceData(itemName, serviceID, startTime, endTime, page, pageLength, boundary, itemState)`
+- `async getItemsFromService(serviceID, itemName)`
+- `async getItemPersistenceData(itemName, serviceID, startTime, endTime, page, pageLength, boundary, itemState, displayState, language)`
 - `async storeItemData(itemName, time, state, serviceID)`
 - `async deleteItemData(itemName, startTime, endTime, serviceID)`
 
@@ -2174,9 +2280,9 @@ Gets full sitemap events for a given subscription.
 
 ##### `subscribeToSitemapEvents()`
 
-Creates a new subscription for sitemap events and returns the subscription ID.
+Creates a new subscription for sitemap events.
 
-**Returns:** The subscription ID.
+**Returns:** `{"message": "Subscription created.", "location": "<url>", "subscriptionID": "<id>"}`.
 
 ---
 
@@ -2722,13 +2828,13 @@ voice = Voice(client)
 
 #### Methods
 
-##### `getDefaultVoice()`
+##### `getDefaultVoice(language: str = None)`
 
 Gets the default voice used by the system.
 
 **Returns:** A dictionary with details of the default voice.
 
-##### `getVoices()`
+##### `getVoices(language: str = None)`
 
 Gets the list of all voices.
 
@@ -2873,3 +2979,64 @@ Please ensure your code adheres to PEP 8 guidelines and includes relevant docume
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+### 21.4.0
+
+Bug fixes (all found against openHAB 5.2.3):
+
+- **Async events:** `AsyncEvents`, `AsyncItemEvents`, … called the non-existent
+  `AsyncOpenHABClient.executeSSE()`. The method now exists (public) and returns the open
+  `aiohttp` response. SSE streams are no longer cut after the aiohttp default timeout of 5 minutes.
+- **SSE and token authentication:** the synchronous SSE request did not use the client
+  session, so the `Authorization: Bearer` header was missing (`401`). It now uses the
+  session (token and Basic Authentication) and reports errors properly.
+- **Responses with a `status` field:** the internal marker `{"status": <code>}` for empty
+  responses collided with JSON that contains a `status` field. `Things.getThingStatus()`
+  and `Rules.getRule()`/`getRules()` returned `"Unexpected response"` instead of the data.
+  Empty responses are now represented by the dedicated type `StatusResponse`.
+- **`ItemEvents.ItemEvent()`** subscribed to `openhab/items` (no events at all); now `openhab/items/*`.
+- **Persistence:** the query parameter was sent as `serviceID` instead of `serviceId`, so
+  openHAB silently used the default service. `getItemPersistenceData()` used `page=1`,
+  which skipped the first page (pages start at 0) – paging is now off by default and all
+  data points of the time range are returned. `getItemsFromService()` builds its query
+  correctly and explains `405`.
+- **`Items.addOrUpdateItem()`** sent `Accept: */` and always failed with `406`.
+- **`Rules.createRule()`** crashed with `AttributeError` (`response.status_code`).
+- **`Rules.runNow()`** sent its body without content type (`415` in the async variant).
+- **`Links`:** `linkItemToChannel()` put the URL-encoded channel UID into the JSON body
+  (`400 Content does not match the path`); `getLink()` reported a missing link as
+  "Content does not match the path".
+- **UIDs containing `#`** (action and channel UIDs such as `astro.getElevation#…`) were cut
+  off as URL fragment, e.g. `Actions.executeAction()` always returned "Action not found".
+- **`Inbox.approveDiscoveryResult()`:** `newThingID` → `newThingId`.
+- **`Sitemaps`:** `subscriptionID`/`pageId` → `subscriptionid`/`pageid`;
+  `subscribeToSitemapEvents()` now returns the subscription ID and URL.
+- **`Voice`:** `sayText()` sent `voiceId`/`sinkId` instead of `voiceid`/`sinkid`;
+  `interpretTextBatch()` used the wrong endpoint.
+- **`Addons`:** `serviceId` for install/uninstall/config is sent as query parameter.
+- **`Services.updateServiceConfig()`** reported `204` (no previous configuration) as error.
+- The client no longer changes the session headers permanently with every request
+  (a `Content-Type` of one request leaked into all following requests).
+
+Improvements:
+
+- The asynchronous classes are generated from the synchronous ones
+  (`tools/generate_async.py`) and now return exactly the same values and messages –
+  previously many async methods returned the raw `{"status": 200}`.
+- Error messages contain openHAB's own explanation, e.g.
+  `... (Persistence service not modifiable: rrd4j)`.
+- Clearer messages for rejected commands/states (`Invalid command for this item.`).
+- New optional parameters: `timeout` and `verify` for both clients;
+  `source` for `sendCommand`/`postUpdate`/`updateItemState`; `parents` for `getItems`/`getItem`;
+  `displayState`/`language` for `getItemPersistenceData`; `itemName` for `getItemsFromService`;
+  `language` for `Voice.getVoices`/`getDefaultVoice`.
+- `OpenHABClient` can be used as context manager (`with OpenHABClient(...) as client:`),
+  `AsyncOpenHABClient` creates its session lazily and has `close()`.
+- **Events arrived late:** SSE streams are now requested uncompressed (`Accept-Encoding: identity`);
+  a gzip-compressed stream was flushed by openHAB only with the next message.
+  New helpers `iterSSELines`, `iterSSEEvents`, `aiterSSELines`, `aiterSSEEvents` and `parseSSEData`
+  deliver every event immediately – `requests`' `iter_lines()` keeps the last line of a chunk back.
+- Text responses are decoded as UTF-8 (`getItemState` returned `21.5 Â°C` instead of `21.5 °C`).
+- `StatusResponse` is exported. Automated tests (`tests_pytest/`), `pyproject.toml`.

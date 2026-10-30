@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -20,7 +20,7 @@ class Sitemaps:
         try:
             response = self.client.get("/sitemaps", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -59,7 +59,7 @@ class Sitemaps:
             response = self.client.get(f"/sitemaps/{sitemapName}", params={"type": type, "jsoncallback": jsonCallback,
                                                                            "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -96,9 +96,9 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/{pageID}", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
+                                       "subscriptionid": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -142,9 +142,9 @@ class Sitemaps:
 
         try:
             response = self.client.get(f"/sitemaps/{sitemapName}/*", params={
-                                       "subscriptionID": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
+                                       "subscriptionid": subscriptionID, "includeHidden": includeHidden}, headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -182,9 +182,9 @@ class Sitemaps:
         """
         try:
             response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemapName, "pageId": pageID})
+                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemapName, "pageid": pageID})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -223,7 +223,7 @@ class Sitemaps:
             response = self.client.get(
                 f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemapName})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -258,7 +258,20 @@ class Sitemaps:
         try:
             response = self.client.post("/sitemaps/events/subscribe")
 
-            if isinstance(response, dict) and "status" in response:
+            # openHAB answers with 201 and the subscription URL (Location header, and in
+            # some versions also as a serialized JAX-RS response in the body).
+            location = None
+            if isinstance(response, dict):
+                location = response.get("location")
+                if not location:
+                    headers = (response.get("context") or {}).get("headers") or {}
+                    value = headers.get("Location")
+                    location = value[0] if isinstance(value, list) and value else value
+            if location:
+                return {"message": "Subscription created.", "location": location,
+                        "subscriptionID": location.rstrip("/").split("/")[-1]}
+
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

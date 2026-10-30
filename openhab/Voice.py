@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -11,7 +11,7 @@ class Voice:
         """
         self.client = client
 
-    def getDefaultVoice(self):
+    def getDefaultVoice(self, language: str = None):
         """
         Gets the default voice.
 
@@ -19,9 +19,9 @@ class Voice:
         """
         try:
             response = self.client.get(
-                '/voice/defaultvoice', headers={"Accept": "application/json"})
+                '/voice/defaultvoice', headers={"Accept": "application/json", "Accept-Language": language})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -66,7 +66,7 @@ class Voice:
             response = self.client.post('/voice/dialog/start', params={'sourceId': sourceID, 'ksId': ksID, 'sttId': sttID, 'ttsId': ttsID,
                                                                        'voiceId': voiceID, 'hliIds': hliIDs, 'sinkId': sinkID, 'keyword': keyword, 'listeningItem': listeningItem}, headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -103,7 +103,7 @@ class Voice:
             response = self.client.post(
                 '/voice/dialog/stop', params={'sourceId': sourceID})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -144,7 +144,7 @@ class Voice:
         try:
             response = self.client.get('/voice/interpreters', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -179,7 +179,7 @@ class Voice:
         try:
             response = self.client.post('/voice/interpreters', headers=headers, data=text)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -222,7 +222,7 @@ class Voice:
             response = self.client.get(
                 f'/voice/interpreters/{interpreterID}', headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -259,10 +259,9 @@ class Voice:
             headers["Accept-Language"] = language
 
         try:
-            response = self.client.post('/voice/interpreters', headers=headers, params={
-                                        'ids': ','.join(IDs)}, data=text)
+            response = self.client.post(f"/voice/interpreters/{','.join(IDs)}", headers=headers, data=text)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -308,7 +307,7 @@ class Voice:
             response = self.client.post('/voice/listenandanswer', params={'sourceId': sourceID, 'sttId': sttID, 'ttsId': ttsID, 'voiceId': voiceID, 'hliIds': ','.join(
                 hliIDs) if hliIDs else None, 'sinkId': sinkID, 'listeningItem': listeningItem}, headers={"Accept-Language": language} if language else {})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -346,9 +345,9 @@ class Voice:
         :return: The response from the server.
         """
         try:
-            response = self.client.post('/voice/say', params={'voiceId': voiceID, 'sinkId': sinkID, 'volume': volume}, data=text, headers={"Content-Type": "text/plain"})
+            response = self.client.post('/voice/say', params={'voiceid': voiceID, 'sinkid': sinkID, 'volume': volume}, data=text, headers={"Content-Type": "text/plain"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -366,7 +365,7 @@ class Voice:
 
         return {"error": f"Unexpected response: {status_code}"}
 
-    def getVoices(self):
+    def getVoices(self, language: str = None):
         """
         Get the list of all voices.
 
@@ -374,9 +373,9 @@ class Voice:
         """
         try:
             response = self.client.get(
-                '/voice/voices', headers={"Accept": "application/json"})
+                '/voice/voices', headers={"Accept": "application/json", "Accept-Language": language})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import requests
 
 
@@ -32,7 +32,7 @@ class ChannelTypes:
             response = self.client.get(
                 "/channel-types", headers=headers, params=params)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -67,7 +67,7 @@ class ChannelTypes:
             response = self.client.get(
                 f"/channel-types/{channelTypeUID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -101,7 +101,7 @@ class ChannelTypes:
             response = self.client.get(
                 f"/channel-types/{channelTypeUID}/linkableItemTypes", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

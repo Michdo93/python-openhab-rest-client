@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -27,7 +27,7 @@ class Services:
         try:
             response = self.client.get("/services", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -62,7 +62,7 @@ class Services:
             response = self.client.get(
                 f"/services/{serviceID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -95,7 +95,7 @@ class Services:
         try:
             response = self.client.get(f"/services/{serviceID}/config", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -137,7 +137,7 @@ class Services:
             response = self.client.put(f"/services/{serviceID}/config", data=json.dumps(
                 configData), headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -155,7 +155,7 @@ class Services:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 204:
-            return {"error": "No old configuration."}
+            return {"message": "OK, no old configuration."}
         elif status_code == 500:
             return {"error": "Configuration can not be updated due to internal error."}
 
@@ -173,7 +173,7 @@ class Services:
             response = self.client.delete(
                 f"/services/{serviceID}/config", headers={"Accept": "application/json"})
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -191,7 +191,7 @@ class Services:
         if status_code == 200:
             return {"message": "OK"}
         elif status_code == 204:
-            return {"error": "No old configuration."}
+            return {"message": "OK, no old configuration."}
         elif status_code == 500:
             return {"error": "Configuration can not be updated due to internal error."}
 
@@ -214,7 +214,7 @@ class Services:
             response = self.client.get(
                 f"/services/{serviceID}/contexts", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response

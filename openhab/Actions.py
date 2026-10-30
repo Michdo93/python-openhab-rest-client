@@ -1,4 +1,4 @@
-from .Client import OpenHABClient
+from .Client import OpenHABClient, StatusResponse
 import json
 import requests
 
@@ -28,7 +28,7 @@ class Actions:
         try:
             response = self.client.get(f"/actions/{thingUID}", headers=headers)
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
@@ -73,7 +73,7 @@ class Actions:
             response = self.client.post(
                 f"/actions/{thingUID}/{actionUID}", headers=headers, data=json.dumps(actionInputs))
 
-            if isinstance(response, dict) and "status" in response:
+            if isinstance(response, StatusResponse):
                 status_code = response["status"]
             else:
                 return response
