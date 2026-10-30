@@ -1,5 +1,6 @@
 LICENSE
 README.md
+pyproject.toml
 setup.py
 openhab/Actions.py
 openhab/Addons.py
@@ -48,6 +49,7 @@ openhab/ModuleTypes.py
 openhab/Persistence.py
 openhab/ProfileTypes.py
 openhab/Rules.py
+openhab/SSE.py
 openhab/Services.py
 openhab/Sitemaps.py
 openhab/Systeminfo.py
