@@ -57,6 +57,76 @@ Install via pip:
 pip install python-openhab-rest-client
 ```
 
+Here is the complete section translated into English, formatted to match your README:
+
+---
+
+### Secure HTTPS & Self-Signed Certificates (TLS)
+
+When running openHAB over HTTPS with a custom or self-signed certificate, you must ensure that Python (via the underlying `requests` library) trusts the certificate and successfully validates the hostname.
+
+#### 1. Switch openHAB to HTTPS
+
+1. **Disable HTTP:**
+Open the configuration file `/etc/openhab/services/org.ops4j.pax.web.cfg` (if it is not existing, create it) and set:
+```properties
+org.osgi.service.http.enabled=false
+org.osgi.service.http.secure.enabled=true
+org.ops4j.pax.web.ssl.port=8443
+```
+
+It could also help to edit the `/etc/default/openhab` file and make this changes:
+
+```
+#########################
+## PORTS
+## The ports openHAB will bind its HTTP/HTTPS web server to.
+
+#OPENHAB_HTTP_PORT=8080
+OPENHAB_HTTPS_PORT=8443
+```
+
+This ensures openHAB runs exclusively on the secure HTTPS port (default `8443`).
+2. **Generate Keystore with a Proper SAN (Subject Alternative Name):**
+Modern OpenSSL and Python versions strictly require a SAN entry in the certificate to prevent hostname mismatches. Create a new keystore using Java's `keytool` (replace `<your-hostname>` with your actual hostname):
+```bash
+sudo rm /var/lib/openhab/etc/keystore
+sudo keytool -genkeypair -alias openhab -keyalg RSA -keysize 2048 -validity 365 \
+  -keystore /var/lib/openhab/etc/keystore -storepass openhab -keypass openhab \
+  -dname "CN=openhab" -ext "san=dns:<your-hostname>,ip:127.0.0.1,dns:localhost"
+sudo chown openhab:openhab /var/lib/openhab/etc/keystore
+sudo systemctl restart openhab
+```
+
+3. **Export the Certificate in PEM Format:**
+Export the public certificate so your Python client can read and trust it:
+```bash
+sudo keytool -exportcert -rfc -alias openhab -keystore /var/lib/openhab/etc/keystore \
+  -storepass openhab -file /home/$USER/openhab-exported.crt
+sudo chown $USER:$USER /home/$USER/openhab-exported.crt
+```
+
+#### 2. Usage in the Python Client
+
+Since self-signed certificates are rejected by default, you can pass the absolute path to the exported `.crt` file via the `verify` parameter of the client. The library will cryptographically verify the connection against your certificate:
+
+```python
+from openhab import OpenHABClient, Items
+
+client = OpenHABClient(
+    url="https://<your-hostname>:8443", 
+    username="openhab", 
+    password="habopen", 
+    verify="/home/smarthome/openhab-exported.crt"
+)
+
+itemsAPI = Items(client)
+allItems = itemsAPI.getItems()
+print("All Items:", allItems)
+```
+
+*(Note: For the asynchronous client `AsyncOpenHABClient`, the `verify` parameter works the exact same way via `aiohttp`.)*
+
 ## Usage
 
 Basically, you always need the `OpenHABClient` (or `AsyncOpenHABClient` for async usage). Regardless of whether you carry out a normal `REST request` or one via `SSE`.
