@@ -315,7 +315,7 @@ class AsyncRules:
         """
         try:
             response = await self.client.put(f"/rules/{ruleUID}/{moduleCategory}/{moduleID}/config/{param}",
-                                       data=json.dumps(value), headers={'Content-Type': 'text/plain'})
+                                       data=str(value), headers={"Content-Type": "text/plain"})
 
             if isinstance(response, StatusResponse):
                 status_code = response["status"]

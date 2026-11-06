@@ -185,7 +185,8 @@ class AsyncLinks:
         :return: The API response when all links are successfully deleted.
         """
         try:
-            response = await self.client.delete(f"/links/{object}")
+            response = await self.client.delete(f"/links/{object}",
+                                          headers={"Accept": "application/json"})
 
             if isinstance(response, StatusResponse):
                 status_code = response["status"]

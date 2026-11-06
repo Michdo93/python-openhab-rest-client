@@ -182,7 +182,8 @@ class Links:
         :return: The API response when all links are successfully deleted.
         """
         try:
-            response = self.client.delete(f"/links/{object}")
+            response = self.client.delete(f"/links/{object}",
+                                          headers={"Accept": "application/json"})
 
             if isinstance(response, StatusResponse):
                 status_code = response["status"]

@@ -198,3 +198,52 @@ def test_async_variants(client, items):
             assert isinstance(status, list)
 
     asyncio.run(asyncio.wait_for(run(), 20))
+
+
+def test_module_config_param_is_plain_text(client, items):
+    rules = Rules(client)
+    rules.deleteRule(RULE)
+    rules.createRule({"uid": RULE, "name": "PyTest", "triggers": [], "conditions": [],
+                      "actions": [{"id": "1", "type": "core.ItemCommandAction",
+                                   "configuration": {"itemName": ITEM, "command": "OFF"}}]})
+    try:
+        assert rules.setModuleConfigParam(RULE, "actions", "1", "command", "ON") == {"message": "OK"}
+        assert rules.getModuleConfigParam(RULE, "actions", "1", "command") == "ON"
+        assert rules.getRule(RULE)["actions"][0]["configuration"]["command"] == "ON"
+    finally:
+        rules.deleteRule(RULE)
+
+
+def test_delete_all_links_returns_count(client, items):
+    assert Links(client).deleteAllLinks(NUMBER) == {"count": 0}
+
+
+def test_sitemap_event_stream(client, items):
+    from openhab import UI, iterSSELines, parseSSEData
+    ui, sitemaps = UI(client), Sitemaps(client)
+    ui.deleteUIComponent("system:sitemap", "pytest_sitemap")
+    ui.addUIComponent("system:sitemap", {"uid": "pytest_sitemap", "component": "Sitemap",
+                                         "config": {"label": "PyTest"},
+                                         "slots": {"widgets": [{"component": "Switch",
+                                                                "config": {"item": ITEM}}]}})
+    try:
+        sub = sitemaps.subscribeToSitemapEvents()["subscriptionID"]
+        sitemaps.getSitemapPage("pytest_sitemap", "pytest_sitemap", subscriptionID=sub)
+        items.sendCommand(ITEM, "OFF")
+        time.sleep(0.3)
+        threading.Timer(1, lambda: items.sendCommand(ITEM, "ON")).start()
+        stream = sitemaps.getSitemapEvents(sub, "pytest_sitemap", "pytest_sitemap")
+        with stream:
+            for line in iterSSELines(stream):
+                event = parseSSEData(line)
+                if event and event.get("widgetId"):
+                    assert event["item"]["name"] == ITEM
+                    break
+    finally:
+        ui.deleteUIComponent("system:sitemap", "pytest_sitemap")
+
+
+def test_interpreter_answer_is_kept(client):
+    from openhab import Voice
+    answer = Voice(client).interpretTextBatch("xyzzy plugh", ["system"], language="de")
+    assert "error" in answer and "(" in answer["error"]

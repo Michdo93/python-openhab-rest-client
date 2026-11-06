@@ -3052,6 +3052,27 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+### 21.4.1
+
+Bug fixes (found while writing the examples of the book »openHAB & Python-Entwicklung«
+against openHAB 5.2.3):
+
+- **`Sitemaps.getSitemapEvents()` / `getFullSitemapEvents()`** read the SSE endpoints like a
+  normal response and failed after 10 s with "Read timed out". They now open the stream via
+  `executeSSE()` and return it (read it with `iterSSELines()` and `parseSSEData()` – sitemap
+  events have no `topic`). Note: bind the subscription to a page first with
+  `getSitemapPage(sitemap, page, subscriptionID=...)`; openHAB answers the stream request only
+  when the first event arrives.
+- **`Rules.setModuleConfigParam()`** sent the value with `json.dumps()`, so `10` was stored as
+  `"10"` (with quotes) and e.g. an `ItemCommandAction` sent an invalid command. The value is now
+  sent as plain text.
+- **`Links.deleteAllLinks()`** failed with `500 No message body writer` because of the missing
+  `Accept: application/json` header. It now returns openHAB's answer, e.g. `{"count": 1}`.
+- **`Persistence.deleteItemData()`** reported every `400` as "Invalid filter parameters.";
+  openHAB also uses `400` for read-only services such as rrd4j. openHAB's reason is appended now.
+- **`Voice.interpretText()` / `interpretTextBatch()`** dropped the interpreter's answer on `400`
+  (e.g. "Entschuldigung, aber das habe ich nicht verstanden."). It is appended now.
+
 ### 21.4.0
 
 Bug fixes (all found against openHAB 5.2.3):

@@ -308,7 +308,8 @@ class AsyncPersistence:
         except aiohttp.ClientResponseError as err:
             status_code = err.status
             if status_code == 400:
-                return {"error": "Invalid filter parameters."}
+                # openHAB uses 400 for invalid filters and for read-only services (e.g. rrd4j)
+                return {"error": f"Invalid filter parameters or service not modifiable: {str(err)}"}
             elif status_code == 404:
                 return {"error": "Unknown persistence service."}
             else:

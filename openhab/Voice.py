@@ -187,7 +187,8 @@ class Voice:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 400:
-                return {"error": "Interpretation exception occurs."}
+                # openHAB explains in its error message why the text was not understood
+                return {"error": f"Interpretation exception occurs: {str(err)}"}
             elif status_code == 404:
                 return {"error": "No human language interpreter was found."}
             else:
@@ -269,7 +270,8 @@ class Voice:
         except requests.exceptions.HTTPError as err:
             status_code = err.response.status_code
             if status_code == 400:
-                return {"error": "Interpretation exception occurs."}
+                # openHAB explains in its error message why the text was not understood
+                return {"error": f"Interpretation exception occurs: {str(err)}"}
             elif status_code == 404:
                 return {"error": "No human language interpreter was found."}
             else:

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-openhab-rest-client",
-    version="21.4.0",
+    version="21.4.1",
     packages=find_packages(exclude=["tests", "tests.*", "tests_pytest", "tests_pytest.*", "tools"]),
     install_requires=[
         "requests>=2.28",

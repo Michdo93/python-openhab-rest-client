@@ -11,6 +11,18 @@ class Sitemaps:
         """
         self.client = client
 
+    def _openEventStream(self, path: str, params: dict, errors: dict):
+        """Opens a sitemap SSE stream; returns the streaming response or {"error": ...}."""
+        try:
+            return self.client.executeSSE(path, params=params)
+        except requests.exceptions.HTTPError as err:
+            statusCode = err.response.status_code
+            if statusCode in errors:
+                return {"error": errors[statusCode]}
+            return {"error": f"HTTP error {statusCode}: {str(err)}"}
+        except requests.exceptions.RequestException as err:
+            return {"error": f"Request error: {str(err)}"}
+
     def getSitemaps(self):
         """
         Get all available sitemaps.
@@ -172,82 +184,33 @@ class Sitemaps:
 
     def getSitemapEvents(self, subscriptionID: str, sitemapName: str = None, pageID: str = None):
         """
-        Get sitemap events.
+        Opens the event stream (SSE) of a sitemap subscription for one page.
 
-        :param subscriptionID: The ID of the subscription.
-        :param sitemap: The name of the sitemap (optional).
-        :param pageID: The ID of the page (optional).
+        :param subscriptionID: The ID of the subscription (see subscribeToSitemapEvents()).
+        :param sitemapName: The name of the sitemap.
+        :param pageID: The ID of the page (the sitemap name for the home page).
 
-        :return: The events (JSON).
+        :return: A SSE stream (requests.Response, read it with iterSSEEvents()) or {"error": ...}.
         """
-        try:
-            response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}", params={"sitemap": sitemapName, "pageid": pageID})
-
-            if isinstance(response, StatusResponse):
-                status_code = response["status"]
-            else:
-                return response
-
-        except requests.exceptions.HTTPError as err:
-            status_code = err.response.status_code
-            if status_code == 400:
-                return {"error": "Missing sitemap or page parameter, or page not linked successfully to the subscription."}
-            elif status_code == 404:
-                return {"error": "Subscription not found."}
-            else:
-                return {"error": f"HTTP error {status_code}: {str(err)}"}
-
-        except requests.exceptions.RequestException as err:
-            return {"error": f"Request error: {str(err)}"}
-
-        if status_code == 200:
-            return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "Subscription not found."}
-        elif status_code == 400:
-            return {"error": "Missing sitemap or page parameter, or page not linked successfully to the subscription."}
-
-        return {"error": f"Unexpected response: {status_code}"}
+        return self._openEventStream(
+            f"/rest/sitemaps/events/{subscriptionID}", {"sitemap": sitemapName, "pageid": pageID},
+            {400: "Missing sitemap or page parameter, or page not linked successfully to the subscription.",
+             404: "Subscription not found."})
 
     def getFullSitemapEvents(self, subscriptionID: str, sitemapName: str = None):
         """
-        Get sitemap events for a whole sitemap. Not recommended due to potentially high traffic.
+        Opens the event stream (SSE) of a sitemap subscription for the whole sitemap.
+        Not recommended due to potentially high traffic.
 
         :param subscriptionID: The ID of the subscription.
-        :param sitemap: The name of the sitemap (optional).
+        :param sitemapName: The name of the sitemap.
 
-        :return: The events for the entire sitemap (JSON).
+        :return: A SSE stream (requests.Response) or {"error": ...}.
         """
-        try:
-            response = self.client.get(
-                f"/sitemaps/events/{subscriptionID}/*", params={"sitemap": sitemapName})
-
-            if isinstance(response, StatusResponse):
-                status_code = response["status"]
-            else:
-                return response
-
-        except requests.exceptions.HTTPError as err:
-            status_code = err.response.status_code
-            if status_code == 400:
-                return {"error": "Missing sitemap parameter, or sitemap not linked successfully to the subscription."}
-            elif status_code == 404:
-                return {"error": "Subscription not found."}
-            else:
-                return {"error": f"HTTP error {status_code}: {str(err)}"}
-
-        except requests.exceptions.RequestException as err:
-            return {"error": f"Request error: {str(err)}"}
-
-        if status_code == 200:
-            return {"message": "OK"}
-        elif status_code == 404:
-            return {"error": "Subscription not found."}
-        elif status_code == 400:
-            return {"error": "Missing sitemap parameter, or sitemap not linked successfully to the subscription."}
-
-        return {"error": f"Unexpected response: {status_code}"}
+        return self._openEventStream(
+            f"/rest/sitemaps/events/{subscriptionID}/*", {"sitemap": sitemapName},
+            {400: "Missing sitemap parameter, or sitemap not linked successfully to the subscription.",
+             404: "Subscription not found."})
 
     def subscribeToSitemapEvents(self):
         """
